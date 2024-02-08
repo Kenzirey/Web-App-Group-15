@@ -1,0 +1,2 @@
+-- INSERT INTO Categories (categoryId, categoryName)
+-- VALUES (int, VARCHAR(255)
