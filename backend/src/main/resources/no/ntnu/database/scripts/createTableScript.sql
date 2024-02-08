@@ -23,6 +23,15 @@ CREATE TABLE ProductProviders (
                                   FOREIGN KEY (courseProviderId) REFERENCES CourseProvider(courseProviderId)
 );
 
+-- Images table
+CREATE TABLE Images (
+                        imageId int NOT NULL,
+                        productId int,
+                        imageUrl VARCHAR (255),
+                        PRIMARY KEY (imageId),
+                        FOREIGN KEY (productId) REFERENCES Product(productId)
+);
+
 -- Product table
 CREATE TABLE Product (
                          productId int NOT NULL,

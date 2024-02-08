@@ -1,0 +1,2 @@
+-- INSERT INTO Images (imageId, productId, imageUrl)
+-- VALUES (int, int, VARCHAR)
