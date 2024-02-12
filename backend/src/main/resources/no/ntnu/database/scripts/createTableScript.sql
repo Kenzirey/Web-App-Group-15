@@ -53,9 +53,10 @@ CREATE TABLE Product (
 -- Users table
 CREATE TABLE Users (
                       userId int NOT NULL AUTO_INCREMENT,
-                      userName VARCHAR (255),
-                      email VARCHAR (255),
-                      password VARCHAR (255),
+                      userName VARCHAR (200),
+                      email VARCHAR (200),
+                      password VARCHAR (200),
+                      isAdmin BOOLEAN,
                       PRIMARY KEY (userId)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
