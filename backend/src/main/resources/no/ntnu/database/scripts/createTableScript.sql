@@ -1,21 +1,22 @@
 -- Categories table
 CREATE TABLE Categories (
-                            categoryId int NOT NULL,
+                            categoryId int NOT NULL AUTO_INCREMENT,
                             categoryName VARCHAR (255) NOT NULL,
                             PRIMARY KEY (categoryId)
-);
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- CourseProvider table
 CREATE TABLE CourseProvider (
-                                courseProviderId int NOT NULL,
+                                courseProviderId int NOT NULL AUTO_INCREMENT,
                                 providerName VARCHAR (255),
                                 PRIMARY KEY (courseProviderId)
-);
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
 
 
 -- ProductProviders table
 CREATE TABLE ProductProviders (
-                                  productId int,
+                                  productId int NOT NULL,
                                   courseProviderId int,
                                   price int,
                                   PRIMARY KEY (productId, courseProviderId),
@@ -25,16 +26,17 @@ CREATE TABLE ProductProviders (
 
 -- Images table
 CREATE TABLE Images (
-                        imageId int NOT NULL,
+                        imageId int NOT NULL AUTO_INCREMENT,
                         productId int,
                         imageUrl VARCHAR (255),
                         PRIMARY KEY (imageId),
                         FOREIGN KEY (productId) REFERENCES Product(productId)
-);
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+-- Change autoincrement to start somewhere else?
 
 -- Product table
 CREATE TABLE Product (
-                         productId int NOT NULL,
+                         productId int NOT NULL AUTO_INCREMENT,
                          categoryId int,
                          courseTitle VARCHAR (255),
                          difficultyLevel VARCHAR (20),
@@ -46,4 +48,22 @@ CREATE TABLE Product (
                          courseDescription TEXT,
                          PRIMARY KEY (productId),
                          FOREIGN KEY (categoryId) REFERENCES Categories(categoryId)
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+-- Users table
+CREATE TABLE Users (
+                      userId int NOT NULL AUTO_INCREMENT,
+                      userName VARCHAR (255),
+                      email VARCHAR (255),
+                      password VARCHAR (255),
+                      PRIMARY KEY (userId)
+)ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+-- Favorites table
+CREATE TABLE Favorites (
+                          userId int,
+                          productId int,
+                          PRIMARY KEY (userId, productId),
+                          FOREIGN KEY (userId) REFERENCES Users(userId),
+                          FOREIGN KEY (productId) REFERENCES Product(productId)
 );
