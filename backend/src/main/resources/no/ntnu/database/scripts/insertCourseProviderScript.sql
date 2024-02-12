@@ -1,2 +1,0 @@
--- INSERT INTO CourseProvider (courseProviderId, providerName)
--- VALUES (int, VARCHAR(255)
