@@ -1,4 +1,4 @@
-package no.ntnu;
+package no.ntnu.database;
 
 import no.ntnu.database.ScriptUtility;
 import org.junit.Assert;
@@ -11,7 +11,7 @@ import java.sql.Statement;
 import static no.ntnu.database.ScriptUtility.getMySQLDataSourceTest;
 
 public class ScriptUtilityTest {
-  private static final String BASE_SCRIPT_PATH = "no/ntnu/projectgroup15app/database/scripts/";
+  private static final String BASE_SCRIPT_PATH = "no/ntnu/database/scripts/";
   //Is there a simpler way of setting resource path?
 
   @Test

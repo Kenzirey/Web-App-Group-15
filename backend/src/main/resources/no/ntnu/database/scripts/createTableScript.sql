@@ -1,11 +1,11 @@
--- Categories table
+-- categories table
 CREATE TABLE category (
                             categoryId int NOT NULL AUTO_INCREMENT,
                             categoryName VARCHAR (255) NOT NULL,
                             PRIMARY KEY (categoryId)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
--- CourseProvider table
+-- courseProvider table
 CREATE TABLE courseProvider (
                                 courseProviderId int NOT NULL AUTO_INCREMENT,
                                 providerName VARCHAR (255),
@@ -14,7 +14,7 @@ CREATE TABLE courseProvider (
 
 
 
--- ProductProviders table
+-- productProviders table
 CREATE TABLE productProvider (
                                   productId int NOT NULL,
                                   courseProviderId int,
@@ -24,7 +24,7 @@ CREATE TABLE productProvider (
                                   FOREIGN KEY (courseProviderId) REFERENCES courseProvider (courseProviderId)
 );
 
--- Images table
+-- images table
 CREATE TABLE image (
                         imageId int NOT NULL AUTO_INCREMENT,
                         productId int,
@@ -34,7 +34,7 @@ CREATE TABLE image (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 -- Change autoincrement to start somewhere else?
 
--- Product table
+-- product table
 CREATE TABLE product (
                          productId int NOT NULL AUTO_INCREMENT,
                          categoryId int,
@@ -50,7 +50,7 @@ CREATE TABLE product (
                          FOREIGN KEY (categoryId) REFERENCES category(categoryId)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
--- User table
+-- user table
 CREATE TABLE user (
                       userId int NOT NULL AUTO_INCREMENT,
                       userName VARCHAR (200),
@@ -60,7 +60,7 @@ CREATE TABLE user (
                       PRIMARY KEY (userId)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
--- Favorite table
+-- favorite table
 CREATE TABLE favorite (
                           userId int,
                           productId int,
