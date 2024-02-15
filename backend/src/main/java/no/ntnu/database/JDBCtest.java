@@ -26,7 +26,7 @@ public class JDBCtest {
     String password = "abcd1234";
 
     //The query via String format.
-    String query = "SELECT * FROM categories";
+    String query = "SELECT * FROM category";
 
 
     //Check if the driver import works.

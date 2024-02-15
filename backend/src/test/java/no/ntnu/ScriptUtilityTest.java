@@ -26,7 +26,7 @@ public class ScriptUtilityTest {
     //AutoClosable, use ().
     try (
             Statement statement = getMySQLDataSourceTest().getConnection().createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT COUNT(1) FROM categories");
+            ResultSet resultSet = statement.executeQuery("SELECT COUNT(1) FROM category");
     ) {
       if (resultSet.next()) {
         int count = resultSet.getInt(1);
