@@ -24,16 +24,6 @@ CREATE TABLE productProvider (
                                   FOREIGN KEY (courseProviderId) REFERENCES courseProvider (courseProviderId)
 );
 
--- images table
-CREATE TABLE image (
-                        imageId int NOT NULL AUTO_INCREMENT,
-                        productId int,
-                        imageUrl TEXT,
-                        PRIMARY KEY (imageId),
-                        FOREIGN KEY (productId) REFERENCES product (productId)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
--- Change autoincrement to start somewhere else?
-
 -- product table
 CREATE TABLE product (
                          productId int NOT NULL AUTO_INCREMENT,
@@ -49,6 +39,16 @@ CREATE TABLE product (
                          PRIMARY KEY (productId),
                          FOREIGN KEY (categoryId) REFERENCES category(categoryId)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+-- images table
+CREATE TABLE image (
+                        imageId int NOT NULL AUTO_INCREMENT,
+                        productId int,
+                        imageUrl TEXT,
+                        PRIMARY KEY (imageId),
+                        FOREIGN KEY (productId) REFERENCES product (productId)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+-- Change autoincrement to start somewhere else?
 
 -- user table
 CREATE TABLE user (
