@@ -15,10 +15,10 @@ import java.util.logging.Logger;
  * A template for connecting to a database, and running queries via Strings.
  * Primarily used for testing a simple SELECT query.
  */
-public class JDBCtest {
+public class JdbcTest {
 	//Connection => Statement => ResultSet.
 
-	private static final Logger LOGGER = Logger.getLogger(JDBCtest.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(JdbcTest.class.getName());
 
 	/**
 	 * Main method. Application should contain 3-5 args when launched:
