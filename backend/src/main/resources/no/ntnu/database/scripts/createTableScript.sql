@@ -6,23 +6,12 @@ CREATE TABLE category (
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- courseProvider table
+-- The names of the various providers of courses.
 CREATE TABLE courseProvider (
                                 courseProviderId int NOT NULL AUTO_INCREMENT,
                                 providerName VARCHAR (255),
                                 PRIMARY KEY (courseProviderId)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
-
-
--- productProviders table
-CREATE TABLE productProvider (
-                                  productId int NOT NULL,
-                                  courseProviderId int,
-                                  price int,
-                                  PRIMARY KEY (productId, courseProviderId),
-                                  FOREIGN KEY (productId) REFERENCES product (productId),
-                                  FOREIGN KEY (courseProviderId) REFERENCES courseProvider (courseProviderId)
-);
 
 -- product table
 CREATE TABLE product (
@@ -39,6 +28,17 @@ CREATE TABLE product (
                          PRIMARY KEY (productId),
                          FOREIGN KEY (categoryId) REFERENCES category(categoryId)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+-- productProviders table
+-- Links a course with a course(product)Provider.
+CREATE TABLE productProvider (
+                                 productId int NOT NULL,
+                                 courseProviderId int,
+                                 price int,
+                                 PRIMARY KEY (productId, courseProviderId),
+                                 FOREIGN KEY (productId) REFERENCES product (productId),
+                                 FOREIGN KEY (courseProviderId) REFERENCES courseProvider (courseProviderId)
+);
 
 -- images table
 CREATE TABLE image (
