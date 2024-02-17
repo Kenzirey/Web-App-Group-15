@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Utility class for formatting result data from an SQL query.
@@ -30,15 +31,15 @@ public class ResultFormatUtil {
 	 *     </ul></li>
 	 * </ol>
 	 * </p>
-	 * <p>This operation moves the result pointer at the start before operation,
-	 * and leaves the result pointer after the last result when the operation is done</p>
+	 * <p>This operation leaves the result pointer after the last result when the operation is done.
+	 * <b>Any entries before the pointer's current position will be ignored</b></p>
 	 *
 	 * @param result The result set to format as a 2-dimensional array
 	 * @return A 2-dimensional array, containing the result
 	 * @throws SQLException If a database error occurs
 	 */
-	public List<Map<String, String>> formatResultAs2dArray(ResultSet result) throws SQLException {
-		result.beforeFirst();
+	public static List<Map<String, String>> formatResultAs2dArray(ResultSet result)
+			throws SQLException {
 		List<Map<String, String>> entries = new ArrayList<>();
 		while (result.next()) {
 			entries.add(formatCurrentRowAsMap(result));
@@ -61,7 +62,7 @@ public class ResultFormatUtil {
 	 * @return The current row, as a map
 	 * @throws SQLException If a database error occurs
 	 */
-	public Map<String, String> formatCurrentRowAsMap(ResultSet result) throws SQLException {
+	public static Map<String, String> formatCurrentRowAsMap(ResultSet result) throws SQLException {
 		Map<String, String> entry = new HashMap<>();
 		ResultSetMetaData metaData = result.getMetaData();
 		int columnCount = metaData.getColumnCount();
@@ -69,5 +70,22 @@ public class ResultFormatUtil {
 			entry.put(metaData.getColumnName(i), result.getString(i));
 		}
 		return entry;
+	}
+
+	/**
+	 * Identical to {@link Function}, except it can throw {@link SQLException}.
+	 *
+	 * @param <T> The type of the input to the function
+	 * @param <R> The type of the result of the function
+	 */
+	public interface SqlFunction<T, R> {
+		/**
+		 * Applies this function to the given argument.
+		 *
+		 * @param t – The function argument
+		 * @return The function result
+		 * @throws SQLException If an uncaught {@link SQLException} happens in this function
+		 */
+		R apply(T t) throws SQLException;
 	}
 }

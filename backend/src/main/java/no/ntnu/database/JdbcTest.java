@@ -39,7 +39,7 @@ public class JdbcTest {
 		if (args == null || args.length < 3) {
 			throw new IllegalArgumentException("Application should be launched with 3-5 arguments: "
 					+ "1: Schema name | 2: Username | 3: Password | "
-					+ "4: Port (optional) | 5: Address (optional"
+					+ "4: Port (optional) | 5: Address (optional)"
 			);
 		}
 
