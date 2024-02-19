@@ -2,9 +2,12 @@ package no.ntnu.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import no.ntnu.database.sqlfunction.SqlConsumer;
+import no.ntnu.database.sqlfunction.SqlFunction;
 
 /**
  * A connector for connecting to a database, and safely sending queries to it.
@@ -30,6 +33,7 @@ public class DatabaseConnector {
 
 	/**
 	 * Executes an SQL query, and returns the result.
+	 * If no result hook is provided, this method will return {@code null}.
 	 *
 	 * @param sqlQuery   The query to execute
 	 * @param resultHook Function to handle the result, before it is closed
@@ -38,10 +42,14 @@ public class DatabaseConnector {
 	 * @throws SQLException If an exception occurs when sending the query
 	 * @see #executeQuery(Query)
 	 */
-	public <T> T executeQuery(Query sqlQuery, ResultFormatUtil.SqlFunction<ResultSet, T> resultHook)
+	public <T> T executeQuery(Query sqlQuery, SqlFunction<ResultSet, T> resultHook)
 			throws SQLException {
 		try (Statement connector = connection.createStatement()) {
-			return resultHook.apply(connector.executeQuery(sqlQuery.getString()));
+			T result = null;
+			if (resultHook != null) {
+				result = resultHook.apply(connector.executeQuery(sqlQuery.getString()));
+			}
+			return result;
 		}
 	}
 
@@ -50,12 +58,49 @@ public class DatabaseConnector {
 	 *
 	 * @param sqlQuery The query to execute
 	 * @throws SQLException If an exception occurs when sending the query
-	 * @see #executeQuery(Query, ResultFormatUtil.SqlFunction)
+	 * @see #executeQuery(Query, SqlFunction)
 	 */
 	public void executeQuery(Query sqlQuery) throws SQLException {
-		// Use this method to execute a query when you don't care about the result
-		try (Statement connector = connection.createStatement()) {
-			connector.executeQuery(sqlQuery.getString());
+		executeQuery(sqlQuery, (SqlFunction<ResultSet, Object>) null);
+	}
+
+	/**
+	 * Executes an SQL query with parameters, and returns the result.
+	 * If no result hook is provided, or the statement doesn't return anything,
+	 * this method will return {@code null}.
+	 *
+	 * @param sqlQuery    The query to execute
+	 * @param prepareHook Consumer that allows assigning query parameters
+	 * @param resultHook  Function to handle the result, before it is closed
+	 * @param <T>         The return type of the result hook
+	 * @return The result from the query
+	 * @throws SQLException If an exception occurs when sending the query
+	 */
+	public <T> T executeQuery(
+			Query sqlQuery,
+			SqlConsumer<PreparedStatement> prepareHook,
+			SqlFunction<ResultSet, T> resultHook
+	) throws SQLException {
+		PreparedStatement statement = connection.prepareStatement(sqlQuery.getString());
+		prepareHook.accept(statement);
+		T result = null;
+		if (resultHook != null && statement.execute()) {
+			result = resultHook.apply(statement.getResultSet());
 		}
+		return result;
+	}
+
+	/**
+	 * Executes an SQL query with parameters.
+	 *
+	 * @param sqlQuery    The query to execute
+	 * @param prepareHook Consumer that allows assigning query parameters
+	 * @throws SQLException If an exception occurs when sending the query
+	 */
+	public void executeQuery(
+			Query sqlQuery,
+			SqlConsumer<PreparedStatement> prepareHook
+	) throws SQLException {
+		executeQuery(sqlQuery, prepareHook, null);
 	}
 }

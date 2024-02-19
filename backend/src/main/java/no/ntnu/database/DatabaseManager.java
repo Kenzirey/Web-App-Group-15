@@ -1,7 +1,8 @@
 package no.ntnu.database;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Manager for the database, serves as an intermediary between the API & the database.
@@ -62,13 +63,28 @@ public class DatabaseManager {
 	/**
 	 * Gets all categories.
 	 *
-	 * @param resultHook Function to handle the result, before it is closed
-	 * @param <T>        The return type of the result hook
 	 * @return All categories
-	 * @throws SQLException If exception occurs when sending the SQL query
+	 * @throws SQLException If an exception occurs when sending the SQL query
 	 */
-	public <T> T getAllCategories(ResultFormatUtil.SqlFunction<ResultSet, T> resultHook)
-			throws SQLException {
-		return connector.executeQuery(Query.SELECT_CATEGORY_ALL, resultHook);
+	public List<Map<String, String>> getAllCategories() throws SQLException {
+		return connector.executeQuery(
+				Query.SELECT_CATEGORY_ALL,
+				ResultFormatUtil::formatResultAs2dArray
+		);
+	}
+
+	/**
+	 * Searches for a specific category.
+	 *
+	 * @param category   The search query to use when searching for categories
+	 * @return Any categories that match the search query
+	 * @throws SQLException If an exception occurs when sending the SQL query
+	 */
+	public List<Map<String, String>> searchCategory(String category) throws SQLException {
+		return connector.executeQuery(
+				Query.SEARCH_FOR_CATEGORY,
+				statement -> statement.setString(1, String.format("%%%s%%", category)),
+				ResultFormatUtil::formatResultAs2dArray
+		);
 	}
 }

@@ -4,7 +4,8 @@ package no.ntnu.database;
  * Stores SQL queries used in the application.
  */
 public enum Query {
-	SELECT_CATEGORY_ALL("SELECT * FROM category");
+	SELECT_CATEGORY_ALL("SELECT * FROM category"),
+	SEARCH_FOR_CATEGORY("SELECT * FROM category WHERE categoryName LIKE ?;");
 
 	private final String string;
 

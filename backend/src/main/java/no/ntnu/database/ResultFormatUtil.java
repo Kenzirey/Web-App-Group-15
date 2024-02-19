@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * Utility class for formatting result data from an SQL query.
@@ -70,22 +69,5 @@ public class ResultFormatUtil {
 			entry.put(metaData.getColumnName(i), result.getString(i));
 		}
 		return entry;
-	}
-
-	/**
-	 * Identical to {@link Function}, except it can throw {@link SQLException}.
-	 *
-	 * @param <T> The type of the input to the function
-	 * @param <R> The type of the result of the function
-	 */
-	public interface SqlFunction<T, R> {
-		/**
-		 * Applies this function to the given argument.
-		 *
-		 * @param t – The function argument
-		 * @return The function result
-		 * @throws SQLException If an uncaught {@link SQLException} happens in this function
-		 */
-		R apply(T t) throws SQLException;
 	}
 }
