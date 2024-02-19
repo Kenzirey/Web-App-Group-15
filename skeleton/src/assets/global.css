@@ -1,0 +1,45 @@
+/* Global styles */
+footer {
+    width: 100%;
+    background-color: #333; /* Dark background for contrast */
+    color: #fff; /* Placeholder (light text) */
+    text-align: center; /* Center the text inside the footer */
+    padding: 5px 0; 
+    font-size: 14px;
+  }
+
+  /*
+  * Added padding for the placeholder test section, to pad between it and the footer.
+  */
+  .test {
+    padding-bottom: 50px; /* Adjust the value as needed */
+  }
+  
+  .course-content {
+    min-height: 100vh; /* Ensure minimum height */
+    display: flex;
+    flex-direction: column;
+  }
+  
+
+  /* Flex-grow willS push the footer down, even without enough content to fill page. */
+  header, main {
+    flex-grow:1;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  nav ul li {
+    display: inline;
+    margin-right: 10px;
+  }
+  
+  .v-btn {
+    color: #fff;
+    background-color: #666
+  }  
