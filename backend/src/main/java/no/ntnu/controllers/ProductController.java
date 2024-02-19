@@ -25,8 +25,11 @@ public class ProductController {
 	 * detailing its properties.</p>
 	 *
 	 * @return A {@link ResponseEntity} object containing either:
-	 *<li>A list of products (courses) with 200 OK if successful</li>
-	 *<li>Or an empty response with 503 UNAVAILABLE if a database access error occurs. </li>
+	 *
+	 *     <ul>
+	 *         <li>A list of products (courses) with 200 OK if successful.</li>
+	 *         <li>Or an empty response with 503 UNAVAILABLE if a database access error occurs.</li>
+	 *     </ul>
 	 */
 	@GetMapping("/products")
 	public ResponseEntity<List<Map<String, String>>> getAllProducts() {
@@ -50,11 +53,13 @@ public class ProductController {
 	 * @param query The query to use when searching for products.
 	 *
 	 * @return {@link ResponseEntity} object containing either:
-	 *     <li>A list of matching products with status 200 OK,
-	 *     if the operation is successful and matches are found.</li>
-	 *     <li>An empty list with status 200 OK if no matches are found.</li>
-	 *     <li>An empty response with status 503 SERVICE_UNAVAILABLE
-	 *     if a database access error occurs.</li>
+	 *     <ul>
+	 *         <li>A list of matching products with status 200 OK if
+	 *         the operation is successful and matches are found.</li>
+	 *         <li>An empty list with status 200 OK if no matches are found.</li>
+	 *         <li>An empty response with status 503 SERVICE_UNAVAILABLE
+	 *         if a database access error occurs.</li>
+	 *     </ul>
 	 */
 	@GetMapping("/products/{query}")
 	public ResponseEntity<List<Map<String, String>>> searchProduct(@PathVariable String query) {
