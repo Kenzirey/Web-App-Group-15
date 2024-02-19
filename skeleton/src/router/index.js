@@ -11,6 +11,9 @@ const routes = [
   // Define routes for other pages
 ];
 
+/**
+ * Creates a router instance, to navigate the Vue application.  
+ */
 const router = createRouter({
   history: createWebHistory(),
   routes,

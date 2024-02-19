@@ -11,6 +11,8 @@ public class DatabaseManager {
 	private static DatabaseManager instance;
 
 	private final DatabaseConnector connector;
+	//TODO: rename this to a more fitting constant name. Henrik, suggestions?
+	private static final String WIZARDRY = "%%%s%%";
 
 	/**
 	 * Creates the database manager.
@@ -83,7 +85,75 @@ public class DatabaseManager {
 	public List<Map<String, String>> searchCategory(String category) throws SQLException {
 		return connector.executeQuery(
 				Query.SEARCH_FOR_CATEGORY,
-				statement -> statement.setString(1, String.format("%%%s%%", category)),
+				statement -> statement.setString(1, String.format(WIZARDRY, category)),
+				ResultFormatUtil::formatResultAs2dArray
+		);
+	}
+
+	/**
+	 * Gets all course providers.
+	 *
+	 * @return returns all course providers.
+	 *
+	 * @throws SQLException If an exception occurs when sending the SQL query.
+	 */
+	public List<Map<String, String>> getAllCourseProviders() throws SQLException {
+		return connector.executeQuery(
+				Query.SELECT_COURSE_PROVIDER_ALL,
+				ResultFormatUtil::formatResultAs2dArray
+		);
+	}
+
+	/**
+	 * Searches for a specific course provider.
+	 *
+	 * @param courseProvider The search query to use when searching for course providers.
+	 *
+	 * @return Any course providers that match the search query.
+	 *
+	 * @throws SQLException If an exception occurs when sending the SQL query.
+	 */
+	public List<Map<String, String>> searchCourseProvider(String courseProvider)
+			throws SQLException {
+		return connector.executeQuery(
+				Query.SEARCH_FOR_COURSE_PROVIDER,
+				statement -> statement.setString(1, String.format(WIZARDRY, courseProvider)),
+				//This is the same as:
+				//resultSet -> ResultFormatUtil.formatResultAs2dArray(resultSet)
+				//method reference, where method's implementation is passed as an argument.
+				//passes method as an argument to another method (executeQuery).
+				// Indicating that formalResultAs2dArray will process the query's results.
+				ResultFormatUtil::formatResultAs2dArray
+		);
+	}
+
+	/**
+	 * Gets all products (courses).
+	 *
+	 * @return returns all products (courses).
+	 *
+	 * @throws SQLException If an exception occurs when sending the SQL query.
+	 */
+	public List<Map<String, String>> getAllProducts() throws SQLException {
+		return connector.executeQuery(
+				Query.SEARCH_PRODUCT_ALL,
+				ResultFormatUtil::formatResultAs2dArray
+		);
+	}
+
+	/**
+	 * Searches for a specific product (course).
+	 *
+	 * @param product The search query to use when searching for products (courses).
+	 *
+	 * @return returns any products (courses) that match the search query.
+	 *
+	 * @throws SQLException If an exception occurs when sending the SQL query.
+	 */
+	public  List<Map<String, String>> searchProduct(String product) throws SQLException {
+		return connector.executeQuery(
+				Query.SEARCH_FOR_PRODUCT,
+				statement -> statement.setString(1, String.format(WIZARDRY, product)),
 				ResultFormatUtil::formatResultAs2dArray
 		);
 	}
