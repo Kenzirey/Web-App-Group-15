@@ -8,6 +8,10 @@ footer {
     font-size: 14px;
   }
 
+  #content {
+    flex-grow: 1;
+  }
+
   /*
   * Added padding for the placeholder test section, to pad between it and the footer.
   */
@@ -16,7 +20,7 @@ footer {
   }
   
   .course-content {
-    min-height: 100vh; /* Ensure minimum height */
+    min-height: 95vh; /* Ensure minimum height */
     display: flex;
     flex-direction: column;
   }
@@ -24,9 +28,12 @@ footer {
 
   /* Flex-grow willS push the footer down, even without enough content to fill page. */
   header, main {
-    flex-grow:0.1;
     padding-left: 10px;
     padding-right: 10px;
+  }
+
+  main {
+    flex-grow: 1;
   }
   
   nav ul {
@@ -48,7 +55,7 @@ footer {
     padding: 75px 0;
     width: 800px;
     text-align: left;
-    /*background: #918b8b; */
+    background: #918b8b;
     margin: 25px;
     display: inline-block;
   }
