@@ -1,0 +1,27 @@
+
+
+
+.box {
+    padding: 75px 0;
+    width: 800px;
+    text-align: left;
+    background: #bdb6b6;  /*Kommer sikkert til å fjerne denne i final build, den hjelper bare med å se hvor jeg kan plassere ting honestly on god */
+    margin: 25px;
+    display: inline-block;
+  }
+
+  .topLeftText {
+    color: rgb(47, 46, 46);
+    position: relative;
+    top: -70px;
+    left: 10px;
+    font-size: 25px;
+  }
+
+  .pContact {
+    color: rgb(47, 46, 46);
+    position: relative;
+    top: -70px;
+    left: 10px;
+    font-size: 20px;
+  }
