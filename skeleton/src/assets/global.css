@@ -24,7 +24,7 @@ footer {
 
   /* Flex-grow willS push the footer down, even without enough content to fill page. */
   header, main {
-    flex-grow:1;
+    flex-grow:0.1;
     padding-left: 10px;
     padding-right: 10px;
   }
@@ -43,3 +43,14 @@ footer {
     color: #fff;
     background-color: #666
   }  
+
+  .box {
+    padding: 75px 0;
+    width: 800px;
+    text-align: left;
+    /*background: #918b8b; */
+    margin: 25px;
+    display: inline-block;
+  }
+
+  
