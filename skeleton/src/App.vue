@@ -13,7 +13,7 @@
     </header>
     
     <!-- The main content of the page, replaced based on the current route -->
-    <router-view></router-view>
+    <router-view id="content"></router-view>
     
     <footer>
       <section id="contact">
