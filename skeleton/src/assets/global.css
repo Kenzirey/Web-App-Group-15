@@ -8,6 +8,13 @@ footer {
     font-size: 14px;
   }
 
+  .top-right-icons {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 1000; /* Ensure it stays on top */
+  }
+  
   #content {
     flex-grow: 1;
   }

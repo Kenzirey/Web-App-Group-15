@@ -1,5 +1,8 @@
 <template>
-  <div class="course-content">
+  
+  <div id="app">
+    <TopRightIcons class="top-right-icons" />
+    <div class="course-content">
     <header>
       <h1>Learniverse Connect</h1>
       <nav>
@@ -10,6 +13,7 @@
           <li><router-link to="/contact">Contact</router-link></li>
         </ul>
       </nav>
+    
     </header>
     
     <!-- The main content of the page, replaced based on the current route -->
@@ -23,15 +27,21 @@
       <p>This website is a result of a university group project performed in the course IDATA2301 Web technologies at NTNU. All the information provided here is a result of imagination. Any resemblance with real companies or products is a coincidence.</p>
     </footer>
   </div>
+</div>
 </template>
 
 <script>
+import TopRightIcons from './components/TopRightIcons.vue';
 export default {
+  
   name: 'App',
+  components: {
+    TopRightIcons
+  }
 };
 </script>
 
-<style scoped>
-@import './assets/global.css';
+<style>
+
 </style>
 
