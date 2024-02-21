@@ -25,6 +25,9 @@ footer {
     flex-direction: column;
   }
   
+  #content h2 {
+    margin-top: 20px;
+  }
 
   /* Flex-grow willS push the footer down, even without enough content to fill page. */
   header, main {
