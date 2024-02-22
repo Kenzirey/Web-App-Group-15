@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@mdi/js": "^7.4.47",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5",
     "vuetify": "^3.4.0-beta.1"
