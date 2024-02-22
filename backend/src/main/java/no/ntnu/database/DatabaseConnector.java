@@ -103,4 +103,21 @@ public class DatabaseConnector {
 	) throws SQLException {
 		executeQuery(sqlQuery, prepareHook, null);
 	}
+
+	/**
+	 * Executes an update (INSERT, UPDATE, DELETE) on the database.
+	 *
+	 * @param sql The SQL statement to execute as a String.
+	 * @param prepareHook A consumer that sets the parameters of the PreparedStatement.
+	 * @return The number of rows affected by the execution.
+	 * @throws SQLException If an error occurs while executing the statement.
+	 */
+	public int executeUpdate(String sql, SqlConsumer<PreparedStatement> prepareHook) throws SQLException {
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			prepareHook.accept(statement);
+			return statement.executeUpdate();
+		} catch (SQLException e) {
+			throw e;
+		}
+	}
 }
