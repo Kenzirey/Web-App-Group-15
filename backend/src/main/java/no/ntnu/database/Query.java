@@ -16,7 +16,11 @@ public enum Query {
 	SEARCH_PRODUCT_PROVIDER_ALL("SELECT * FROM productProvider"),
 	//TODO: what to do about product provider, as it's a composite key.
 	SEARCH_USER_ALL("SELECT * FROM user"),
-	SEARCH_FOR_USER("SELECT * FROM user WHERE userName LIKE ?;");
+	SEARCH_FOR_USER("SELECT * FROM user WHERE userName LIKE ?;"),
+
+	INSERT_COURSE("INSERT INTO Courses (CourseName, CourseDescription, CreatedBy) VALUES (?, ?, ?);"),
+	UPDATE_COURSE("UPDATE Courses SET CourseName = ?, CourseDescription = ? WHERE CourseID = ?;"),
+	DELETE_COURSE("DELETE FROM Courses WHERE CourseID = ?;");
 
 
 
