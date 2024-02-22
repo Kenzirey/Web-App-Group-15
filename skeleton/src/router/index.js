@@ -17,6 +17,9 @@ const routes = [
   { path: '/about', component: AboutPage, name: 'About' },
   { path: '/account', component: AccountPage, name: 'Account' },
   { path: '/favorites', component: CourseFavoriteListPage, name: 'Favorites'},
+  { path: '/admin', component: AdminDashboard, name: 'AdminDashboard' },
+  { path: '/admin/courses', component: AdminCourses, name: 'AdminCourses' },
+  { path: '/admin/users', component: AdminUsers, name: 'AdminUsers' },
   // Define routes for other pages
 ];
 
