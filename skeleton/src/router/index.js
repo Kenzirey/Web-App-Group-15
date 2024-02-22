@@ -7,6 +7,9 @@ import ContactPage from '../pages/ContactPage.vue';
 import AboutPage from '../pages/AboutPage.vue';
 import AccountPage from '../pages/AccountPage.vue';
 import CourseFavoriteListPage from '../pages/CourseFavoriteListPage.vue';
+import AdminDashboard from '../pages/AdminDashboard.vue';
+import AdminCourses from '../pages/AdminCourses.vue';
+import AdminUsers from '../pages/AdminUsers.vue';
 
 
 //Add the routes / paths to the "pages" here.
