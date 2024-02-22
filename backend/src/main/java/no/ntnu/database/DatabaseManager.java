@@ -1,8 +1,11 @@
 package no.ntnu.database;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+
+import no.ntnu.database.sqlfunction.SqlConsumer;
 
 /**
  * Manager for the database, serves as an intermediary between the API & the database.
@@ -157,4 +160,10 @@ public class DatabaseManager {
 				ResultFormatUtil::formatResultAs2dArray
 		);
 	}
+
+	public int executeUpdate(Query query, SqlConsumer<PreparedStatement> prepareHook) throws SQLException {
+		String sql = query.getString();
+		return connector.executeUpdate(sql, prepareHook);
+}
+
 }
