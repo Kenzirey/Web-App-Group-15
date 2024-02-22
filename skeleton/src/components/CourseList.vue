@@ -14,8 +14,8 @@
           <td>{{ course.name }}</td>
           <td>{{ course.description }}</td>
           <td>
-            <button @click="editCourse(course)">Edit</button>
-            <button @click="deleteCourse(course.id)">Delete</button>
+            <button @click="onEditCourse(course)">Edit</button>
+            <button @click="onDeleteCourse(course.id)">Delete</button>
           </td>
         </tr>
       </tbody>
@@ -30,11 +30,12 @@ export default {
     courses: Array,
   },
   methods: {
-    editCourse(course) {
-      // Trigger edit course action
+    onEditCourse(course) {
+      this.$emit('edit-course', course);
     },
-    deleteCourse(courseId) {
-      // Trigger delete course action
+    onDeleteCourse(courseId) {
+      // Emit an event to the parent component
+      this.$emit('delete-course', courseId);
     },
   },
 };
