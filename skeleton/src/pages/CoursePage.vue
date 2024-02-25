@@ -4,7 +4,6 @@
         <v-col cols="12">
           <h1>{{ course.title }}</h1>
           <p>{{ course.description }}</p>
-          <h2><v-textarea label="Label">Test</v-textarea></h2>
           <!-- Add more details about course here, and research v-container, v-col, row etc -->
         </v-col>
       </v-row>
