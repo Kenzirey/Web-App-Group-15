@@ -33,8 +33,4 @@
   }
   </script>
 
-  <style>
-.course-content {
-  padding-top: 64px; /* Adjust based on the actual height of your toolbar */
-}</style>
   

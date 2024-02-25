@@ -27,19 +27,22 @@ In summary, Chuck Norris's greatness lies not just in his physical achievements,
 
         <H2>The Tale of the Bald Mountain Sage</H2>
         <p>
-            In the heart of the ancient mountains, where the peaks pierce the heavens and the air whispers secrets of old, there lived a bald man known to the villagers as the Mountain Sage. His head, as bare as the mountain stones, shone under the sun's embrace, a beacon of wisdom in the wild.
+          <v-carousel>
+  <v-carousel-item
+    src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+    cover
+  ></v-carousel-item>
 
-The sage had not always called the mountains his home. Once, he had been a man of the bustling cities, his life filled with the clamor and clang of civilization. Yet, as the years wove silver threads through his heart, he found himself yearning for something beyond the reach of man-made wonders.
+  <v-carousel-item
+    src="https://cdn.vuetifyjs.com/images/cards/hotel.jpg"
+    cover
+  ></v-carousel-item>
 
-With nothing but the clothes on his back and the resolve in his soul, he ventured into the embrace of the mountains. The journey was arduous, the paths untamed, and the nights unforgiving. Yet, with each step, the weight of his former life fell away, like leaves from a tree in autumn.
-
-The mountains taught him the language of the wind and the stories of the stars. He learned the humility of being just another creature in the vastness of nature. The bald man embraced the mountains, and in return, they gifted him peace.
-
-Years turned, and tales of the sage spread across the lands. Travelers, seekers of wisdom, and those lost in the labyrinth of life made pilgrimages to the mountain. They found the sage in his simple abode, a cabin built from the bounty of the forest, his bald head reflecting the light of the fire, a symbol of his enlightenment.
-
-They asked him of wealth, of love, and of purpose, and to each, he offered answers, not as one who commands but as one who suggests. "Look to the mountains," he would say, "See how they stand tall, not in defiance of the wind, storms, and time, but in harmony with them. Be like the mountain."
-
-And so, the bald man in the mountains lived, a testament to the pursuit of peace and understanding. His legacy, a reminder that sometimes, to find what we seek, we must venture beyond the familiar, embrace the solitude, and listen to the whispers of the world around us.
+  <v-carousel-item
+    src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
+    cover
+  ></v-carousel-item>
+</v-carousel>
         </p>
       </section>
     </div>
@@ -51,6 +54,6 @@ And so, the bald man in the mountains lived, a testament to the pursuit of peace
   };
   </script>
   
-  <style scoped>
+  <style>
   </style>
   

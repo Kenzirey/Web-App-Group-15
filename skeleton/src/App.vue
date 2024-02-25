@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-app>
+    <v-app id="main app">
       <TopToolbar class="toolbar" />
       <div class="course-content">
         <header>
