@@ -1,22 +1,97 @@
 /* Global styles */
 footer {
-    width: 100%;
-    background-color: #333; /* Dark background for contrast */
-    color: #fff; /* Placeholder (light text) */
-    text-align: center; /* Center the text inside the footer */
-    padding: 5px 0; 
-    font-size: 14px;
-  }
+  width: 100%;
+  background-color: #333; /* Dark background for contrast */
+  color: #fff; /* Placeholder (light text) */
+  text-align: center; /* Center the text inside the footer */
+  padding: 5px 0; 
+  font-size: 14px;
+}
 
-  #main-app {
+#main-app {
+  display: flex;
+  flex-direction: column; /* Stacks children vertically */
+  height: 100%; /* Ensure it takes the full height of its container */
+}
+
+#content {
+  flex-grow: 1;
+}
+
+#suggestions-container {
+  position: relative;
+  justify-content: center;
+}
+
+#topbar-left {
+  justify-content: flex-start;
+}
+
+#topbar-right {
+  justify-content: flex-end;
+}
+
+#suggestions-container, #topbar-left, #topbar-right {
+  display: flex;
+  align-items: center;
+}
+
+#bar {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  width: 100%;
+}
+
+/* Search css */
+#app-bar {
+  overflow: visible;
+}
+
+#search-suggestions-center-align {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 0;
+}
+
+#search-suggestions {
+    position: relative;
+    display: none;
+    height: 40vw;
+    max-height: 80vh;
+    width: 40vw;
+    left: -20vw;
+}
+
+#courses-suggestions {
+    background-color: #FF0000;
     display: flex;
-    flex-direction: column; /* Stacks children vertically */
-    height: 100%; /* Ensure it takes the full height of its container */
-  }
-  
-  #content {
-    flex-grow: 1;
-  }
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 1;
+    grid-row-end: 1;
+}
+
+#providers-suggestions {
+    background-color: #00FF00;
+    display: flex;
+    grid-column-start: 1;
+    grid-column-end: 1;
+    grid-row-start: 2;
+    grid-row-end: 2;
+}
+
+#all-suggestions {
+    background-color: #0000FF;
+    display: flex;
+    grid-column-start: 2;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
+
+/* End of search css */
 
   /*
   * Added padding for the placeholder test section, to pad between it and the footer.
