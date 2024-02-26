@@ -1,12 +1,13 @@
 package no.ntnu.database;
 
-import org.junit.Assert;
-import org.junit.Test;
+
 
 import java.net.URL;
 import java.nio.file.Paths;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import org.junit.Assert;
+import org.junit.Test;
 
 import static no.ntnu.database.ScriptUtility.getMySqlDataSourceTest;
 
