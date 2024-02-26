@@ -20,7 +20,17 @@ public enum Query {
 
 	INSERT_COURSE("INSERT INTO Courses (CourseName, CourseDescription, CreatedBy) VALUES (?, ?, ?);"),
 	UPDATE_COURSE("UPDATE Courses SET CourseName = ?, CourseDescription = ? WHERE CourseID = ?;"),
-	DELETE_COURSE("DELETE FROM Courses WHERE CourseID = ?;");
+	DELETE_COURSE("DELETE FROM Courses WHERE CourseID = ?;"),
+
+	INSERT_2FA_SECRET("INSERT INTO users_2fa (username, two_factor_secret) VALUES (?, ?);"),
+    GET_2FA_SECRET("SELECT two_factor_secret FROM users_2fa WHERE username = ?;"),
+    SET_2FA_ENABLED("UPDATE users SET is_2fa_enabled = ? WHERE username = ?;"),
+    GET_2FA_ENABLED("SELECT is_2fa_enabled FROM users WHERE username = ?;"),
+	CREATE_USERS_2FA_TABLE("CREATE TABLE IF NOT EXISTS users_2fa (" +
+	"username VARCHAR(255) PRIMARY KEY," +
+	"two_factor_secret VARCHAR(255)," +
+	"is_2fa_enabled BOOLEAN DEFAULT FALSE" +
+	");");
 
 
 
