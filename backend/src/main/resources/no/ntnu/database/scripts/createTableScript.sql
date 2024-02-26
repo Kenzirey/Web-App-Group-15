@@ -68,3 +68,11 @@ CREATE TABLE favorite (
                           FOREIGN KEY (userId) REFERENCES user(userId),
                           FOREIGN KEY (productId) REFERENCES product (productId)
 );
+
+-- users_2fa table
+CREATE TABLE IF NOT EXISTS users_2fa (
+                           username VARCHAR(255) NOT NULL,
+                           two_factor_secret VARCHAR(255),
+                           is_2fa_enabled BOOLEAN NOT NULL DEFAULT FALSE,
+                           PRIMARY KEY (username)
+)                          ENGINE=InnoDB DEFAULT CHARSET=utf8;
