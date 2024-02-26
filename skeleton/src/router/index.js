@@ -27,7 +27,7 @@ const routes = [
 ];
 
 /**
- * Creates a router instance, to navigate the Vue application.  
+ * Creates a router instance, to navigate the Vue application.
  */
 const router = createRouter({
   history: createWebHistory(),
