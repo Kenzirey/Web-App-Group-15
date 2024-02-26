@@ -187,12 +187,12 @@ public class DatabaseManager {
 	 * @throws SQLException If an error occurs during the database update operation.
 	 */
 	public void saveUser2FASecretKey(String username, String secretKey) throws SQLException {
-        String sql = Query.INSERT_2FA_SECRET.getString();
-        executeUpdate(sql, statement -> {
-            statement.setString(1, username);
-            statement.setString(2, secretKey);
-        });
-    }
+		String sql = Query.INSERT_2FA_SECRET.getString();
+		executeUpdate(sql, statement -> {
+			statement.setString(1, username);
+			statement.setString(2, secretKey);
+		});
+	}
 	
 	/**
 	 * Retrieves the 2FA secret key for a user from the database.
@@ -202,15 +202,15 @@ public class DatabaseManager {
 	 * @throws SQLException If an error occurs during the database query operation.
 	 */
 
-    public String get2FASecretKey(String username) throws SQLException {
-        String sql = Query.GET_2FA_SECRET.getString();
-        return executeQuery(sql, statement -> statement.setString(1, username), resultSet -> {
-            if (resultSet.next()) {
-                return resultSet.getString("two_factor_secret");
-            }
-            return null;
-        });
-    }
+	public String get2FASecretKey(String username) throws SQLException {
+		String sql = Query.GET_2FA_SECRET.getString();
+		return executeQuery(sql, statement -> statement.setString(1, username), resultSet -> {
+			if (resultSet.next()) {
+				return resultSet.getString("two_factor_secret");
+			}
+			return null;
+		});
+	}
 
 		
 	/**
@@ -221,13 +221,13 @@ public class DatabaseManager {
 	 * @throws SQLException If an error occurs during the database update operation.
 	 */
 
-    public void set2FAEnabled(String username, boolean isEnabled) throws SQLException {
-        String sql = Query.SET_2FA_ENABLED.getString();
-        executeUpdate(sql, statement -> {
-            statement.setBoolean(1, isEnabled);
-            statement.setString(2, username);
-        });
-    }
+	public void set2FAEnabled(String username, boolean isEnabled) throws SQLException {
+		String sql = Query.SET_2FA_ENABLED.getString();
+		executeUpdate(sql, statement -> {
+			statement.setBoolean(1, isEnabled);
+			statement.setString(2, username);
+		});
+	}
 
 		
 	/**
@@ -237,25 +237,25 @@ public class DatabaseManager {
 	 * @return The 2FA enabled status.
 	 * @throws SQLException If an error occurs during the database query operation.
 	 */
-    public boolean get2FAEnabled(String username) throws SQLException {
-        String sql = Query.GET_2FA_ENABLED.getString();
-        return executeQuery(sql, statement -> statement.setString(1, username), resultSet -> {
-            if (resultSet.next()) {
-                return resultSet.getBoolean("is_2fa_enabled");
-            }
-            return false;
-        });
-    }
+	public boolean get2FAEnabled(String username) throws SQLException {
+		String sql = Query.GET_2FA_ENABLED.getString();
+		return executeQuery(sql, statement -> statement.setString(1, username), resultSet -> {
+			if (resultSet.next()) {
+				return resultSet.getBoolean("is_2fa_enabled");
+			}
+			return false;
+		});
+	}
 
 	/**
 	 * Creates the 2FA table in the database if it does not exist.
 	 *
 	 * @throws SQLException If an error occurs during the database update operation.
 	 */
-    public void create2FATable() throws SQLException {
-        String sql = Query.CREATE_USERS_2FA_TABLE.getString();
-        executeUpdate(sql, PreparedStatement::execute);
-    }
+	public void create2FATable() throws SQLException {
+		String sql = Query.CREATE_USERS_2FA_TABLE.getString();
+		executeUpdate(sql, PreparedStatement::execute);
+	}
 
 
 	/**
@@ -268,9 +268,9 @@ public class DatabaseManager {
 	 */
 	public int executeUpdate(String sql, SqlConsumer<PreparedStatement> prepareStatement) throws SQLException {
 
-        return this.connector.executeUpdate(sql, prepareStatement);
-    }
-    
+		return this.connector.executeUpdate(sql, prepareStatement);
+	}
+	
 
 	/**
 	 * Executes a query operation with the given SQL string.
