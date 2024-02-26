@@ -1,13 +1,9 @@
 package no.ntnu.database;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
-import no.ntnu.database.sqlfunction.SqlConsumer;
-import no.ntnu.database.sqlfunction.SqlFunction;
+import no.ntnu.dto.Course;
 
 /**
  * Manager for the database, serves as an intermediary between the API & the database.
@@ -16,15 +12,14 @@ public class DatabaseManager {
 	private static DatabaseManager instance;
 
 	private final DatabaseConnector connector;
-	//TODO: rename this to a more fitting constant name. Henrik, suggestions?
-	private static final String WIZARDRY = "%%%s%%";
+	private static final String SEARCH_QUERY_BASE = "%%%s%%";
 
 	/**
 	 * Creates the database manager.
 	 *
 	 * @param url      The url of the database to connect to
 	 * @param username The username of the user to log in as
-	 * @param password The password of the user to long in as
+	 * @param password The password of the user to log in as
 	 * @throws ClassNotFoundException If MySQL server drivers are not installed on this device
 	 * @throws SQLException           If a connection to a database could not be
 	 *                                established with the given credentials
@@ -67,6 +62,8 @@ public class DatabaseManager {
 		instance = new DatabaseManager(dbUrl, dbUsername, dbPassword);
 	}
 
+	// INFO QUERY OPERATIONS:
+
 	/**
 	 * Gets all categories.
 	 *
@@ -83,14 +80,17 @@ public class DatabaseManager {
 	/**
 	 * Searches for a specific category.
 	 *
-	 * @param category   The search query to use when searching for categories
+	 * @param category The search query to use when searching for categories
 	 * @return Any categories that match the search query
 	 * @throws SQLException If an exception occurs when sending the SQL query
 	 */
 	public List<Map<String, String>> searchCategory(String category) throws SQLException {
 		return connector.executeQuery(
 				Query.SEARCH_FOR_CATEGORY,
-				statement -> statement.setString(1, String.format(WIZARDRY, category)),
+				statement -> statement.setString(
+						1,
+						String.format(SEARCH_QUERY_BASE, category)
+				),
 				ResultFormatUtil::formatResultAs2dArray
 		);
 	}
@@ -99,7 +99,6 @@ public class DatabaseManager {
 	 * Gets all course providers.
 	 *
 	 * @return returns all course providers.
-	 *
 	 * @throws SQLException If an exception occurs when sending the SQL query.
 	 */
 	public List<Map<String, String>> getAllCourseProviders() throws SQLException {
@@ -113,16 +112,17 @@ public class DatabaseManager {
 	 * Searches for a specific course provider.
 	 *
 	 * @param courseProvider The search query to use when searching for course providers.
-	 *
 	 * @return Any course providers that match the search query.
-	 *
 	 * @throws SQLException If an exception occurs when sending the SQL query.
 	 */
 	public List<Map<String, String>> searchCourseProvider(String courseProvider)
 			throws SQLException {
 		return connector.executeQuery(
 				Query.SEARCH_FOR_COURSE_PROVIDER,
-				statement -> statement.setString(1, String.format(WIZARDRY, courseProvider)),
+				statement -> statement.setString(
+						1,
+						String.format(SEARCH_QUERY_BASE, courseProvider)
+				),
 				//This is the same as:
 				//resultSet -> ResultFormatUtil.formatResultAs2dArray(resultSet)
 				//method reference, where method's implementation is passed as an argument.
@@ -136,7 +136,6 @@ public class DatabaseManager {
 	 * Gets all products (courses).
 	 *
 	 * @return returns all products (courses).
-	 *
 	 * @throws SQLException If an exception occurs when sending the SQL query.
 	 */
 	public List<Map<String, String>> getAllProducts() throws SQLException {
@@ -150,50 +149,94 @@ public class DatabaseManager {
 	 * Searches for a specific product (course).
 	 *
 	 * @param product The search query to use when searching for products (courses).
-	 *
 	 * @return returns any products (courses) that match the search query.
-	 *
 	 * @throws SQLException If an exception occurs when sending the SQL query.
 	 */
-	public  List<Map<String, String>> searchProduct(String product) throws SQLException {
+	public List<Map<String, String>> searchProduct(String product) throws SQLException {
 		return connector.executeQuery(
 				Query.SEARCH_FOR_PRODUCT,
-				statement -> statement.setString(1, String.format(WIZARDRY, product)),
+				statement -> statement.setString(1, String.format(SEARCH_QUERY_BASE, product)),
 				ResultFormatUtil::formatResultAs2dArray
 		);
 	}
 
 	/**
-	 * Executes a database update operation such as INSERT, UPDATE, or DELETE.
-	 *
-	 * @param query The enumeration of the SQL query to be executed.
-	 * @param prepareHook A functional interface to set the parameters of the PreparedStatement.
-	 * @return The number of rows affected by the operation.
-	 * @throws SQLException If an error occurs during the database update execution.
-	 */
-	public int executeUpdate(Query query, SqlConsumer<PreparedStatement> prepareHook) throws SQLException {
-
-		String sql = query.getString();
-		return connector.executeUpdate(sql, prepareHook);
-	}
-	
-	
-
-	/**
 	 * Stores the 2FA secret key for a user in the database.
 	 *
-	 * @param username The username for which the 2FA secret key is to be saved.
+	 * @param username  The username for which the 2FA secret key is to be saved.
 	 * @param secretKey The secret key to be stored.
 	 * @throws SQLException If an error occurs during the database update operation.
 	 */
-	public void saveUser2FASecretKey(String username, String secretKey) throws SQLException {
-		String sql = Query.INSERT_2FA_SECRET.getString();
-		executeUpdate(sql, statement -> {
+	public void saveUser2FaSecretKey(String username, String secretKey) throws SQLException {
+		connector.executeUpdate(Query.INSERT_2FA_SECRET, statement -> {
 			statement.setString(1, username);
 			statement.setString(2, secretKey);
 		});
 	}
-	
+
+	// ADMIN CREATE / DELETE OPERATIONS
+
+	/**
+	 * <p>Inserts a new course into the {@code Course} table.</p>
+	 * <p>This returns {@code false} if the course already exists, {@code true} otherwise</p>
+	 *
+	 * @param course The course to add
+	 * @return If the operation changed anything in the database
+	 * @throws SQLException If an error occurs during the database update operation.
+	 */
+	public boolean insertCourse(
+			Course course
+	) throws SQLException {
+		return connector.executeUpdate(
+				Query.INSERT_COURSE,
+				statement -> {
+					statement.setString(1, course.getName());
+					statement.setString(2, course.getDescription());
+					statement.setInt(3, course.getCreatedBy());
+				}
+		) > 0;
+	}
+
+	/**
+	 * <p>Removes an existing course from the {@code Course} table.</p>
+	 * <p>This returns {@code false} if the course does not exist, {@code true} otherwise</p>
+	 *
+	 * @param courseId The ID of the course to remove
+	 * @return If the operation changed anything in the database
+	 * @throws SQLException If an error occurs during the database update operation.
+	 */
+	public boolean removeCourse(int courseId) throws SQLException {
+		return connector.executeUpdate(
+				Query.DELETE_COURSE,
+				statement -> statement.setInt(3, courseId)
+		) > 0;
+	}
+
+	/**
+	 * <p>Updates an existing course into the {@code Course} table.</p>
+	 * <p>This returns {@code false} if the course was already updated, {@code true} otherwise</p>
+	 *
+	 * @param courseId The ID of the course to update
+	 * @param newCourse The new & updated course
+	 * @return If the operation changed anything in the database
+	 * @throws SQLException If an error occurs during the database update operation.
+	 */
+	public boolean updateCourse(
+			int courseId,
+			Course newCourse
+	) throws SQLException {
+		return connector.executeUpdate(
+				Query.UPDATE_COURSE,
+				statement -> {
+					statement.setString(1, newCourse.getName());
+					statement.setString(2, newCourse.getDescription());
+					statement.setInt(3, courseId);
+				}
+		) > 0;
+	}
+
+	// 2FA OPERATIONS
+
 	/**
 	 * Retrieves the 2FA secret key for a user from the database.
 	 *
@@ -202,34 +245,36 @@ public class DatabaseManager {
 	 * @throws SQLException If an error occurs during the database query operation.
 	 */
 
-	public String get2FASecretKey(String username) throws SQLException {
-		String sql = Query.GET_2FA_SECRET.getString();
-		return executeQuery(sql, statement -> statement.setString(1, username), resultSet -> {
-			if (resultSet.next()) {
-				return resultSet.getString("two_factor_secret");
-			}
-			return null;
-		});
+	public String get2FaSecretKey(String username) throws SQLException {
+		return connector.executeQuery(
+				Query.GET_2FA_SECRET,
+				statement -> statement.setString(1, username),
+				resultSet -> {
+					String twoFaSecret = null;
+					if (resultSet.next()) {
+						twoFaSecret = resultSet.getString("two_factor_secret");
+					}
+					return twoFaSecret;
+				});
 	}
 
-		
+
 	/**
 	 * Updates the 2FA enabled status for a user in the database.
 	 *
-	 * @param username The username for which the 2FA status is to be updated.
+	 * @param username  The username for which the 2FA status is to be updated.
 	 * @param isEnabled The new 2FA enabled status to be set.
 	 * @throws SQLException If an error occurs during the database update operation.
 	 */
 
-	public void set2FAEnabled(String username, boolean isEnabled) throws SQLException {
-		String sql = Query.SET_2FA_ENABLED.getString();
-		executeUpdate(sql, statement -> {
+	public void set2FaEnabled(String username, boolean isEnabled) throws SQLException {
+		connector.executeUpdate(Query.SET_2FA_ENABLED, statement -> {
 			statement.setBoolean(1, isEnabled);
 			statement.setString(2, username);
 		});
 	}
 
-		
+
 	/**
 	 * Retrieves the 2FA enabled status for a user from the database.
 	 *
@@ -237,52 +282,28 @@ public class DatabaseManager {
 	 * @return The 2FA enabled status.
 	 * @throws SQLException If an error occurs during the database query operation.
 	 */
-	public boolean get2FAEnabled(String username) throws SQLException {
-		String sql = Query.GET_2FA_ENABLED.getString();
-		return executeQuery(sql, statement -> statement.setString(1, username), resultSet -> {
-			if (resultSet.next()) {
-				return resultSet.getBoolean("is_2fa_enabled");
-			}
-			return false;
-		});
+	public boolean get2FaEnabled(String username) throws SQLException {
+		return connector.executeQuery(
+				Query.GET_2FA_ENABLED,
+				statement -> statement.setString(1, username),
+				resultSet -> {
+					boolean twoFaEnabled = false;
+					if (resultSet.next()) {
+						twoFaEnabled = resultSet.getBoolean("is_2fa_enabled");
+					}
+					return twoFaEnabled;
+				}
+		);
 	}
 
 	/**
 	 * Creates the 2FA table in the database if it does not exist.
 	 *
 	 * @throws SQLException If an error occurs during the database update operation.
+	 * @deprecated Table should already exist, creating it should be done in advance in sql script
 	 */
-	public void create2FATable() throws SQLException {
-		String sql = Query.CREATE_USERS_2FA_TABLE.getString();
-		executeUpdate(sql, PreparedStatement::execute);
-	}
-
-
-	/**
-	 * Executes an update operation with the given SQL string.
-	 *
-	 * @param sql The SQL statement to execute as a String.
-	 * @param prepareStatement A consumer that sets the parameters of the PreparedStatement.
-	 * @return The number of rows affected by the execution.
-	 * @throws SQLException If an error occurs while executing the statement.
-	 */
-	public int executeUpdate(String sql, SqlConsumer<PreparedStatement> prepareStatement) throws SQLException {
-
-		return this.connector.executeUpdate(sql, prepareStatement);
-	}
-	
-
-	/**
-	 * Executes a query operation with the given SQL string.
-	 *
-	 * @param sql The SQL query to execute as a String.
-	 * @param prepareStatement A consumer that sets the parameters of the PreparedStatement.
-	 * @param handleResultSet A function to process the ResultSet.
-	 * @param <T> The return type of the result processing function.
-	 * @return The processed result.
-	 * @throws SQLException If an error occurs while executing the query.
-	 */
-	public <T> T executeQuery(String sql, SqlConsumer<PreparedStatement> prepareStatement, SqlFunction<ResultSet, T> handleResultSet) throws SQLException {
-		return this.connector.executeQuery(sql, prepareStatement, handleResultSet);
+	@Deprecated(since = "1.0.0-SNAPSHOT", forRemoval = true)
+	public void create2FaTable() throws SQLException {
+		connector.executeUpdate(Query.CREATE_USERS_2FA_TABLE, null);
 	}
 }

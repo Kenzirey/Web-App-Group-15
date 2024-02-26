@@ -24,7 +24,7 @@ public class UserService {
 	 */
 	public void saveUser2FASecretKey(String username, String secretKey)
 		throws SQLException {
-		databaseManager.saveUser2FASecretKey(username, secretKey);
+		databaseManager.saveUser2FaSecretKey(username, secretKey);
 	}
 
 	/**
@@ -35,7 +35,7 @@ public class UserService {
 	 * @throws SQLException If an SQL exception occurs.
 	 */
 	public String get2FASecretKey(String username) throws SQLException {
-		return databaseManager.get2FASecretKey(username);
+		return databaseManager.get2FaSecretKey(username);
 	}
 
 	
@@ -48,7 +48,7 @@ public class UserService {
 	 */
 	public void set2FAEnabled(String username, boolean isEnabled)
 		throws SQLException {
-		databaseManager.set2FAEnabled(username, isEnabled);
+		databaseManager.set2FaEnabled(username, isEnabled);
 	}
 
 	/**
@@ -59,7 +59,7 @@ public class UserService {
 	 * @throws SQLException If an SQL exception occurs.
 	 */
 	public boolean get2FAEnabled(String username) throws SQLException {
-		return databaseManager.get2FAEnabled(username);
+		return databaseManager.get2FaEnabled(username);
 	}
 
 	/**

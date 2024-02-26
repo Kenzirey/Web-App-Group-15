@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import no.ntnu.database.sqlfunction.SqlConsumer;
 import no.ntnu.database.sqlfunction.SqlFunction;
 
@@ -32,36 +31,24 @@ public class DatabaseConnector {
 	}
 
 	/**
-	 * Executes an SQL query, and returns the result.
-	 * If no result hook is provided, this method will return {@code null}.
+	 * <p>Executes an SQL query with no dynamic parameters, and returns the result.
+	 * If no result hook is provided, this method will return {@code null}.</p>
+	 * <p>This method is equivalent of calling
+	 * {@link #executeQuery(Query, SqlConsumer, SqlFunction)}
+	 * with {@code executeQuery(sqlQuery, null, resultHook)}</p>
 	 *
 	 * @param sqlQuery   The query to execute
 	 * @param resultHook Function to handle the result, before it is closed
 	 * @param <T>        The return type of the result hook
 	 * @return The result from the query
 	 * @throws SQLException If an exception occurs when sending the query
-	 * @see #executeQuery(Query)
+	 * @see #executeQuery(Query, SqlConsumer, SqlFunction)
 	 */
-	public <T> T executeQuery(Query sqlQuery, SqlFunction<ResultSet, T> resultHook)
-			throws SQLException {
-		try (Statement connector = connection.createStatement()) {
-			T result = null;
-			if (resultHook != null) {
-				result = resultHook.apply(connector.executeQuery(sqlQuery.getString()));
-			}
-			return result;
-		}
-	}
-
-	/**
-	 * Executes an SQL query.
-	 *
-	 * @param sqlQuery The query to execute
-	 * @throws SQLException If an exception occurs when sending the query
-	 * @see #executeQuery(Query, SqlFunction)
-	 */
-	public void executeQuery(Query sqlQuery) throws SQLException {
-		executeQuery(sqlQuery, (SqlFunction<ResultSet, Object>) null);
+	public <T> T executeQuery(
+			Query sqlQuery,
+			SqlFunction<ResultSet, T> resultHook
+	) throws SQLException {
+		return executeQuery(sqlQuery, null, resultHook);
 	}
 
 	/**
@@ -75,29 +62,43 @@ public class DatabaseConnector {
 	 * @param <T>         The return type of the result hook
 	 * @return The result from the query
 	 * @throws SQLException If an exception occurs when sending the query
+	 * @see #executeQuery(Query, SqlFunction)
 	 */
 	public <T> T executeQuery(
 			Query sqlQuery,
 			SqlConsumer<PreparedStatement> prepareHook,
 			SqlFunction<ResultSet, T> resultHook
 	) throws SQLException {
-		PreparedStatement statement = connection.prepareStatement(sqlQuery.getString());
-		prepareHook.accept(statement);
 		T result = null;
-		if (resultHook != null && statement.execute()) {
-			result = resultHook.apply(statement.getResultSet());
+		try (PreparedStatement statement = connection.prepareStatement(sqlQuery.getString())) {
+			if (prepareHook != null) {
+				prepareHook.accept(statement);
+			}
+			if (resultHook != null && statement.execute()) {
+				result = resultHook.apply(statement.getResultSet());
+			}
 		}
+
 		return result;
 	}
 
 	/**
-	 * Executes an SQL query with parameters.
+	 * (TODO) Jonas: Don't use string as query, it's vulnerable to injections.
+	 * <br/>(TODO) use a pre-defined Query (enum), and fill in parameters with a prepareHook
 	 *
-	 * @param sqlQuery    The query to execute
-	 * @param prepareHook Consumer that allows assigning query parameters
-	 * @throws SQLException If an exception occurs when sending the query
+	 * @param sql              Don't pass a string here
+	 * @param prepareStatement .
+	 * @param handleResultSet  .
+	 * @param <T>              .
+	 * @return .
+	 * @deprecated Use {@link #executeQuery(Query, SqlConsumer, SqlFunction)} instead.
 	 */
-	public <T> T executeQuery(String sql, SqlConsumer<PreparedStatement> prepareStatement, SqlFunction<ResultSet, T> handleResultSet) throws SQLException {
+	@Deprecated(since = "1.0.0-SNAPSHOT", forRemoval = true)
+	public <T> T executeQuery(
+			String sql,
+			SqlConsumer<PreparedStatement> prepareStatement,
+			SqlFunction<ResultSet, T> handleResultSet
+	) throws SQLException {
 		try (PreparedStatement statement = connection.prepareStatement(sql)) {
 			prepareStatement.accept(statement);
 			try (ResultSet resultSet = statement.executeQuery()) {
@@ -109,17 +110,20 @@ public class DatabaseConnector {
 	/**
 	 * Executes an update (INSERT, UPDATE, DELETE) on the database.
 	 *
-	 * @param sql The SQL statement to execute as a String.
+	 * @param sql         The SQL statement to execute as a String.
 	 * @param prepareHook A consumer that sets the parameters of the PreparedStatement.
 	 * @return The number of rows affected by the execution.
 	 * @throws SQLException If an error occurs while executing the statement.
 	 */
-	public int executeUpdate(String sql, SqlConsumer<PreparedStatement> prepareHook) throws SQLException {
-		try (PreparedStatement statement = connection.prepareStatement(sql)) {
-			prepareHook.accept(statement);
+	public int executeUpdate(
+			Query sql,
+			SqlConsumer<PreparedStatement> prepareHook
+	) throws SQLException {
+		try (PreparedStatement statement = connection.prepareStatement(sql.getString())) {
+			if (prepareHook != null) {
+				prepareHook.accept(statement);
+			}
 			return statement.executeUpdate();
-		} catch (SQLException e) {
-			throw e;
 		}
 	}
 }
