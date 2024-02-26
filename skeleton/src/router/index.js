@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '../pages/HomePage.vue';
 import CoursePage from '../pages/CoursePage.vue';
 import ContactPage from '../pages/ContactPage.vue';
-import FormsPage from '../pages/FormsPage.vue';
+//import FormsPage from '../pages/FormsPage.vue';
 import AboutPage from '../pages/AboutPage.vue';
 import AccountPage from '../pages/AccountPage.vue';
 import CourseFavoriteListPage from '../pages/CourseFavoriteListPage.vue';
