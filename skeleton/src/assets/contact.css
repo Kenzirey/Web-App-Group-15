@@ -1,6 +1,4 @@
 
-
-
 .box {
     /*Hvit box med svart tekst og border  */
     padding: 75px 0;
@@ -23,7 +21,7 @@
 
   .topLeftText {
     /* color: rgb(47, 46, 46); */
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     position: relative;
     top: -70px;
     left: 10px;
@@ -32,7 +30,7 @@
 
   .pContact {
     /*color: rgb(47, 46, 46); */
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     position: relative;
     top: -70px;
     left: 10px;
