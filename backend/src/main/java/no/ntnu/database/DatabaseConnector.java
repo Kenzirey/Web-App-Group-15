@@ -97,11 +97,13 @@ public class DatabaseConnector {
 	 * @param prepareHook Consumer that allows assigning query parameters
 	 * @throws SQLException If an exception occurs when sending the query
 	 */
-	public void executeQuery(
-			Query sqlQuery,
-			SqlConsumer<PreparedStatement> prepareHook
-	) throws SQLException {
-		executeQuery(sqlQuery, prepareHook, null);
+	public <T> T executeQuery(String sql, SqlConsumer<PreparedStatement> prepareStatement, SqlFunction<ResultSet, T> handleResultSet) throws SQLException {
+		try (PreparedStatement statement = connection.prepareStatement(sql)) {
+			prepareStatement.accept(statement);
+			try (ResultSet resultSet = statement.executeQuery()) {
+				return handleResultSet.apply(resultSet);
+			}
+		}
 	}
 
 	/**
