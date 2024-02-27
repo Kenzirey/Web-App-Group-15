@@ -10,7 +10,6 @@
               <li><router-link to="/course"><v-btn color="primary">Go to Course Page</v-btn></router-link></li>
               <li><router-link to="/about">About Us</router-link></li>
               <li><router-link to="/contact">Contact</router-link></li>
-              <li><router-link to="/forms">Forms</router-link></li>
             </ul>
           </nav>
         </header>

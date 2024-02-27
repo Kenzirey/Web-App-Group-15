@@ -19,6 +19,12 @@
   </form>
 </template>
 
+
+<style>
+  @import '../assets/forms.css';
+</style>
+
+
 <script>
 export default {
   name: 'UserForm',
