@@ -2,7 +2,7 @@
 -- We need a fetch method to get the ID of the category, so we can use it in the product table
 
 -- 1.
-INSERT INTO product (courseTitle,
+INSERT INTO course (courseTitle,
                      difficultyLevel,
                      courseStartDate,
                      courseEndDate,
@@ -27,7 +27,7 @@ ensuring you not only grasp the theoretical underpinnings but also gain the prof
 expertise to new heights and stay ahead in the ever-evolving landscape of real-time systems with our comprehensive and immersive course.');
 
 -- 2.
-INSERT INTO product (courseTitle,
+INSERT INTO course (courseTitle,
                      difficultyLevel,
                      courseStartDate,
                      courseEndDate,
@@ -52,7 +52,7 @@ this course offers an accessible entry point into the world of SQL, setting the 
        );
 
 -- 3.
-INSERT INTO product (courseTitle,
+INSERT INTO course (courseTitle,
                      difficultyLevel,
                      courseStartDate,
                      courseEndDate,
@@ -79,7 +79,7 @@ web application development with .NET, setting you on a path to create dynamic a
        );
 
 -- 4.
-INSERT INTO product (courseTitle,
+INSERT INTO course (courseTitle,
                      difficultyLevel,
                      courseStartDate,
                      courseEndDate,
@@ -105,7 +105,7 @@ Join us on this educational journey and unlock the potential of cloud technology
        );
 
 -- 5.
-INSERT INTO product (courseTitle,
+INSERT INTO course (courseTitle,
                      difficultyLevel,
                      courseStartDate,
                      courseEndDate,
@@ -133,7 +133,7 @@ Join us on this transformative journey towards advanced Azure proficiency'
        );
 
 -- 6.
-INSERT INTO product (courseTitle,
+INSERT INTO course (courseTitle,
                      difficultyLevel,
                      courseStartDate,
                      courseEndDate,
@@ -159,7 +159,7 @@ Join us in this educational journey, and initiate your AWS Cloud Practitioner ce
        );
 
 -- 7.
-INSERT INTO product (courseTitle,
+INSERT INTO course (courseTitle,
                      difficultyLevel,
                      courseStartDate,
                      courseEndDate,
@@ -184,7 +184,7 @@ this course equips you with the skills and knowledge needed to navigate the comp
        );
 
 -- 8.
-INSERT INTO product (courseTitle,
+INSERT INTO course (courseTitle,
                      difficultyLevel,
                      courseStartDate,
                      courseEndDate,
@@ -212,7 +212,7 @@ VALUES (
        );
 
 -- 9.
-INSERT INTO product (courseTitle,
+INSERT INTO course (courseTitle,
                      difficultyLevel,
                      courseStartDate,
                      courseEndDate,
@@ -239,7 +239,7 @@ Join us in this transformative learning journey and elevate your strategic acume
        );
 
 -- 10.
-INSERT INTO product (courseTitle,
+INSERT INTO course (courseTitle,
                      difficultyLevel,
                      courseStartDate,
                      courseEndDate,
@@ -266,7 +266,7 @@ journey into the world of intelligent algorithms. Join us and demystify the basi
        );
 
 -- 11.
-INSERT INTO product (courseTitle,
+INSERT INTO course (courseTitle,
                      difficultyLevel,
                      courseStartDate,
                      courseEndDate,
@@ -293,7 +293,7 @@ Join us in this intermediate-level course, and unlock the potential of image rec
        );
 
 -- 12.
-INSERT INTO product (courseTitle,
+INSERT INTO course (courseTitle,
                      difficultyLevel,
                      courseStartDate,
                      courseEndDate,

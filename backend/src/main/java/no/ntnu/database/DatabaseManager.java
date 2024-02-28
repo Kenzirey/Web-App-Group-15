@@ -133,12 +133,12 @@ public class DatabaseManager {
 	}
 
 	/**
-	 * Gets all products (courses).
+	 * Returns all courses.
 	 *
-	 * @return returns all products (courses).
+	 * @return returns all courses.
 	 * @throws SQLException If an exception occurs when sending the SQL query.
 	 */
-	public List<Map<String, String>> getAllProducts() throws SQLException {
+	public List<Map<String, String>> getCourses() throws SQLException {
 		return connector.executeQuery(
 				Query.SEARCH_PRODUCT_ALL,
 				ResultFormatUtil::formatResultAs2dArray
@@ -148,14 +148,14 @@ public class DatabaseManager {
 	/**
 	 * Searches for a specific product (course).
 	 *
-	 * @param product The search query to use when searching for products (courses).
+	 * @param course The search query to use when searching for products (courses).
 	 * @return returns any products (courses) that match the search query.
 	 * @throws SQLException If an exception occurs when sending the SQL query.
 	 */
-	public List<Map<String, String>> searchProduct(String product) throws SQLException {
+	public List<Map<String, String>> searchCourse(String course) throws SQLException {
 		return connector.executeQuery(
 				Query.SEARCH_FOR_PRODUCT,
-				statement -> statement.setString(1, String.format(SEARCH_QUERY_BASE, product)),
+				statement -> statement.setString(1, String.format(SEARCH_QUERY_BASE, course)),
 				ResultFormatUtil::formatResultAs2dArray
 		);
 	}
