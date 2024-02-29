@@ -1,5 +1,7 @@
 package no.ntnu.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,11 @@ public class CourseProviderController {
 	 *     </ul>
 	 */
 	@GetMapping("/course-providers")
+	@Operation(
+			summary = "Get all course providers",
+			description = "Get all course providers available in the database."
+					+ " Or 503 UNAVAILABLE if a database access error occurs."
+	)
 	public ResponseEntity<List<Map<String, String>>> getAllCourseProviders() {
 		ResponseEntity<List<Map<String, String>>> response;
 		try {
@@ -61,13 +68,13 @@ public class CourseProviderController {
 	@GetMapping("/course-providers/{query}")
 	//a list of maps, because we want key/value pairs. And key/value are both strings.
 	public ResponseEntity<List<Map<String, String>>> searchCourseProvider(
+			@Parameter(description = "The query to use when searching for course providers")
 			@PathVariable String query) {
 		//ResponseEntity should match the return type of the method.
 		ResponseEntity<List<Map<String, String>>> response;
 		try {
 			List<Map<String, String>> result
 					= DatabaseManager.getInstance().searchCourseProvider(query);
-			//variable = (condition) ? expressionTrue : expressionFalse;
 			//If result is null, builds a response entity with an error code.
 			//If not null, sends an OK response with the result.
 			response = result == null

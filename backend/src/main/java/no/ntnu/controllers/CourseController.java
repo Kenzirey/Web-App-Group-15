@@ -1,5 +1,7 @@
 package no.ntnu.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
  * Controller for product endpoints.
  */
 @RestController
-public class ProductController {
-	private static final Logger LOGGER = Logger.getLogger(ProductController.class.getName());
+public class CourseController {
+	private static final Logger LOGGER = Logger.getLogger(CourseController.class.getName());
 
 	/**
 	 * Endpoint to get all available products (courses).
@@ -31,13 +33,18 @@ public class ProductController {
 	 *         <li>Or an empty response with 503 UNAVAILABLE if a database access error occurs.</li>
 	 *     </ul>
 	 */
-	@GetMapping("/products")
-	public ResponseEntity<List<Map<String, String>>> getAllProducts() {
+	@GetMapping("/courses")
+	@Operation(
+			summary = "Get all courses",
+			description = "Get all courses available in the database."
+			+ " Or 503 UNAVAILABLE if a database access error occurs."
+	)
+	public ResponseEntity<List<Map<String, String>>> getAllCourses() {
 		ResponseEntity<List<Map<String, String>>> response;
 		try {
 			response = ResponseEntity.ok(
 					DatabaseManager.getInstance()
-							.getAllProducts()
+							.getCourses()
 			);
 		} catch (SQLException sqle) {
 			response = ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
@@ -61,12 +68,19 @@ public class ProductController {
 	 *         if a database access error occurs.</li>
 	 *     </ul>
 	 */
-	@GetMapping("/products/{query}")
-	public ResponseEntity<List<Map<String, String>>> searchProduct(@PathVariable String query) {
+	@GetMapping("/courses/{query}")
+	@Operation(
+			summary = "Get one course",
+			description = "Search for one course that match the given query."
+			+ " or 503 UNAVAILABLE if a database access error occurs."
+	)
+	public ResponseEntity<List<Map<String, String>>> searchCourse(
+			@Parameter(description = "The query to use when searching for a specific course")
+			@PathVariable String query) {
 		ResponseEntity<List<Map<String, String>>> response;
 		try {
 			List<Map<String, String>> result = DatabaseManager.getInstance()
-					.searchProduct(query);
+					.searchCourse(query);
 			response = result == null
 					? ResponseEntity.internalServerError().build()
 					: ResponseEntity.ok(result);

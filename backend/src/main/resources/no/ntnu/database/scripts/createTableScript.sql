@@ -1,5 +1,5 @@
--- categories table
-CREATE TABLE category (
+-- category table
+CREATE TABLE IF NOT EXISTS category (
                             categoryId int NOT NULL AUTO_INCREMENT,
                             categoryName VARCHAR (255) NOT NULL,
                             PRIMARY KEY (categoryId)
@@ -13,9 +13,9 @@ CREATE TABLE courseProvider (
                                 PRIMARY KEY (courseProviderId)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
--- product table
-CREATE TABLE product (
-                         productId int NOT NULL AUTO_INCREMENT,
+-- course table
+CREATE TABLE IF NOT EXISTS course (
+                         courseId int NOT NULL AUTO_INCREMENT,
                          categoryId int,
                          courseTitle VARCHAR (255),
                          difficultyLevel VARCHAR (20),
@@ -25,33 +25,33 @@ CREATE TABLE product (
                          hoursPerWeek int,
                          relatedCertifications VARCHAR (100),
                          courseDescription TEXT,
-                         PRIMARY KEY (productId),
+                         PRIMARY KEY (courseId),
                          FOREIGN KEY (categoryId) REFERENCES category(categoryId)
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
--- productProviders table
--- Links a course with a course(product)Provider.
-CREATE TABLE productProvider (
-                                 productId int NOT NULL,
+-- courseProviderLink table
+-- Links a course with a course Provider.
+CREATE TABLE IF NOT EXISTS courseProviderLink (
+                                 courseId int NOT NULL,
                                  courseProviderId int,
                                  price int,
-                                 PRIMARY KEY (productId, courseProviderId),
-                                 FOREIGN KEY (productId) REFERENCES product (productId),
+                                 PRIMARY KEY (courseId, courseProviderId),
+                                 FOREIGN KEY (courseId) REFERENCES course (courseId),
                                  FOREIGN KEY (courseProviderId) REFERENCES courseProvider (courseProviderId)
 );
 
--- images table
-CREATE TABLE image (
+-- image table
+CREATE TABLE IF NOT EXISTS image (
                         imageId int NOT NULL AUTO_INCREMENT,
-                        productId int,
+                        courseId int,
                         imageUrl TEXT,
                         PRIMARY KEY (imageId),
-                        FOREIGN KEY (productId) REFERENCES product (productId)
+                        FOREIGN KEY (courseId) REFERENCES course (courseId)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 -- Change autoincrement to start somewhere else?
 
 -- user table
-CREATE TABLE user (
+CREATE TABLE IF NOT EXISTS user (
                       userId int NOT NULL AUTO_INCREMENT,
                       userName VARCHAR (200),
                       email VARCHAR (200),
@@ -61,12 +61,12 @@ CREATE TABLE user (
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- favorite table
-CREATE TABLE favorite (
+CREATE TABLE IF NOT EXISTS favorite (
                           userId int,
-                          productId int,
-                          PRIMARY KEY (userId, productId),
+                          courseId int,
+                          PRIMARY KEY (userId, courseId),
                           FOREIGN KEY (userId) REFERENCES user(userId),
-                          FOREIGN KEY (productId) REFERENCES product (productId)
+                          FOREIGN KEY (courseId) REFERENCES course (courseId)
 );
 
 -- users_2fa table
