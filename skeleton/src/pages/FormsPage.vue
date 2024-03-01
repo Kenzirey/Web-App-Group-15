@@ -11,6 +11,7 @@
           <input
             class="userInput"
             type="First name"
+            rules="nameRules"
             required
             v-model="firstName"
             hide-details
@@ -22,6 +23,7 @@
           <input
             class="userInput"
             type="Last name"
+            rules="nameRules"
             required
             v-model="lastName"
           />
@@ -31,19 +33,31 @@
       <div class="flex">
         <div class="inputGroup">
           <label class="labelNameSide">E-mail:</label>
-          <input class="userInput" type="E-mail" required v-model="email" />
+          <input
+            class="userInput"
+            type="E-mail"
+            required
+            v-model="email"
+            rules="emailRules"
+            placeholder="name@example.com"
+          />
         </div>
 
         <div class="inputGroup">
           <label class="labelName">Phone Number:</label>
           <input
             class="userInput"
-            type="Phone number"
+            type="phoneNumber"
             required
             v-model="phoneNumber"
+            maxlength="8"
+            placeholder="000-00-000"
           />
         </div>
       </div>
+
+      <br />
+      <br />
 
       <v-select
         v-model="select"
@@ -78,7 +92,7 @@
       <div class="flex">
         <div class="inputGroup">
           <label class="labelName">City:</label>
-          <input class="userInput" type="City" required v-model="City"/>
+          <input class="userInput" type="City" required v-model="City" />
         </div>
 
         <div class="inputGroup">
@@ -153,7 +167,12 @@
       />
 
       <label class="labelName">Course id:</label>
-      <input class="userInputLong" type="Course id" required v-model="courseId" />
+      <input
+        class="userInputLong"
+        type="Course id"
+        required
+        v-model="courseId"
+      />
     </fieldset>
 
     <fieldset class="fieldBox">
@@ -181,6 +200,27 @@ export default {
     return {
       firstName: "",
       lastName: "",
+      nameRules: [
+        (value) => {
+          if (value) return true;
+
+          return "Name is required.";
+        },
+      ],
+
+      emailRules: [
+        (value) => {
+          if (value) return true;
+
+          return "E-mail is requred.";
+        },
+        (value) => {
+          if (/.+@.+\..+/.test(value)) return true;
+
+          return "E-mail must be valid.";
+        },
+      ],
+
       email: "",
       phoneNumber: "",
       select: null,
