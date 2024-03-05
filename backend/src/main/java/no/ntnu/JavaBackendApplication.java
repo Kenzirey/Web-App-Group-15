@@ -3,7 +3,7 @@ package no.ntnu;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import no.ntnu.database.DatabaseManager;
+import no.ntnu.database.DbConnectionWrapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -37,7 +37,7 @@ public class JavaBackendApplication {
 			);
 		}
 		try {
-			DatabaseManager.initializeManager(parseUrl(args), args[1], args[2]);
+			DbConnectionWrapper.initializeConnection(parseUrl(args), args[1], args[2]);
 			SpringApplication.run(JavaBackendApplication.class, args);
 		} catch (ClassNotFoundException cnfe) {
 			LOGGER.log(

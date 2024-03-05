@@ -9,8 +9,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import no.ntnu.database.DatabaseManager;
 import no.ntnu.dto.Course;
+import no.ntnu.service.AdminRequests;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,6 +33,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
 	private static final Logger LOGGER = Logger.getLogger(AdminController.class.getName());
 	private static final String SQL_ERROR_MESSAGE = "SQLException occurred";
+
+	private final AdminRequests requests;
+
+	/**
+	 * Creates the controller.
+	 *
+	 * @param adminRequests Autowired object for sending requests to the database
+	 */
+	@Autowired
+	public AdminController(AdminRequests adminRequests) {
+		this.requests = adminRequests;
+	}
 
 	/**
 	 * Endpoint for adding a new course.
@@ -62,7 +75,7 @@ public class AdminController {
 	public ResponseEntity<String> addCourse(@RequestBody Course course) {
 		ResponseEntity<String> response;
 		try {
-			if (DatabaseManager.getInstance().insertCourse(course)) {
+			if (requests.insertCourse(course)) {
 				response = new ResponseEntity<>(
 						"Course added successfully",
 						HttpStatus.CREATED
@@ -112,7 +125,7 @@ public class AdminController {
 	public ResponseEntity<String> removeCourse(@PathVariable int id) {
 		ResponseEntity<String> response;
 		try {
-			if (DatabaseManager.getInstance().removeCourse(id)) {
+			if (requests.removeCourse(id)) {
 				response = new ResponseEntity<>(
 						"Course removed successfully",
 						HttpStatus.OK
@@ -167,7 +180,7 @@ public class AdminController {
 	) {
 		ResponseEntity<String> response;
 		try {
-			if (DatabaseManager.getInstance().updateCourse(id, course)) {
+			if (requests.updateCourse(id, course)) {
 				response = new ResponseEntity<>(
 						"Course added successfully",
 						HttpStatus.OK

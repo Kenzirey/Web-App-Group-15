@@ -5,14 +5,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 /**
  * Data Transfer Object for Two-Factor Authentication (2FA) operations.
  */
-public class TwoFactorDTO {
+public class TwoFactorDto {
 
 	@Schema(description = "The 2FA token used for verification.")
 	private String token;
 
-	public TwoFactorDTO() {}
+	public TwoFactorDto() {}
 
-	public TwoFactorDTO(String token) {
+	public TwoFactorDto(String token) {
 		this.token = token;
 	}
 
