@@ -12,7 +12,7 @@ import java.util.Date;
  * The Course class represents a course entity within the application,
  * mapped to a corresponding database table via JPA annotations.
  *
- * <p>Supports JPA's requirement of a no-argument constructor.</p>
+ * <p>Supports Java persistence API's requirement of a no-argument constructor.</p>
  */
 @Entity
 public final class Course {
@@ -56,7 +56,11 @@ public final class Course {
 	 */
 	@JsonIgnore
 	public boolean isValid() {
-		return courseName != null && !courseName.isEmpty();
+		boolean valid = false;
+		if (courseId > 0 && courseName != null && !courseName.isBlank()) {
+			valid = true;
+		}
+		return valid;
 	}
 
 	/**
