@@ -1,4 +1,4 @@
-package no.ntnu.database.jpa.Image;
+package no.ntnu.database.jpa;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;

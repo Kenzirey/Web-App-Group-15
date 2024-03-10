@@ -1,10 +1,10 @@
-package no.ntnu.database.jpa.Image;
+package no.ntnu.database.jpa.services;
 
 
-import jakarta.transaction.Transactional;
+import no.ntnu.database.jpa.Image;
+import no.ntnu.database.jpa.repositories.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
 
 import java.util.List;
 

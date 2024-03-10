@@ -1,5 +1,6 @@
-package no.ntnu.database.jpa.Image;
+package no.ntnu.database.jpa.repositories;
 
+import no.ntnu.database.jpa.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
