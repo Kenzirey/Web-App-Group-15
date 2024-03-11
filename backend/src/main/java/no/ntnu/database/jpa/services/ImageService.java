@@ -2,12 +2,15 @@ package no.ntnu.database.jpa.services;
 
 
 import no.ntnu.database.jpa.Image;
+import no.ntnu.database.jpa.repositories.CourseRepository;
 import no.ntnu.database.jpa.repositories.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
+/**
+ * Service class for handling business logic for images
+ * Interacts with the {@link ImageRepository} to perform CRUD operations.
+ */
 @Service
 public class ImageService {
 
@@ -39,7 +42,7 @@ public class ImageService {
 	 *
 	 * @return All the images in the database
 	 */
-	public List<Image> getAllImages() {
+	public Iterable<Image> getAllImages() {
 		return imageRepository.findAll();
 	}
 
@@ -67,7 +70,7 @@ public class ImageService {
 	/**
 	 *	Deletes an image from the database.
 	 *
-	 * @return Returns true if deleted. False if the image doesn't exist image
+	 * @return Returns true if deleted. False if the image doesn't exist in the database
 	 */
 	public boolean deleteImage(Image image) {
 		if (imageRepository.existsById(image.getImageId())) {
