@@ -1,6 +1,5 @@
 package no.ntnu.database.jpa.controllers;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import no.ntnu.database.jpa.Course;
 import no.ntnu.database.jpa.services.CourseService;
@@ -26,8 +25,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class CourseController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CourseController.class);
 
-	@Autowired
-	private CourseService courseService;
+	private final CourseService courseService;
+
+	/**
+	 * Makes the course controller.
+	 *
+	 * @param courseService The service class for communication
+	 */
+	public CourseController(@Autowired CourseService courseService) {
+		this.courseService = courseService;
+	}
 
 	/**
 	 * Returns all the courses in the database.
@@ -117,7 +124,11 @@ public class CourseController {
 			courseService.updateCourse(id, course);
 			//Because there's no response to client/us when this method is called.
 			response = ResponseEntity.noContent().build();
-		} catch (EntityNotFoundException e) {
+		} catch (IllegalArgumentException e) {
+			LOGGER.warn(e.getMessage());
+			response = ResponseEntity.badRequest().build();
+		} catch (IllegalStateException e) {
+			LOGGER.warn(e.getMessage());
 			response = ResponseEntity.notFound().build();
 		}
 		return  response;

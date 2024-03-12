@@ -17,8 +17,16 @@ import org.springframework.stereotype.Service;
 public class CourseService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CourseService.class);
 
-	@Autowired
-	private CourseRepository repository;
+	private final CourseRepository repository;
+
+	/**
+	 * Makes the course service.
+	 *
+	 * @param courseRepository The repository class for communication
+	 */
+	public CourseService(@Autowired CourseRepository courseRepository) {
+		this.repository = courseRepository;
+	}
 
 	/**
 	 * Adds a course to the database.
@@ -53,12 +61,12 @@ public class CourseService {
 		Optional<Course> existingCourse = repository.findById(id);
 
 		if (existingCourse.isEmpty()) {
-			LOGGER.warn("Course with ID {} not found ", id);
+			throw new IllegalStateException(String.format("Course with ID %s not found ", id));
+		} else if (!course.isValid()) {
+			throw new IllegalArgumentException("Course is invalid");
+		} else {
+			repository.save(course);
 		}
-		if (!course.isValid()) {
-			LOGGER.warn("Course is invalid");
-		}
-		repository.save(course);
 	}
 
 	/**
