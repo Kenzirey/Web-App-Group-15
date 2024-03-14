@@ -2,8 +2,17 @@
     <v-container>
       <v-row>
         <v-col cols="12">
-          <h1>{{ course.title }}</h1>
-          <p>{{ course.description }}</p>
+          <div class="course information">
+            <h3>{{ course.title }}</h3>
+            <p>Difficulty Level</p>
+            <p>Course Session (date)</p>
+            <p>Course size (ECTs credits)</p>
+            <p>Hours per week</p>
+            <p>Related certifications</p>
+            <p>Course Providers</p>
+            <p>{{ course.description }}</p>
+          </div>
+          
           <!-- Add more details about course here, and research v-container, v-col, row etc -->
         </v-col>
       </v-row>
