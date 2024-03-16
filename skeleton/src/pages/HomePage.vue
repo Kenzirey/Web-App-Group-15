@@ -17,6 +17,12 @@
     <section>
       <CourseCarousel :title="'Beginner Courses'" :courses="testCourses" difficulty="Beginner" />
     </section>
+    <section>
+      <CourseCarousel :title="'Advanced Courses'" :courses="testCourses" difficulty="Advanced" />
+    </section>
+    <section>
+      <CourseCarousel :title="'Expert Courses'" :courses="testCourses" difficulty="Expert" />
+    </section>
       </section>
     </div>
   </template>

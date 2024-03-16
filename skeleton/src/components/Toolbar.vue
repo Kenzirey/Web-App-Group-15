@@ -1,9 +1,9 @@
 <template>
-  <v-app-bar :elevation="0"  scroll-behavior="hide" id="app-bar">
+  <v-app-bar class="toolbar-app" :elevation="0"  scroll-behavior="hide" id="app-bar">
     <div id="bar">
       <div id="topbar-left">
         <v-btn prepend-icon="mdi-home" stacked size="small" @click="navigateFrontPage"></v-btn>
-        <v-text>Learniverse WORK IN PROGRESS! Should be on the left?</v-text>
+        <v-text>Learniverse</v-text>
       </div>
       
       <v-form v-on:submit.prevent="submitSearch" id="suggestions-container">
