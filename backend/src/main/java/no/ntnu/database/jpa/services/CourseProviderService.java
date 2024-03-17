@@ -16,8 +16,17 @@ import org.springframework.stereotype.Service;
 public class CourseProviderService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CourseProviderService.class);
 
+	private final CourseProviderRepository repository;
+
+	/**
+	 * Creates the course service via autowired.
+	 *
+	 * @param repository the repository class for communication.
+	 */
 	@Autowired
-	private CourseProviderRepository repository;
+	public CourseProviderService(CourseProviderRepository repository) {
+		this.repository = repository;
+	}
 
 	/**
 	 * Adds a course provider in the database.
@@ -65,6 +74,7 @@ public class CourseProviderService {
 		if (!provider.isValid()) {
 			LOGGER.warn("Provider is invalid");
 		}
+		provider.setCourseProviderId(id);
 		repository.save(provider);
 	}
 

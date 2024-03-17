@@ -27,8 +27,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class CourseProviderController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CourseProviderController.class);
 
+	private final CourseProviderService service;
+
+	/**
+	 * Makes the course provider controller via autowired.
+	 *
+	 * @param service the service class for communication.
+	 */
 	@Autowired
-	private CourseProviderService service;
+	public CourseProviderController(CourseProviderService service) {
+		this.service = service;
+	}
 
 	/**
 	 * Returns all the course providers in the database.

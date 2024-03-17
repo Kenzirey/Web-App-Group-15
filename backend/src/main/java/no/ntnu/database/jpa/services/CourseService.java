@@ -24,7 +24,8 @@ public class CourseService {
 	 *
 	 * @param courseRepository The repository class for communication
 	 */
-	public CourseService(@Autowired CourseRepository courseRepository) {
+	@Autowired
+	public CourseService(CourseRepository courseRepository) {
 		this.repository = courseRepository;
 	}
 
@@ -65,6 +66,9 @@ public class CourseService {
 		} else if (!course.isValid()) {
 			throw new IllegalArgumentException("Course is invalid");
 		} else {
+			//Before the setCourseId, JPA did not have enough info to link this new "updated object"
+			//So it just added it as a new object, without deleting the old. I.e. did not update.
+			course.setCourseId(id); //Important.
 			repository.save(course);
 		}
 	}
