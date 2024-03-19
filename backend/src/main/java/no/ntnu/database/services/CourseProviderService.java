@@ -1,8 +1,10 @@
-package no.ntnu.database.jpa.services;
+package no.ntnu.database.services;
 
 import java.util.Optional;
-import no.ntnu.database.jpa.CourseProvider;
-import no.ntnu.database.jpa.repositories.CourseProviderRepository;
+
+import no.ntnu.database.entities.CourseProvider;
+import no.ntnu.database.repositories.CourseProviderRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +18,17 @@ import org.springframework.stereotype.Service;
 public class CourseProviderService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CourseProviderService.class);
 
+	private final CourseProviderRepository repository;
+
+	/**
+	 * Creates the course service via autowired.
+	 *
+	 * @param repository the repository class for communication.
+	 */
 	@Autowired
-	private CourseProviderRepository repository;
+	public CourseProviderService(CourseProviderRepository repository) {
+		this.repository = repository;
+	}
 
 	/**
 	 * Adds a course provider in the database.
@@ -65,6 +76,7 @@ public class CourseProviderService {
 		if (!provider.isValid()) {
 			LOGGER.warn("Provider is invalid");
 		}
+		provider.setCourseProviderId(id);
 		repository.save(provider);
 	}
 

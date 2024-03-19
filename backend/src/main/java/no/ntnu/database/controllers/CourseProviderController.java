@@ -1,9 +1,11 @@
-package no.ntnu.database.jpa.controllers;
+package no.ntnu.database.controllers;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
-import no.ntnu.database.jpa.CourseProvider;
-import no.ntnu.database.jpa.services.CourseProviderService;
+
+import no.ntnu.database.entities.CourseProvider;
+import no.ntnu.database.services.CourseProviderService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +29,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class CourseProviderController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CourseProviderController.class);
 
+	private final CourseProviderService service;
+
+	/**
+	 * Makes the course provider controller via autowired.
+	 *
+	 * @param service the service class for communication.
+	 */
 	@Autowired
-	private CourseProviderService service;
+	public CourseProviderController(CourseProviderService service) {
+		this.service = service;
+	}
 
 	/**
 	 * Returns all the course providers in the database.

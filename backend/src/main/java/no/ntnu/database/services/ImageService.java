@@ -1,9 +1,10 @@
-package no.ntnu.database.jpa.services;
+package no.ntnu.database.services;
 
 
-import no.ntnu.database.jpa.Image;
-import no.ntnu.database.jpa.repositories.CourseRepository;
-import no.ntnu.database.jpa.repositories.ImageRepository;
+import no.ntnu.database.entities.Image;
+import no.ntnu.database.repositories.CourseRepository;
+import no.ntnu.database.repositories.ImageRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

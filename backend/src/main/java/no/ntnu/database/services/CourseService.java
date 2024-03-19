@@ -1,8 +1,10 @@
-package no.ntnu.database.jpa.services;
+package no.ntnu.database.services;
 
 import java.util.Optional;
-import no.ntnu.database.jpa.Course;
-import no.ntnu.database.jpa.repositories.CourseRepository;
+
+import no.ntnu.database.entities.Course;
+import no.ntnu.database.repositories.CourseRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +19,17 @@ import org.springframework.stereotype.Service;
 public class CourseService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CourseService.class);
 
+	private final CourseRepository repository;
+
+	/**
+	 * Makes the course service.
+	 *
+	 * @param courseRepository The repository class for communication
+	 */
 	@Autowired
-	private CourseRepository repository;
+	public CourseService(CourseRepository courseRepository) {
+		this.repository = courseRepository;
+	}
 
 	/**
 	 * Adds a course to the database.
@@ -53,12 +64,15 @@ public class CourseService {
 		Optional<Course> existingCourse = repository.findById(id);
 
 		if (existingCourse.isEmpty()) {
-			LOGGER.warn("Course with ID {} not found ", id);
+			throw new IllegalStateException(String.format("Course with ID %s not found ", id));
+		} else if (!course.isValid()) {
+			throw new IllegalArgumentException("Course is invalid");
+		} else {
+			//Before the setCourseId, JPA did not have enough info to link this new "updated object"
+			//So it just added it as a new object, without deleting the old. I.e. did not update.
+			course.setCourseId(id); //Important.
+			repository.save(course);
 		}
-		if (!course.isValid()) {
-			LOGGER.warn("Course is invalid");
-		}
-		repository.save(course);
 	}
 
 	/**

@@ -1,9 +1,9 @@
-package no.ntnu.database.jpa.services;
+package no.ntnu.database.services;
 
-import no.ntnu.database.jpa.Category;
-import no.ntnu.database.jpa.Image;
-import no.ntnu.database.jpa.repositories.CategoryRepository;
-import no.ntnu.database.jpa.repositories.ImageRepository;
+import no.ntnu.database.entities.Category;
+import no.ntnu.database.repositories.CategoryRepository;
+import no.ntnu.database.repositories.ImageRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,16 @@ import org.springframework.stereotype.Service;
 public class CategoryService {
 
 
-	@Autowired
-	private CategoryRepository categoryRepository;
+	private final CategoryRepository repository;
 
+	/**
+	 * Creates the service class.
+	 *
+	 * @param categoryRepository The repository used for interacting with the database
+	 */
+	public CategoryService(@Autowired CategoryRepository categoryRepository) {
+		this.repository = categoryRepository;
+	}
 
 	/**
 	 * Adds a category in the database.
@@ -28,8 +35,8 @@ public class CategoryService {
 	 */
 	public String addCategory(Category category) {
 		try {
-			if (!categoryRepository.existsById(category.getCategoryId())) {
-				categoryRepository.save(category);
+			if (!repository.existsById(category.getCategoryId())) {
+				repository.save(category);
 				return "Category inserted:" + category.getCategoryName();
 			} else {
 				return "Category is invalid";
@@ -45,7 +52,7 @@ public class CategoryService {
 	 * @return All the categories in the database
 	 */
 	public Iterable<Category> getAllCategories() {
-		return categoryRepository.findAll();
+		return repository.findAll();
 	}
 
 	/**
@@ -54,12 +61,12 @@ public class CategoryService {
 	 * @param category The new category
 	 */
 	public String updateCategory(Category category) {
-		if (categoryRepository.existsById(category.getCategoryId())) {
+		if (repository.existsById(category.getCategoryId())) {
 			try {
-				Category existingCategory = categoryRepository.findById(category.getCategoryId()).get();
+				Category existingCategory = repository.findById(category.getCategoryId()).get();
 				existingCategory.setCategoryId(category.getCategoryId());
 				existingCategory.setCategoryName(category.getCategoryName());
-				categoryRepository.save(existingCategory); // save the updated category
+				repository.save(existingCategory); // save the updated category
 				return "Category updated";
 			} catch (Exception e) {
 				throw e;
@@ -75,9 +82,9 @@ public class CategoryService {
 	 * @return Returns true if deleted. False if the doesn't exist int the database
 	 */
 	public boolean deleteCategory(Category category) {
-		if (categoryRepository.existsById(category.getCategoryId())) {
+		if (repository.existsById(category.getCategoryId())) {
 			try {
-				categoryRepository.delete(category);
+				repository.delete(category);
 				return true;
 			} catch (Exception e) {
 
@@ -87,7 +94,15 @@ public class CategoryService {
 		return false;
 	}
 
-
+	/**
+	 * Searches for a specific category.
+	 *
+	 * @param query The search query to use when searching for categories
+	 * @return Any categories that match the search query
+	 */
+	public Iterable<Category> searchCategory(String query) {
+		return repository.searchCategory(query);
+	}
 
 
 

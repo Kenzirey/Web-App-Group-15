@@ -1,0 +1,517 @@
+{
+	"info": {
+		"_postman_id": "8607ed99-8f0b-45a2-87d9-7aafac2bde01",
+		"name": "Course Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32742278"
+	},
+	"item": [
+		{
+			"name": "add test data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function() {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.environment.set(\"test_data\", pm.response.text());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"courseId\": 1,\r\n        \"courseName\": \"SQL Advanced\",\r\n        \"difficultyLevel\": \"Advanced\",\r\n        \"startDate\": \"2022-12-31T23:00:00.000+00:00\",\r\n        \"endDate\": \"2024-01-18T23:00:00.000+00:00\",\r\n        \"courseCredits\": 10.0,\r\n        \"hoursPerWeek\": 30,\r\n        \"relatedCertification\": \"SQL Advanced\",\r\n        \"courseDescription\": \"SQL Advanced for Adults\"\r\n    }\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/courses",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"courses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add sweatshop course",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function() {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.environment.set(\"sweatshop_id\", pm.response.text());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"courseId\": 2,\r\n        \"courseName\": \"Sweatshop before PUT request\",\r\n        \"difficultyLevel\": \"Not Hard Yet\",\r\n        \"startDate\": \"2021-12-31T23:00:00.000+00:00\",\r\n        \"endDate\": \"2023-02-24T23:00:00.000+00:00\",\r\n        \"courseCredits\": 7.5,\r\n        \"hoursPerWeek\": 99,\r\n        \"relatedCertification\": \"Slave\",\r\n        \"courseDescription\": \"Sweatshop Trial\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/courses",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"courses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all courses",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/courses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"courses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update sweatshop",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"courseId\": 2,\r\n        \"courseName\": \"Sweatshop deathrun course\",\r\n        \"difficultyLevel\": \"Deadily Hard\",\r\n        \"startDate\": \"2021-12-31T23:00:00.000+00:00\",\r\n        \"endDate\": \"2023-02-24T23:00:00.000+00:00\",\r\n        \"courseCredits\": 7.5,\r\n        \"hoursPerWeek\": 99,\r\n        \"relatedCertification\": \"Slave\",\r\n        \"courseDescription\": \"Sweatshop Trial\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/courses/{{sweatshop_id}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"courses",
+						"{{sweatshop_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Test that the PUT request worked correctly",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response body to JSON\r",
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Define the expected course name\r",
+							"var expectedCourseName = \"Sweatshop deathrun course\";\r",
+							"\r",
+							"// Write a test to check if the course name in the response matches the expected course name\r",
+							"pm.test(\"Course name has been updated correctly\", function () {\r",
+							"    pm.expect(responseBody.courseName).to.eql(expectedCourseName);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/courses/{{sweatshop_id}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"courses",
+						"{{sweatshop_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get course with {{test_data}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response body as JSON\r",
+							"var responseData = pm.response.json();\r",
+							"\r",
+							"// Define the expected title\r",
+							"var expectedTitle = \"SQL Advanced\";\r",
+							"\r",
+							"// Check if the title in the response matches the expected title\r",
+							"pm.test(\"Course title is correct\", function () {\r",
+							"    pm.expect(responseData.courseName).to.eql(expectedTitle);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/courses/{{test_data}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"courses",
+						"{{test_data}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Correct amount of objects",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"\r",
+							"// Define the expected number of objects\r",
+							"var expectedCount = 2; \r",
+							"\r",
+							"// Write a test to check if the number of objects matches the expected count\r",
+							"pm.test(\"Number of objects is correct\", function () {\r",
+							"    pm.expect(responseBody.length).to.eql(expectedCount);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/courses",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"courses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "add SQL novice course",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function() {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"pm.environment.set(\"new_course_id\", pm.response.text());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"courseName\": \"SQL Novice\",\r\n    \"difficultyLevel\": \"Novice\",\r\n    \"startDate\": \"2020-12-31T23:00:00.000+00:00\",\r\n    \"endDate\": \"2022-01-28T23:00:00.000+00:00\",\r\n    \"courseCredits\": 8.0,\r\n    \"hoursPerWeek\": 25,\r\n    \"relatedCertification\": \"SQL Novice\",\r\n    \"courseDescription\": \"SQL Teenagers\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/courses",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"courses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find the recently posted course",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response body as JSON",
+							"var responseData = pm.response.json();",
+							"",
+							"// Define the expected title",
+							"var expectedTitle = \"SQL Novice\";",
+							"",
+							"// Check if the title in the response matches the expected title",
+							"pm.test(\"Course title is correct\", function () {",
+							"    pm.expect(responseData.courseName).to.eql(expectedTitle);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/courses/{{new_course_id}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"courses",
+						"{{new_course_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Testing non-existing course search",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404, course does not exist\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/courses/999",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"courses",
+						"999"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete recently added course",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Course successfully deleted\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/courses/{{new_course_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"courses",
+						"{{new_course_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete test data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Course successfully deleted\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/courses/{{test_data}}",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"courses",
+						"{{test_data}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete sweatshop course",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Course successfully deleted\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/courses/{{sweatshop_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"courses",
+						"{{sweatshop_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get recently deleted, should not be found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Book successfully deleted\", function () {\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([404, 400]);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/courses/{{new_course_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"courses",
+						"{{new_course_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
