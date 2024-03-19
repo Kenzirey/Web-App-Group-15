@@ -20,7 +20,6 @@
             <p class="card-value">{{ totalUsers }}</p>
           </div>
         </div>
-
         <div class="card total-users-2fa" @click="goTo2FAUsers">
           <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
           <div class="card-details">
@@ -29,35 +28,82 @@
           </div>
         </div>
       </div>
-
+      <div class="chart-container">
+        <canvas id="growthChart"></canvas>
+      </div>
     </div>
   </div>
 </template>
 
-
 <script>
+import axios from 'axios';
+import { Chart, registerables } from 'chart.js';
+
+Chart.register(...registerables);
+
 export default {
   name: 'AdminDashboard',
   data() {
     return {
       totalCourses: 0,
       totalUsers: 0,
+      totalUsersWith2FA: 0,
+      chartData: {
+        labels: ['January', 'February', 'March', 'April'], // Placeholder labels
+        datasets: [
+          {
+            label: 'Total Users',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            data: [50, 150, 100, 200], // Placeholder data
+          },
+          {
+            label: 'Users with 2FA',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            data: [30, 90, 70, 150], // Placeholder data
+          },
+          {
+            label: 'Total Courses',
+            backgroundColor: 'rgba(255, 206, 86, 0.2)',
+            borderColor: 'rgba(255, 206, 86, 1)',
+            data: [4, 6, 8, 10], // Placeholder data
+          },
+        ],
+      },
     };
   },
   created() {
     this.fetchSummaryData();
   },
+  mounted() {
+    this.initChart();
+  },
   methods: {
     async fetchSummaryData() {
-      try {
-        const coursesResponse = await axios.get('/admin/courses/summary');
-        const usersResponse = await axios.get('/admin/users/summary');
-        this.totalCourses = coursesResponse.data.total;
-        this.totalUsers = usersResponse.data.total;
-      } catch (error) {
-        console.error('Failed to fetch summary data:', error);
-        // toast notification ?
-      }
+
+      this.initChart();
+    },
+    initChart() {
+      const ctx = document.getElementById('growthChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: this.chartData,
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+          maintainAspectRatio: false,
+        },
+      });
+    },
+    goToCourses() {
+    },
+    goToUsers() {
+    },
+    goTo2FAUsers() {
     },
   },
 };
@@ -69,21 +115,23 @@ export default {
 }
 
 .admin-header {
+  text-align: center;
   padding: 20px 0;
   border-bottom: 2px solid #eee;
   margin-bottom: 20px;
 }
 
 .admin-content {
+  flex-grow: 1;
   padding: 20px;
-  width: 100%;
-  background-color: #f9f9f9; 
+  background-color: #f9f9f9;
 }
 
 .summary-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+  margin-bottom: 20px;
 }
 
 .card {
@@ -93,6 +141,11 @@ export default {
   padding: 15px;
   cursor: pointer;
   transition: box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .card:hover {
@@ -101,25 +154,32 @@ export default {
 
 .card-icon {
   color: #4a90e2;
-  margin-bottom: 10px;
+  font-size: 2rem;
 }
 
 .card-title {
-  margin: 0;
+  margin: 10px 0 5px;
   color: #333;
-  font-size: 18px;
+  font-size: 1rem;
 }
 
 .card-value {
   color: #333;
-  font-size: 36px;
+  font-size: 2rem;
   font-weight: bold;
 }
 
-.admin-navigation {
-  min-width: 200px;
-  height: 100vh;
-  border-right: 1px solid #d3d3d3;
+.chart-container {
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  margin-top: 20px;
 }
 
+
+#growthChart {
+  width: 100% !important;
+  height: 40vh !important;
+}
 </style>
