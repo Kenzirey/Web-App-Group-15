@@ -18,18 +18,36 @@ export default {
   },
   data() {
     return {
-      users: [],
+      users: [
+        // some test users for visualizing
+        { id: 1, name: 'kenzirey', email: 'kenzirey@example.com', role: 'admin', twoFactorEnabled: true },
+        { id: 2, name: 'Smiley', email: 'smiley@example.com', role: 'user', twoFactorEnabled: false },
+        { id: 3, name: 'Tpp', email: 'Tpp@example.com', role: 'user', twoFactorEnabled: true },
+      ],
     };
   },
   methods: {
-    fetchUsers() {
-      // TODO: Fetch the users from the API
+   async fetchUsers() {
+      try {
+        const response = await axios.get('/admin/users');
+        this.users = response.data;
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+      }
     },
     editUser(user) {
       // TODO: Handle user edit
     },
-    deleteUser(userId) {
-      // TODO: Handle user deletion
+    async deleteUser(userId) {
+      if (!confirm('Are you sure you want to delete this user?')) {
+        return;
+      }
+      try {
+        await axios.delete(`/admin/users/${userId}`);
+        this.users = this.users.filter(user => user.id !== userId);
+      } catch (error) {
+        console.error('Failed to delete user:', error);
+      }
     },
   },
   mounted() {
