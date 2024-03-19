@@ -1,9 +1,10 @@
-package no.ntnu.database.jpa.repositories;
+package no.ntnu.database.repositories;
 
-import no.ntnu.database.jpa.Category;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+
+import no.ntnu.database.entities.Category;
 
 
 @Repository

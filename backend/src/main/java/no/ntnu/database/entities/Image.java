@@ -1,4 +1,4 @@
-package no.ntnu.database.jpa;
+package no.ntnu.database.entities;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,7 +1,8 @@
-package no.ntnu.controllers;
+package no.ntnu.database.controllers;
 
-import no.ntnu.database.jpa.Category;
-import no.ntnu.database.jpa.services.CategoryService;
+import no.ntnu.database.entities.Category;
+import no.ntnu.database.services.CategoryService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

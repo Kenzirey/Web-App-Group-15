@@ -1,8 +1,10 @@
-package no.ntnu.database.jpa.controllers;
+package no.ntnu.database.controllers;
 
 import java.util.Optional;
-import no.ntnu.database.jpa.Course;
-import no.ntnu.database.jpa.services.CourseService;
+
+import no.ntnu.database.entities.Course;
+import no.ntnu.database.services.CourseService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
