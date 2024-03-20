@@ -2,7 +2,6 @@ package no.ntnu.database.services;
 
 import no.ntnu.database.entities.Category;
 import no.ntnu.database.repositories.CategoryRepository;
-import no.ntnu.database.repositories.ImageRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * Service class for handling business logic for category
- * Interacts with the {@link ImageRepository} to perform CRUD operations.
+ * Interacts with the {@link CategoryRepository} to perform CRUD operations.
  */
 @Service
 public class CategoryService {
