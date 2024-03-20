@@ -1,4 +1,4 @@
-package no.ntnu.controllers;
+package no.ntnu.database.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
