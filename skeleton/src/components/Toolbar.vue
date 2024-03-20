@@ -7,18 +7,32 @@
       </div>
       
       <v-form v-on:submit.prevent="submitSearch" id="suggestions-container">
-        <v-text-field id="search-bar" v-model="search" append-icon="mdi-magnify" @click:append="submitSearch" placeholder="Search..." required hide-details/>
+        <v-text-field id="search-bar" v-model="search" append-icon="mdi-magnify" @click:append="submitSearch" placeholder="Search..." required autocomplete="off" hide-details/>
         <div id="search-suggestions-center-align">
           <div id="search-suggestions">
-            <div id="courses-suggestions"></div>
-            <div id="providers-suggestions"></div>
-            <div id="all-suggestions"></div>
+            <div id="courses-suggestions" class="suggestion-box">
+              <h2>Courses:</h2>
+              <ul>
+                <li @click.native="completeCourseSuggestion($event)" v-for="course in getCourseSuggestions()" :key="course.name" :course-id="course.id">{{ course.name }}</li>
+              </ul>
+            </div>
+            <div id="providers-suggestions" class="suggestion-box">
+              <h2>Course providers:</h2>
+              <ul>
+                <li v-for="provider in getProviderSuggestions()" :key="provider.name">{{ provider.name }}</li>
+              </ul>
+            </div>
+            <div id="all-suggestions" class="suggestion-box">
+              <h2>All results:</h2>
+              <ul>
+                <li v-for="suggestion in getAllSuggestions()" :key="suggestion.name">{{ suggestion.name }}</li>
+              </ul>
+            </div>
           </div>
         </div>
       </v-form>
   
       <!-- Hidden, but kept for future reference -->
-      <p style="display: none;" v-for="suggestion in getSearchSuggestions()" :key="suggestion"><b>{{ suggestion }}</b></p>
       <div id="topbar-right">
         <v-btn prepend-icon="mdi-account" stacked size="small" @click="navigateToAccount">View Account</v-btn>
         <v-btn prepend-icon="mdi-heart" stacked size="small" @click="navigateToFavorites">View Favorites</v-btn>
@@ -31,17 +45,42 @@
 
 <script setup>
   import { ref } from "vue";
-  
   let search = ref("");
-  const suggestions = ["Result 1", "Result 2", "femboys"]; //TODO: Make an API request to get this instead
-  function getSearchSuggestions() {
-    return suggestions.filter((suggestion) => 
-      suggestion.toLowerCase().includes(search.value.toLowerCase())
+  
+  const courses = [{id: 1, name: "Result 1"}, {id: 2, name: "Result 2"}, {id: 3, name: "femboys"}]; //TODO: Make an API request to get this instead
+  const providers = [{id: 1, name: "Provider 1"}, {id: 2, name: "Provider 2"}, {id: 3, name: "tomboys"}]; //TODO: Make an API request to get this instead
+
+  function getCourseSuggestions() {
+    return courses.filter((course) => 
+      course.name.toLowerCase().includes(search.value.toLowerCase())
     );
   }
 
+  function getProviderSuggestions() {
+    return providers.filter((provider) =>
+      provider.name.toLowerCase().includes(search.value.toLowerCase())
+    );
+  }
+
+  function getAllSuggestions() {
+    return getCourseSuggestions().concat(getProviderSuggestions());
+  }
+
+  function completeCourseSuggestion(clickedSuggestion) {
+    const query = new URLSearchParams();
+    query.append("id", clickedSuggestion.target.getAttribute("course-id"));
+    console.log(clickedSuggestion.target.getAttribute("course-id"));
+    if (query.get("id")) {
+        location.href = "./course?" + query.toString();
+    }
+  }
+
   function submitSearch() {
-    console.log("owo");
+    const query = new URLSearchParams();
+    query.append("q", search.value)
+    if (query.get("q")) {
+        location.href = "./search?" + query.toString();
+    }
   }
 
 </script>
