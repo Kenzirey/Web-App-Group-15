@@ -1,5 +1,5 @@
 {
-  "name": "skeleton",
+  "name": "frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,7 @@
     "@mdi/font": "^7.4.47",
     "@mdi/js": "^7.4.47",
     "axios": "^1.6.7",
+    "chart.js": "^4.4.2",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5",
     "vuetify": "^3.0.0"
