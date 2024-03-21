@@ -19,7 +19,7 @@
             <div id="providers-suggestions" class="suggestion-box">
               <h2>Course providers:</h2>
               <ul>
-                <li v-for="provider in filteredProviders" :key="provider.name" :provider-id="provider.id">{{ provider.providerName }}</li>
+                <li v-for="provider in filteredProviders" :key="provider.name" :provider-id="provider.id">{{ provider.name }}</li>
               </ul>
             </div>
             <div id="all-suggestions" class="suggestion-box">
