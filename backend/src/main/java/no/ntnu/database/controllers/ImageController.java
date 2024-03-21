@@ -17,6 +17,7 @@ import java.util.Optional;
  * REST API controller for Image colelction
  *
  */
+@CrossOrigin
 @RestController
 public class ImageController {
 
