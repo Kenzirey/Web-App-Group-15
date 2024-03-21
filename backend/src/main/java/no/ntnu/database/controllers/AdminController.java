@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller class for handling administrative actions related to course management.
  */
-@RestController
+//@RestController TODO: Un-comment this when it workie
 @RequestMapping("/admin")
 @Tag(
 		name = "AdminController",
@@ -35,17 +35,21 @@ public class AdminController {
 	private static final Logger LOGGER = Logger.getLogger(AdminController.class.getName());
 	private static final String SQL_ERROR_MESSAGE = "SQLException occurred";
 
-	private final AdminRequests requests;
+	private AdminRequests requests;
 
+	// TODO: Jonas, do your thing :)
 	/**
 	 * Creates the controller.
 	 *
 	 * @param adminRequests Autowired object for sending requests to the database
 	 */
+	/*
 	@Autowired
 	public AdminController(AdminRequests adminRequests) {
 		this.requests = adminRequests;
 	}
+
+	 */
 
 	/**
 	 * Endpoint for adding a new course.
@@ -202,6 +206,8 @@ public class AdminController {
 		return response;
 	}
 
+	//TODO: Commented out because compilation error
+	/*
 	@Operation(summary = "Get summary of courses")
 	@ApiResponse(
 			responseCode = "200",
@@ -234,5 +240,6 @@ public class AdminController {
 			LOGGER.log(Level.SEVERE, "Error getting users summary", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-	}
+	}*/
+
 }

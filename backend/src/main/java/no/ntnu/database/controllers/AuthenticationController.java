@@ -21,22 +21,25 @@ import org.springframework.web.bind.annotation.RestController;
  * Controller for handling authentication requests,
  * including setup and validation of two-factor authentication (2FA).
  */
-@RestController
+//@RestController TODO: Un-comment this when it workie
 @RequestMapping("/auth")
 public class AuthenticationController {
 	private static final Logger logger = Logger.getLogger(AuthenticationController.class.getName());
 
-	private final TwoFactorRequests requests;
+	private TwoFactorRequests requests;
 
+	//TODO: Jonas, do your thing :)
 	/**
 	 * Creates the controller.
 	 *
 	 * @param twoFactorRequests Autowired object for sending requests to the database
 	 */
+	/*
 	@Autowired
 	public AuthenticationController(TwoFactorRequests twoFactorRequests) {
 		this.requests = twoFactorRequests;
 	}
+	 */
 
 
 	/**
