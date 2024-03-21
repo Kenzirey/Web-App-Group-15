@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller class for handling administrative actions related to course management.
  */
-@RestController
+//@RestController TODO: Un-comment this when it workie
 @RequestMapping("/admin")
 @Tag(
 		name = "AdminController",
@@ -34,17 +35,21 @@ public class AdminController {
 	private static final Logger LOGGER = Logger.getLogger(AdminController.class.getName());
 	private static final String SQL_ERROR_MESSAGE = "SQLException occurred";
 
-	private final AdminRequests requests;
+	private AdminRequests requests;
 
+	// TODO: Jonas, do your thing :)
 	/**
 	 * Creates the controller.
 	 *
 	 * @param adminRequests Autowired object for sending requests to the database
 	 */
+	/*
 	@Autowired
 	public AdminController(AdminRequests adminRequests) {
 		this.requests = adminRequests;
 	}
+
+	 */
 
 	/**
 	 * Endpoint for adding a new course.
@@ -200,4 +205,41 @@ public class AdminController {
 		}
 		return response;
 	}
+
+	//TODO: Commented out because compilation error
+	/*
+	@Operation(summary = "Get summary of courses")
+	@ApiResponse(
+			responseCode = "200",
+			description = "Successfully retrieved course summary",
+			content = @Content(schema = @Schema(implementation = Integer.class))
+	)
+	@GetMapping("/courses/summary")
+	public ResponseEntity<Integer> getCoursesSummary() {
+		try {
+			int totalCourses = requests.getTotalCourses(); //yet to be implemented
+			return ResponseEntity.ok(totalCourses);
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, "Error getting courses summary", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
+	@Operation(summary = "Get summary of users")
+	@ApiResponse(
+			responseCode = "200",
+			description = "Successfully retrieved user summary",
+			content = @Content(schema = @Schema(implementation = Integer.class))
+	)
+	@GetMapping("/users/summary")
+	public ResponseEntity<Integer> getUsersSummary() {
+		try {
+			int totalUsers = requests.getTotalUsers(); //yet to be implemented
+			return ResponseEntity.ok(totalUsers);
+		} catch (SQLException e) {
+			LOGGER.log(Level.SEVERE, "Error getting users summary", e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+	 */
 }
