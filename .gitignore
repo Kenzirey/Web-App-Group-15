@@ -10,6 +10,9 @@
 hs_err_pid*
 replay_pid*
 
+## For Vuetify/Vite
+node_modules/
+
 ##############################
 ## Maven
 ##############################
