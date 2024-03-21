@@ -13,19 +13,19 @@
             <div id="courses-suggestions" class="suggestion-box">
               <h2>Courses:</h2>
               <ul>
-                <li @click.native="completeCourseSuggestion($event)" v-for="course in getCourseSuggestions()" :key="course.name" :course-id="course.id">{{ course.name }}</li>
+                <li @click.native="selectCourseSuggestion($event)" v-for="course in filteredCourses" :key="course.name" :course-id="course.id">{{ course.name }}</li>
               </ul>
             </div>
             <div id="providers-suggestions" class="suggestion-box">
               <h2>Course providers:</h2>
               <ul>
-                <li v-for="provider in getProviderSuggestions()" :key="provider.name">{{ provider.name }}</li>
+                <li v-for="provider in filteredProviders" :key="provider.name" :provider-id="provider.id">{{ provider.providerName }}</li>
               </ul>
             </div>
             <div id="all-suggestions" class="suggestion-box">
               <h2>All results:</h2>
               <ul>
-                <li v-for="suggestion in getAllSuggestions()" :key="suggestion.name">{{ suggestion.name }}</li>
+                <li v-for="suggestion in getAllSuggestions()" :key="suggestion.name" :suggestion-id="suggestion.id">{{ suggestion.name }}</li>
               </ul>
             </div>
           </div>
@@ -43,49 +43,10 @@
   
 </template>
 
-<script setup>
-  import { ref } from "vue";
-  let search = ref("");
-  
-  const courses = [{id: 1, name: "Result 1"}, {id: 2, name: "Result 2"}, {id: 3, name: "femboys"}]; //TODO: Make an API request to get this instead
-  const providers = [{id: 1, name: "Provider 1"}, {id: 2, name: "Provider 2"}, {id: 3, name: "tomboys"}]; //TODO: Make an API request to get this instead
-
-  function getCourseSuggestions() {
-    return courses.filter((course) => 
-      course.name.toLowerCase().includes(search.value.toLowerCase())
-    );
-  }
-
-  function getProviderSuggestions() {
-    return providers.filter((provider) =>
-      provider.name.toLowerCase().includes(search.value.toLowerCase())
-    );
-  }
-
-  function getAllSuggestions() {
-    return getCourseSuggestions().concat(getProviderSuggestions());
-  }
-
-  function completeCourseSuggestion(clickedSuggestion) {
-    const query = new URLSearchParams();
-    query.append("id", clickedSuggestion.target.getAttribute("course-id"));
-    console.log(clickedSuggestion.target.getAttribute("course-id"));
-    if (query.get("id")) {
-        location.href = "./course?" + query.toString();
-    }
-  }
-
-  function submitSearch() {
-    const query = new URLSearchParams();
-    query.append("q", search.value)
-    if (query.get("q")) {
-        location.href = "./search?" + query.toString();
-    }
-  }
-
-</script>
-
 <script>
+import { ref } from "vue";
+
+let suggestions_loaded = false;
 export default {
   name: 'TopToolbar',
   methods: {
@@ -95,14 +56,74 @@ export default {
     navigateToFavorites() {
       this.$router.push('/favorites');
     },
-    navigateFrontPage(){
+    navigateFrontPage() {
       this.$router.push('/');
+    },
+    filterCourses(query) {
+      this.filteredCourses = this.courses.filter(course => course.name.toLowerCase().replace(/\s/g, "").includes(query.toLowerCase().replace(/\s/g, "")));
+    },
+    filterProviders(query) {
+      this.filteredProviders = this.providers.filter(provider => provider.name.toLowerCase().replace(/\s/g, "").includes(query.toLowerCase().replace(/\s/g, "")));
+    },
+    getAllSuggestions() {
+      return this.filteredCourses.concat(this.filteredProviders);
+    },
+    selectCourseSuggestion(clickedSuggestion) {
+      const query = new URLSearchParams();
+      query.append("id", clickedSuggestion.target.getAttribute("course-id"));
+      console.log(clickedSuggestion.target.getAttribute("course-id"));
+      if (query.get("id")) {
+          location.href = "./course?" + query.toString();
+      }
+    },
+    submitSearch() {
+      const query = new URLSearchParams();
+      query.append("q", this.search)
+      if (query.get("q")) {
+          location.href = "./search?" + query.toString();
+      }
     }
   },
+  watch: {
+    search(val) {
+      this.filterCourses(val);
+      this.filterProviders(val);
+    }
+  },
+  setup() {
+    let search = ref("");
+    return {search};
+  },
+  data() {
+    return {courses: [], providers: [], filteredCourses: [], filteredProviders: []};
+  },
   mounted() {
-    console.log("owo");
+    const vueComponent = this;
+    const backend_base_url = "http://localhost:8080/";
+
+    async function fetchCourses() {
+      const response = await fetch(backend_base_url + "courses");
+      return await response.json();
+    }
+
+    async function fetchProviders() {
+      const response = await fetch(backend_base_url + "providers");
+      return await response.json();
+    }
+
     document.getElementById("search-bar").addEventListener("focus", function() {
       document.getElementById("search-suggestions").style.display = "grid";
+      if (!suggestions_loaded) {
+        suggestions_loaded = true;
+        fetchCourses().then(data => {
+          vueComponent.courses = data.map(course => {return {type: "course", id: course.courseId, name: course.courseName};});
+          vueComponent.filterCourses(vueComponent.search);
+        });
+        fetchProviders().then(data => {
+          vueComponent.providers = data.map(provider => {return {type: "provider", id: provider.courseProviderId, name: provider.providerName};});
+          vueComponent.filterProviders(vueComponent.search);
+        });
+      }
     });
 
     document.addEventListener("click", function(event) {
