@@ -1,9 +1,8 @@
 package no.ntnu.database.repositories;
 
+import no.ntnu.database.entities.CourseProvider;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
-import no.ntnu.database.entities.CourseProvider;
 
 /**
  * Abstraction to reduce amount of boilerplate code required to implement data access for JPA
