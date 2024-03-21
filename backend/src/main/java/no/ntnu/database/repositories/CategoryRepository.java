@@ -6,14 +6,13 @@ import org.springframework.stereotype.Repository;
 
 import no.ntnu.database.entities.Category;
 
-
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
-	@Query("""
-			SELECT c
+	@Query(value = """
+			SELECT *
 			FROM Category c
-			WHERE REPLACE(c.categoryName, ' ', '') LIKE %REPLACE(?1, ' ', '')%
-			"""
+			WHERE REPLACE(c.category_name, ' ', '') LIKE '%' || REPLACE(?1, ' ', '') || '%'
+			""", nativeQuery = true
 	)
 	Iterable<Category> searchCategory(String query);
 }
