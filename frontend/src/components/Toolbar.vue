@@ -6,27 +6,31 @@
         <v-text>Learniverse</v-text>
       </div>
       
-      <v-form v-on:submit.prevent="submitSearch" id="suggestions-container">
-        <v-text-field id="search-bar" v-model="search" append-icon="mdi-magnify" @click:append="submitSearch" placeholder="Search..." required autocomplete="off" hide-details/>
+      <v-form v-on:submit.prevent="submitSearch(null, false)" id="suggestions-container">
+        <button style="display: none;"></button> <!-- Prevents other buttons from being invoked as the submit when clicking enter -->
+        <v-text-field id="search-bar" v-model="search" append-icon="mdi-magnify" @click:append="submitSearch(null, false)" placeholder="Search..." required autocomplete="off" hide-details/>
         <div id="search-suggestions-center-align">
           <div id="search-suggestions">
             <div id="courses-suggestions" class="suggestion-box">
               <h2>Courses:</h2>
               <ul>
-                <li @click.native="selectCourseSuggestion($event)" v-for="course in filteredCourses" :key="course.name" :course-id="course.id">{{ course.name }}</li>
+                <li @click="selectSuggestion(course)" v-for="course in filteredCourses" :key="course.name"><a>{{ course.name }}</a></li>
               </ul>
+              <button @click.prevent="submitSearch('courses')">More courses...</button>
             </div>
             <div id="providers-suggestions" class="suggestion-box">
               <h2>Course providers:</h2>
               <ul>
-                <li v-for="provider in filteredProviders" :key="provider.name" :provider-id="provider.id">{{ provider.name }}</li>
+                <li @click="selectSuggestion(provider)" v-for="provider in filteredProviders" :key="provider.name"><a>{{ provider.name }}</a></li>
               </ul>
+              <button @click.prevent="submitSearch('providers')">More providers...</button>
             </div>
             <div id="all-suggestions" class="suggestion-box">
               <h2>All results:</h2>
               <ul>
-                <li v-for="suggestion in getAllSuggestions()" :key="suggestion.name" :suggestion-id="suggestion.id">{{ suggestion.name }}</li>
+                <li @click="selectSuggestion(suggestion)" v-for="suggestion in getAllSuggestions()" :key="suggestion.name"><a>{{ suggestion.name }} [{{ suggestion.type }}]</a></li>
               </ul>
+              <button @click.prevent="submitSearch()">More results...</button>
             </div>
           </div>
         </div>
@@ -59,28 +63,39 @@ export default {
     navigateFrontPage() {
       this.$router.push('/');
     },
+    searchify(str) {
+      return str.toLowerCase().replace(/\s/g, "");
+    },
     filterCourses(query) {
-      this.filteredCourses = this.courses.filter(course => course.name.toLowerCase().replace(/\s/g, "").includes(query.toLowerCase().replace(/\s/g, "")));
+      this.filteredCourses = this.courses.filter(course => this.searchify(course.name).includes(this.searchify(query)));
     },
     filterProviders(query) {
-      this.filteredProviders = this.providers.filter(provider => provider.name.toLowerCase().replace(/\s/g, "").includes(query.toLowerCase().replace(/\s/g, "")));
+      this.filteredProviders = this.providers.filter(provider => this.searchify(provider.name).includes(this.searchify(query)));
     },
     getAllSuggestions() {
       return this.filteredCourses.concat(this.filteredProviders);
     },
-    selectCourseSuggestion(clickedSuggestion) {
-      const query = new URLSearchParams();
-      query.append("id", clickedSuggestion.target.getAttribute("course-id"));
-      console.log(clickedSuggestion.target.getAttribute("course-id"));
-      if (query.get("id")) {
-          location.href = "./course?" + query.toString();
+    selectSuggestion(suggestion) {
+      if (suggestion.type == "course") {
+        const query = new URLSearchParams();
+        query.append("id", suggestion.id);
+        if (query.get("id")) {
+            location.href = "./course?" + query.toString();
+        }
+      } else if (suggestion.type == "provider") {
+        if (suggestion.url) {
+          location.href = suggestion.url;
+        }
       }
     },
-    submitSearch() {
-      const query = new URLSearchParams();
-      query.append("q", this.search)
-      if (query.get("q")) {
-          location.href = "./search?" + query.toString();
+    submitSearch(type, allow_empty_query=true) {
+      const params = new URLSearchParams();
+      if (type) {
+        params.append("type", type);
+      }
+      params.append("q", this.search);
+      if (allow_empty_query || (params.get("q") && this.searchify(params.get("q")))) {
+        location.href = "./search?" + params.toString();
       }
     }
   },
@@ -120,7 +135,7 @@ export default {
           vueComponent.filterCourses(vueComponent.search);
         });
         fetchProviders().then(data => {
-          vueComponent.providers = data.map(provider => {return {type: "provider", id: provider.courseProviderId, name: provider.providerName};});
+          vueComponent.providers = data.map(provider => {return {type: "provider", id: provider.courseProviderId, name: provider.providerName, url: provider.url};});
           vueComponent.filterProviders(vueComponent.search);
         });
       }

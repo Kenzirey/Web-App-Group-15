@@ -86,15 +86,24 @@
 }
 
 .suggestion-box {
-  display: inline-block;
+  display: inline-flex;
+  flex-direction: column;
   overflow-wrap: break-word;
   word-break: break-word;
   text-align: left;
   padding: 10px;
 }
 
+.suggestion-box ul {
+  flex-grow: 1;
+}
+
 .suggestion-box li {
   margin-left: 15px;
+}
+
+.suggestion-box a:hover {
+  cursor: pointer;
 }
 
 #courses-suggestions {
