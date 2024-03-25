@@ -6,27 +6,31 @@
         <v-text>Learniverse</v-text>
       </div>
       
-      <v-form v-on:submit.prevent="submitSearch" id="suggestions-container">
-        <v-text-field id="search-bar" v-model="search" append-icon="mdi-magnify" @click:append="submitSearch" placeholder="Search..." required autocomplete="off" hide-details/>
+      <v-form v-on:submit.prevent="submitSearch(null, false)" id="suggestions-container">
+        <button style="display: none;"></button> <!-- Prevents other buttons from being invoked as the submit when clicking enter -->
+        <v-text-field id="search-bar" v-model="search" append-icon="mdi-magnify" @click:append="submitSearch(null, false)" placeholder="Search..." required autocomplete="off" hide-details/>
         <div id="search-suggestions-center-align">
           <div id="search-suggestions">
             <div id="courses-suggestions" class="suggestion-box">
               <h2>Courses:</h2>
               <ul>
-                <li @click.native="completeCourseSuggestion($event)" v-for="course in getCourseSuggestions()" :key="course.name" :course-id="course.id">{{ course.name }}</li>
+                <li @click="selectSuggestion(course)" v-for="course in filteredCourses" :key="course.name"><a>{{ course.name }}</a></li>
               </ul>
+              <button @click.prevent="submitSearch('courses')">More courses...</button>
             </div>
             <div id="providers-suggestions" class="suggestion-box">
               <h2>Course providers:</h2>
               <ul>
-                <li v-for="provider in getProviderSuggestions()" :key="provider.name">{{ provider.name }}</li>
+                <li @click="selectSuggestion(provider)" v-for="provider in filteredProviders" :key="provider.name"><a>{{ provider.name }}</a></li>
               </ul>
+              <button @click.prevent="submitSearch('providers')">More providers...</button>
             </div>
             <div id="all-suggestions" class="suggestion-box">
               <h2>All results:</h2>
               <ul>
-                <li v-for="suggestion in getAllSuggestions()" :key="suggestion.name">{{ suggestion.name }}</li>
+                <li @click="selectSuggestion(suggestion)" v-for="suggestion in getAllSuggestions()" :key="suggestion.name"><a>{{ suggestion.name }} [{{ suggestion.type }}]</a></li>
               </ul>
+              <button @click.prevent="submitSearch()">More results...</button>
             </div>
           </div>
         </div>
@@ -43,49 +47,10 @@
   
 </template>
 
-<script setup>
-  import { ref } from "vue";
-  let search = ref("");
-  
-  const courses = [{id: 1, name: "Result 1"}, {id: 2, name: "Result 2"}, {id: 3, name: "femboys"}]; //TODO: Make an API request to get this instead
-  const providers = [{id: 1, name: "Provider 1"}, {id: 2, name: "Provider 2"}, {id: 3, name: "tomboys"}]; //TODO: Make an API request to get this instead
-
-  function getCourseSuggestions() {
-    return courses.filter((course) => 
-      course.name.toLowerCase().includes(search.value.toLowerCase())
-    );
-  }
-
-  function getProviderSuggestions() {
-    return providers.filter((provider) =>
-      provider.name.toLowerCase().includes(search.value.toLowerCase())
-    );
-  }
-
-  function getAllSuggestions() {
-    return getCourseSuggestions().concat(getProviderSuggestions());
-  }
-
-  function completeCourseSuggestion(clickedSuggestion) {
-    const query = new URLSearchParams();
-    query.append("id", clickedSuggestion.target.getAttribute("course-id"));
-    console.log(clickedSuggestion.target.getAttribute("course-id"));
-    if (query.get("id")) {
-        location.href = "./course?" + query.toString();
-    }
-  }
-
-  function submitSearch() {
-    const query = new URLSearchParams();
-    query.append("q", search.value)
-    if (query.get("q")) {
-        location.href = "./search?" + query.toString();
-    }
-  }
-
-</script>
-
 <script>
+import { ref } from "vue";
+
+let suggestions_loaded = false;
 export default {
   name: 'TopToolbar',
   methods: {
@@ -95,14 +60,85 @@ export default {
     navigateToFavorites() {
       this.$router.push('/favorites');
     },
-    navigateFrontPage(){
+    navigateFrontPage() {
       this.$router.push('/');
+    },
+    searchify(str) {
+      return str.toLowerCase().replace(/\s/g, "");
+    },
+    filterCourses(query) {
+      this.filteredCourses = this.courses.filter(course => this.searchify(course.name).includes(this.searchify(query)));
+    },
+    filterProviders(query) {
+      this.filteredProviders = this.providers.filter(provider => this.searchify(provider.name).includes(this.searchify(query)));
+    },
+    getAllSuggestions() {
+      return this.filteredCourses.concat(this.filteredProviders);
+    },
+    selectSuggestion(suggestion) {
+      if (suggestion.type == "course") {
+        const query = new URLSearchParams();
+        query.append("id", suggestion.id);
+        if (query.get("id")) {
+            location.href = "./course?" + query.toString();
+        }
+      } else if (suggestion.type == "provider") {
+        if (suggestion.url) {
+          location.href = suggestion.url;
+        }
+      }
+    },
+    submitSearch(type, allow_empty_query=true) {
+      const params = new URLSearchParams();
+      if (type) {
+        params.append("type", type);
+      }
+      params.append("q", this.search);
+      if (allow_empty_query || (params.get("q") && this.searchify(params.get("q")))) {
+        location.href = "./search?" + params.toString();
+      }
     }
   },
+  watch: {
+    search(val) {
+      this.filterCourses(val);
+      this.filterProviders(val);
+    }
+  },
+  setup() {
+    let search = ref("");
+    return {search};
+  },
+  data() {
+    return {courses: [], providers: [], filteredCourses: [], filteredProviders: []};
+  },
   mounted() {
-    console.log("owo");
+    const vueComponent = this;
+    const backend_base_url = "http://localhost:8080/";
+
+    async function fetchCourses() {
+      const response = await fetch(backend_base_url + "courses");
+      return await response.json();
+    }
+
+    async function fetchProviders() {
+      const response = await fetch(backend_base_url + "providers");
+      return await response.json();
+    }
+
     document.getElementById("search-bar").addEventListener("focus", function() {
       document.getElementById("search-suggestions").style.display = "grid";
+      if (!suggestions_loaded) {
+        suggestions_loaded = true;
+        fetchCourses().then(data => {
+          vueComponent.courses = data.map(course => {return {type: "course", id: course.courseId, name: course.courseName};});
+          vueComponent.filterCourses(vueComponent.search);
+        });
+        fetchProviders().then(data => {
+          vueComponent.providers = data.map(provider => {return {type: "provider", id: provider.courseProviderId, name: provider.providerName, url: provider.url};});
+          vueComponent.filterProviders(vueComponent.search);
+        });
+      }
     });
 
     document.addEventListener("click", function(event) {

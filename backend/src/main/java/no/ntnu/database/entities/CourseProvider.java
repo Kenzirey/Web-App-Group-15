@@ -21,6 +21,8 @@ public final class CourseProvider {
 	private int courseProviderId;
 	@Schema(description = "Name of the course provider", example = "University in Oslo")
 	private String providerName;
+	@Schema(description = "URL to the course provider's website", example = "https://www.ntnu.no")
+	private String url;
 
 	/**
 	 * Empty constructor for JPA requirement.
@@ -57,5 +59,13 @@ public final class CourseProvider {
 
 	public int getCourseProviderId() {
 		return courseProviderId;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }
