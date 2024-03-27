@@ -201,7 +201,7 @@ html, body {
   height: 100%;
   margin: 0;
   place-items: center;
-  /*As this area is not a vuetify component, */
+  /*As this area is not a vuetify component, added color here */
   background-color: #F5F5F5;
 }
 
@@ -221,9 +221,7 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
-}
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;

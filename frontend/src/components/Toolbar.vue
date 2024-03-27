@@ -2,7 +2,8 @@
   <v-app-bar class="toolbar-app" :elevation="0"  scroll-behavior="hide" id="app-bar">
     <div id="bar">
       <div id="topbar-left">
-        <v-btn prepend-icon="mdi-home" stacked size="small" @click="navigateFrontPage"></v-btn>
+        <!--Look under! To use vuetify color, just set color to the variable you want to use-->
+        <v-btn color="primary" prepend-icon="mdi-home" stacked size="small" @click="navigateFrontPage"></v-btn>
         <v-text>Learniverse</v-text>
       </div>
       
