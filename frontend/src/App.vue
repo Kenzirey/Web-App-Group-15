@@ -1,6 +1,5 @@
 <template>
-  <div id="app">
-    <v-app id="main app">
+    <v-app id="app" color="background" >
       <TopToolbar class="toolbar" />
       <div class="course-content">
         <header>
@@ -25,7 +24,6 @@
 </footer>
       </div>
     </v-app>
-  </div>
 </template>
 
 <script>
@@ -35,7 +33,7 @@ export default {
   name: 'App',
   components: {
     TopToolbar
-  }
+  },
 };
 </script>
 

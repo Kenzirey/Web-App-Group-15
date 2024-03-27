@@ -1,12 +1,12 @@
 <template>
-  <v-card>
-    <v-card-title>{{ title }}</v-card-title>
+  <v-card color="background">
+    <v-card-title class="text--primary">{{ title }}</v-card-title>
     <!-- Hiding delimeter makes it look more clean -->
     <v-carousel hide-delimiter-background	cycle multiple="true" class="carousel-multiple" :interval="15000" >
-      <v-carousel-item 
+      <v-carousel-item color="background"
         v-for="(course, index) in filteredCourses"
         :key="index">
-        <v-img :src="course.image"></v-img>
+        <v-img color ="background" :src="course.image"></v-img>
         <div class="course-name">{{ course.name }}</div>
       </v-carousel-item>
     </v-carousel>

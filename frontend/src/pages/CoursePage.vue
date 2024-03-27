@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container color ="background">
 <div class="table_component" role="region" tabindex="0">
 <table>
     <thead>
@@ -84,15 +84,15 @@ Maybe we can add a picture or something to the right to fill the web page a bit 
 
 .table_component th {
     border: 1px solid #dededf;
-    background-color: #eceff1;
-    color: #000000;
+    /*background-color: #eceff1;*/
+    /*color: #000000;*/
     padding: 5px;
 }
 
 .table_component td {
     border: 1px solid #dededf;
-    background-color: #ffffff;
-    color: #000000;
+    /*background-color: #ffffff;
+    color: #000000;*/
     padding: 5px;
 }
 </style>
