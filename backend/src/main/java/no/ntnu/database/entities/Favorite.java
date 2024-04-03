@@ -1,6 +1,7 @@
 package no.ntnu.database.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -71,6 +72,21 @@ public final class Favorite {
 	 */
 	public int getProductId() {
 		return productId;
+	}
+
+
+	/**
+	 * Checks if the object is valid.
+	 *
+	 * @return True when valid, false when invalid
+	 */
+	@JsonIgnore
+	public boolean isValid() {
+		boolean  valid = false;
+		if (userId < 0 && productId < 0) {
+			valid = true;
+		}
+		return valid;
 	}
 
 }

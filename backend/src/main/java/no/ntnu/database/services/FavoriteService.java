@@ -1,11 +1,14 @@
 package no.ntnu.database.services;
 
+import no.ntnu.database.entities.Favorite;
 import no.ntnu.database.repositories.FavoriteRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 /**
  * Service class for handling business logic for favorites
@@ -15,11 +18,85 @@ import org.springframework.stereotype.Service;
 public class FavoriteService {
 
 
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(ImageService.class);
 
 	@Autowired
 	private FavoriteRepository favoriteRepository;
 
-	//TODO: Bli ferdig med dette
+
+	/**
+	 * Adds a favorite course in the database
+	 *
+	 * @param favorite The favorite course added to the database.
+	 * @return The course id inserted.
+	 */
+	public int add(Favorite favorite) {
+		if (!favorite.isValid()) {
+			LOGGER.warn("Favorite is invalid");
+		}
+		favoriteRepository.save(favorite);
+		return favorite.getProductId();
+	}
+
+	private int canBeAdded(Favorite favorite) {
+		if (!favorite.isValid()) {
+			LOGGER.warn("Favourite is invalid");
+		}
+		favoriteRepository.save(favorite);
+		return favorite.getProductId();
+	}
+
+	/**
+	 * Returns all favorites courses in the database.
+	 *
+	 * @return All courses in the database.
+	 */
+	public Iterable<Favorite> getAllFavourites() {
+		return favoriteRepository.findAll();
+	}
+
+
+	/**
+	 * Returns a favorite course from the database corresponding with the ID.
+	 *
+	 * @param id The id of the course to return.
+	 * @return The course id, or an empty Optional if not found
+	 */
+	public Optional<Favorite> findByProductId(int id) {
+		return favoriteRepository.findById(id);
+	}
+
+
+	/**
+	 * Updates the favorite course.
+	 *
+	 * @param favorite The new course with a new course id
+	 */
+	public void updateFavorite(int id, Favorite favorite) {
+		Optional<Favorite> existingFavorite = favoriteRepository.findById(id);
+		if (existingFavorite.isEmpty()) {
+			LOGGER.warn("No favorite with id: ", id);
+		}
+		if (favorite.getProductId() != id) {
+			LOGGER.warn("Product id does not match with in the id in data");
+		}
+		favoriteRepository.save(favorite);
+
+	}
+
+
+	/**
+	 *	Deletes a favorite course from the database.
+	 *
+	 * @return Returns true if deleted. False if the course doesn't exist in the database
+	 */
+	public boolean delete(int id) {
+		Optional<Favorite> favorite = favoriteRepository.findById(id);
+		if (favorite.isPresent()) {
+			favoriteRepository.deleteById(id);
+		}
+		return favorite.isPresent();
+	}
+
+
 }
