@@ -104,7 +104,7 @@ public class FavoriteController {
 	 * @param id The id of course to be removed.
 	 * @return 200 OK status on success, 404 NOT FOUND on error
 	 */
-	@DeleteMapping
+	@DeleteMapping("/{id}")
 	public ResponseEntity<String> remove(@PathVariable int id) {
 		ResponseEntity<String> response;
 		if (favoriteService.delete(id)) {
