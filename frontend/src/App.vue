@@ -4,11 +4,6 @@
       <div class="course-content">
         <header>
           <h1><router-link to="/">Learniverse Connect</router-link></h1>
-          <nav>
-            <ul>
-              <li><router-link to="/course"><v-btn color="primary">Go to Course Page</v-btn></router-link></li>
-            </ul>
-          </nav>
         </header>
         
         <!-- The main content of the page, replaced based on the current route -->
@@ -55,4 +50,13 @@ export default {
   flex-basis: 100%; /* Ensure the paragraph takes the full width when wrapping */
   text-align: center; /* Center-align the text of the paragraph */
 }
+
+h2 {
+  color: rgb(var(--v-theme-primary))
+}
+
+button:hover {
+  background-color: rgb(var(--v-theme-secondary))
+}
+
 </style>
