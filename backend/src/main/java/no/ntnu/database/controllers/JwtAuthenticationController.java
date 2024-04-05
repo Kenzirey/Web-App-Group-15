@@ -21,11 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class JwtAuthenticationController {
-	@Autowired
+
+	//TODO: Fix Autowired and beans bug.
 	private AuthenticationManager authenticationManager;
-	@Autowired
+
 	private UserDetailsService userDetailsService;
-	@Autowired
+
 	private JwtUtil jwtUtil;
 
 

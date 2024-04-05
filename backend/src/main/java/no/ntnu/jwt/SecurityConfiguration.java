@@ -26,9 +26,10 @@ public class SecurityConfiguration {
 	/**
 	 * A service providing our users from the database.
 	 */
-	@Autowired
+
+	//TODO: Fix Autowired and beans.
 	private UserDetailsService userDetailsService;
-	@Autowired
+
 	private JwtRequestFilter jwtRequestFilter;
 
 	/**
@@ -38,10 +39,11 @@ public class SecurityConfiguration {
 	 * @param auth Authentication builder
 	 * @throws Exception When user service is not found
 	 */
-	@Autowired
+
 	protected void configureAuthentication(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService);
 	}
+
 
 	/**
 	 * This method will be called automatically by the framework to find the authentication to use.
@@ -49,7 +51,6 @@ public class SecurityConfiguration {
 	 * @param http HttpSecurity setting builder
 	 * @throws Exception When security configuration fails
 	 */
-	@Bean
 	public SecurityFilterChain configureAuthorizationFilterChain(HttpSecurity http) throws Exception {
 		// Set up the authorization requests, starting from most restrictive at the top,
 		// to least restrictive on the bottom
@@ -79,6 +80,11 @@ public class SecurityConfiguration {
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
 			throws Exception {
 		return config.getAuthenticationManager();
+	}
+
+	@Bean
+	public AuthenticationConfiguration getConfig() {
+		return new AuthenticationConfiguration();
 	}
 
 	/**
