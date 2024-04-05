@@ -1,4 +1,4 @@
-package no.ntnu.database.services.security;
+package no.ntnu.jwt;
 
 import java.util.Collection;
 import java.util.LinkedList;

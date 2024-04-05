@@ -1,6 +1,7 @@
 package no.ntnu.jwt;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,20 +17,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/**
- * Creates AuthenticationManager - set up authentication type.
- * The @EnableMethodSecurity is needed so that each endpoint can specify which role it requires
- */
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfiguration {
 	/**
 	 * A service providing our users from the database.
 	 */
-
-	//TODO: Fix Autowired and beans.
+	@Autowired
 	private UserDetailsService userDetailsService;
-
+	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
 
 	/**
@@ -39,11 +35,10 @@ public class SecurityConfiguration {
 	 * @param auth Authentication builder
 	 * @throws Exception When user service is not found
 	 */
-
+	@Autowired
 	protected void configureAuthentication(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService);
 	}
-
 
 	/**
 	 * This method will be called automatically by the framework to find the authentication to use.
@@ -51,6 +46,7 @@ public class SecurityConfiguration {
 	 * @param http HttpSecurity setting builder
 	 * @throws Exception When security configuration fails
 	 */
+	@Bean
 	public SecurityFilterChain configureAuthorizationFilterChain(HttpSecurity http) throws Exception {
 		// Set up the authorization requests, starting from most restrictive at the top,
 		// to least restrictive on the bottom
@@ -73,18 +69,12 @@ public class SecurityConfiguration {
 		// Necessary authorization for each endpoint will be configured by each method,
 		// using @PreAuthorize
 		return http.build();
-
 	}
 
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
 			throws Exception {
 		return config.getAuthenticationManager();
-	}
-
-	@Bean
-	public AuthenticationConfiguration getConfig() {
-		return new AuthenticationConfiguration();
 	}
 
 	/**
@@ -97,4 +87,3 @@ public class SecurityConfiguration {
 		return new BCryptPasswordEncoder();
 	}
 }
-

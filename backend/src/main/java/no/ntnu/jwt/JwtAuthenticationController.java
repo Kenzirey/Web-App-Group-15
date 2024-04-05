@@ -1,4 +1,4 @@
-package no.ntnu.database.controllers;
+package no.ntnu.jwt;
 
 import no.ntnu.jwt.AuthenticationRequest;
 import no.ntnu.jwt.AuthenticationResponse;
@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class JwtAuthenticationController {
 
 	//TODO: Fix Autowired and beans bug.
+	@Autowired
 	private AuthenticationManager authenticationManager;
 
+	@Autowired
 	private UserDetailsService userDetailsService;
-
+	@Autowired
 	private JwtUtil jwtUtil;
 
 

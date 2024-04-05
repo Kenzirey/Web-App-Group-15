@@ -1,9 +1,10 @@
-package no.ntnu.database.services.security;
+package no.ntnu.jwt;
 
 
 import java.util.Optional;
 import no.ntnu.database.entities.User;
 import no.ntnu.database.repositories.UserRepository;
+import no.ntnu.jwt.AccessUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
