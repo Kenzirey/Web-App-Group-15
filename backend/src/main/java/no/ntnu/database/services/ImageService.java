@@ -1,6 +1,7 @@
 package no.ntnu.database.services;
 
 
+import no.ntnu.database.entities.Favorite;
 import no.ntnu.database.entities.Image;
 import no.ntnu.database.repositories.ImageRepository;
 
@@ -30,17 +31,13 @@ public class ImageService {
 	 * @param image the image added in the database.
 	 * @return the image ID if the image has been inserted, if not return invalid
 	 */
-	public String addImage(Image image) {
-		try {
-			if (!imageRepository.existsById(image.getImageId())) {
-				imageRepository.save(image);
-				return "Image inserted:" + image.getImageId();
-			} else {
-				return "Image is invalid";
-			}
-		} catch (Exception e) {
-			throw e;
+	public int add(Image image) {
+		if (!image.isValid()) {
+			LOGGER.warn("Favorite is invalid");
 		}
+
+		imageRepository.save(image);
+		return image.getImageId();
 	}
 
 	/**
@@ -57,19 +54,15 @@ public class ImageService {
 	 *
 	 * @param image The new image with a new url
 	 */
-	public String updateImage(Image image) {
-		if (imageRepository.existsById(image.getImageId())) {
-			try {
-			Image existingImage = imageRepository.findById(image.getImageId()).get();
-			existingImage.setImageUrl(image.getImageUrl());
-			imageRepository.save(existingImage);
-			return "Image updated";
-		} catch (Exception e) {
-				throw e;
-			}
+	public void update(int id, Image image) {
+		Optional<Image> existingImage = imageRepository.findById(id);
+		if (existingImage.isEmpty()) {
+			throw new IllegalStateException(String.format("No favorite: ", id));
 		} else {
-			return "Image does not exists in the DB";
+			image.setCourseId(id);
+			imageRepository.save(image);
 		}
+
 	}
 
 

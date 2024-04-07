@@ -1,5 +1,7 @@
 package no.ntnu.database.services;
 
+import java.util.Optional;
+
 import no.ntnu.database.entities.Favorite;
 import no.ntnu.database.repositories.FavoriteRepository;
 
@@ -7,8 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Optional;
+
 
 /**
  * Service class for handling business logic for favorites
@@ -18,31 +21,35 @@ import java.util.Optional;
 public class FavoriteService {
 
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ImageService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FavoriteService.class);
 
+
+	private final FavoriteRepository repository;
+
+	/**
+	 * Makes the favorite service.
+	 *
+	 * @param favoriteRepository The repository class for communication
+	 */
 	@Autowired
-	private FavoriteRepository favoriteRepository;
+	public FavoriteService(FavoriteRepository favoriteRepository) {
+		this.repository = favoriteRepository;
+	}
 
 
 	/**
-	 * Adds a favorite course in the database
+	 * Adds a favorite course in the database.
 	 *
-	 * @param favorite The favorite course added to the database.
-	 * @return The course id inserted.
+	 * @param favorite The {@link Favorite} added to the database.
+	 * @return The {@link Favorite}'id inserted.
 	 */
 	public int add(Favorite favorite) {
+
 		if (!favorite.isValid()) {
 			LOGGER.warn("Favorite is invalid");
 		}
-		favoriteRepository.save(favorite);
-		return favorite.getProductId();
-	}
 
-	private int canBeAdded(Favorite favorite) {
-		if (!favorite.isValid()) {
-			LOGGER.warn("Favourite is invalid");
-		}
-		favoriteRepository.save(favorite);
+		repository.save(favorite);
 		return favorite.getProductId();
 	}
 
@@ -52,7 +59,7 @@ public class FavoriteService {
 	 * @return All courses in the database.
 	 */
 	public Iterable<Favorite> getAllFavourites() {
-		return favoriteRepository.findAll();
+		return repository.findAll();
 	}
 
 
@@ -63,7 +70,7 @@ public class FavoriteService {
 	 * @return The course id, or an empty Optional if not found
 	 */
 	public Optional<Favorite> findByProductId(int id) {
-		return favoriteRepository.findById(id);
+		return repository.findById(id);
 	}
 
 
@@ -73,14 +80,14 @@ public class FavoriteService {
 	 * @param favorite The new course with a new course id
 	 */
 	public void updateFavorite(int id, Favorite favorite) {
-		Optional<Favorite> existingFavorite = favoriteRepository.findById(id);
+		Optional<Favorite> existingFavorite = repository.findById(id);
+
 		if (existingFavorite.isEmpty()) {
-			LOGGER.warn("No favorite with id: ", id);
+			throw new IllegalStateException(String.format("No favorite: ", id));
+		} else {
+			favorite.setProductId(id);
+			repository.save(favorite);
 		}
-		if (favorite.getProductId() != id) {
-			LOGGER.warn("Product id does not match with in the id in data");
-		}
-		favoriteRepository.save(favorite);
 
 	}
 
@@ -91,12 +98,19 @@ public class FavoriteService {
 	 * @return Returns true if deleted. False if the course doesn't exist in the database
 	 */
 	public boolean delete(int id) {
-		Optional<Favorite> favorite = favoriteRepository.findById(id);
+		Optional<Favorite> favorite = repository.findById(id);
+		if (id < 0) {
+			LOGGER.warn("Invalid ID");
+		}
+
 		if (favorite.isPresent()) {
-			favoriteRepository.deleteById(id);
+			repository.deleteById(id);
 		}
 		return favorite.isPresent();
 	}
+
+
+
 
 
 }

@@ -1,7 +1,10 @@
 package no.ntnu.database.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 /**
@@ -13,7 +16,8 @@ import jakarta.persistence.Id;
 public class Category {
 
 	@Id
-	@Schema (description = "The unique id for the category", example = "1111")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Schema (description = "The unique id for the category", example = "1")
 	private int categoryId;
 
 	@Schema (description = "The name of the category", example = "Java")
@@ -70,7 +74,19 @@ public class Category {
 		this.categoryId = categoryId;
 	}
 
-
+	/**
+	 * Checks if the object is valid.
+	 *
+	 * @return True when valid, false when invalid
+	 */
+	@JsonIgnore
+	public boolean isValid() {
+		boolean  valid = false;
+		if (categoryId > 0 && categoryName != null) {
+			valid = true;
+		}
+		return valid;
+	}
 
 
 
