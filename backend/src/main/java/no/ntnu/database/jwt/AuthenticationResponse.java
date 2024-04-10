@@ -1,4 +1,4 @@
-package no.ntnu.jwt;
+package no.ntnu.database.jwt;
 
 /**
  * Data that we will send as a response to the user when the authentication is successful.

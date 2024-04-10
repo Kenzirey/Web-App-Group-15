@@ -1,4 +1,4 @@
-package no.ntnu.jwt;
+package no.ntnu.database.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;

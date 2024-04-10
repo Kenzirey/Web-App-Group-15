@@ -1,4 +1,4 @@
-package no.ntnu;
+package no.ntnu.database;
 
 import no.ntnu.database.entities.Role;
 import no.ntnu.database.entities.User;

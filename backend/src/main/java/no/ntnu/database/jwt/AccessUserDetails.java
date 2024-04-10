@@ -1,4 +1,4 @@
-package no.ntnu.jwt;
+package no.ntnu.database.jwt;
 
 import java.util.Collection;
 import java.util.LinkedList;

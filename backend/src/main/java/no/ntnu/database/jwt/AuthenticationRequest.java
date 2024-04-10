@@ -1,4 +1,4 @@
-package no.ntnu.jwt;
+package no.ntnu.database.jwt;
 
 /**
  * Data that the user will send in the login request.
