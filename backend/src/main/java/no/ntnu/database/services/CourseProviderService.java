@@ -1,10 +1,8 @@
 package no.ntnu.database.services;
 
 import java.util.Optional;
-
 import no.ntnu.database.entities.CourseProvider;
 import no.ntnu.database.repositories.CourseProviderRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +95,16 @@ public class CourseProviderService {
 	 */
 	public Iterable<CourseProvider> getAllProviders() {
 		return repository.findAll();
+	}
+
+	/**
+	 * Searches for a specific providers.
+	 *
+	 * @param query The search query to use when searching for providers
+	 * @return Any providers that match the search query
+	 */
+	public Iterable<CourseProvider> searchProvider(String query) {
+		return repository.searchProvider(query);
 	}
 
 }

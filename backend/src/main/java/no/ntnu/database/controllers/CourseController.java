@@ -1,10 +1,8 @@
 package no.ntnu.database.controllers;
 
 import java.util.Optional;
-
 import no.ntnu.database.entities.Course;
 import no.ntnu.database.services.CourseService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,6 +134,19 @@ public class CourseController {
 			response = ResponseEntity.notFound().build();
 		}
 		return  response;
+	}
+
+	/**
+	 * Endpoint to search for courses.
+	 *
+	 * @param query The query to use when searching for courses
+	 * @return Courses that match the search query
+	 */
+	@GetMapping("/search/{query}")
+	public Iterable<Course> searchCategory(@PathVariable String query) {
+		return query == null || query.isBlank()
+				? courseService.getAllCourses()
+				: courseService.searchCourse(query);
 	}
 
 }

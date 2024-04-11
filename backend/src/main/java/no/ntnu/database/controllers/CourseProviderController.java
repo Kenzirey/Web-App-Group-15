@@ -2,10 +2,8 @@ package no.ntnu.database.controllers;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
-
 import no.ntnu.database.entities.CourseProvider;
 import no.ntnu.database.services.CourseProviderService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,5 +138,18 @@ public class CourseProviderController {
 			response = ResponseEntity.notFound().build();
 		}
 		return response;
+	}
+
+	/**
+	 * Endpoint to search for providers.
+	 *
+	 * @param query The query to use when searching for providers
+	 * @return Providers that match the search query
+	 */
+	@GetMapping("/search/{query}")
+	public Iterable<CourseProvider> searchCategory(@PathVariable String query) {
+		return query == null || query.isBlank()
+				? service.getAllProviders()
+				: service.searchProvider(query);
 	}
 }

@@ -15,10 +15,6 @@
   <v-pagination  :total-visible="6" v-model="page" :length="Math.ceil(items.length / items_per_page)"></v-pagination>
 </template>
 
-<script setup>
-  
-</script>
-
 <script>
   import { ref } from 'vue';
   export default {
@@ -34,6 +30,18 @@
     watch: {
       page() {
         window.scrollTo({ top: 0});
+      }
+    },
+    mounted() {
+      const backend_base_url = "http://localhost:8080/";
+
+      if (this.$route.query.q) {
+        if (this.$route.query.type != "providers") {
+          fetch(backend_base_url + `courses/search/${this.$route.query.q}`);
+        }
+        if (this.$route.query.type != "courses") {
+          fetch(backend_base_url + `providers/search/${this.$route.query.q}`);
+        }
       }
     }
   }
