@@ -2,9 +2,7 @@
     <v-app id="app" color="background" >
       <TopToolbar class="toolbar" />
       <div class="course-content">
-        <header>
-          <h1><router-link to="/">Learniverse Connect</router-link></h1>
-        </header>
+
         
         <!-- The main content of the page, replaced based on the current route -->
         <router-view id="content"></router-view>
@@ -32,13 +30,21 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .footer-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  place-items: center;
+  /*As this area is not a vuetify component, added color here */
+  background-color: rgb(var(--v-theme-background))
 }
 
 #contact {
@@ -55,8 +61,16 @@ h2 {
   color: rgb(var(--v-theme-primary))
 }
 
-button:hover {
-  background-color: rgb(var(--v-theme-secondary))
-}
 
+
+button {
+
+  &:hover {
+    background-color: rgb(var(--v-theme-secondary))
+  }
+
+  img {
+
+  }
+}
 </style>

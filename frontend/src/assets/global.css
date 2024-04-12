@@ -43,11 +43,14 @@
 
 #topbar-left {
   justify-content: flex-start;
+  gap: 14px 26px;
 }
 
 #topbar-right {
   justify-content: flex-end;
+  gap: 10px 20px;
 }
+
 
 #suggestions-container, #topbar-left, #topbar-right {
   display: flex;
@@ -195,14 +198,6 @@ a {
 }
 a:hover {
   color: #535bf2;
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-  place-items: center;
-  /*As this area is not a vuetify component, added color here */
-  background-color: #F5F5F5;
 }
 
 

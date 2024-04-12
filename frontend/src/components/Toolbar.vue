@@ -3,7 +3,7 @@
     <div id="bar">
       <div id="topbar-left">
         <!--Look under! To use vuetify color, just set color to the variable you want to use-->
-        <v-btn color="primary" prepend-icon="mdi-home" stacked size="small" @click="navigateFrontPage"></v-btn>
+        <v-btn color="primary" prepend-icon="mdi-home" stacked size="small" @click="navigateFrontPage">Home</v-btn>
         <v-text>Learniverse</v-text>
       </div>
       

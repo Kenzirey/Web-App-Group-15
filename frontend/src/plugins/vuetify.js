@@ -16,8 +16,8 @@ const lightTheme = {
   colors: {
     primary: '#3F51B5',
     secondary: '#b4bbe4',
-    background: '#F5F5F5',  //Background of main content area
-    surface: '#F5F5F5',     //Background of the toolbar
+    background: '#e4e8f1',  //Background of main content area
+    surface: '#e4e8f1',     //Background of the toolbar
     accent: '#2196f3',
     error: '#f44336',
     warning: '#ff9800',

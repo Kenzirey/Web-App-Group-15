@@ -1,14 +1,13 @@
 <template>
   <v-container color ="background">
-<div class="table_component" role="region" tabindex="0">
-<table>
+<v-table class="CoursePage_table">
     <thead>
         <tr>
-            <th><h3>{{ course.title }}</h3></th>
-            <th><h3>{{ course.courseTitle }}</h3></th>
+            <td class="course-title" colspan="2"><h3>{{course.title}}</h3></td>
         </tr>
     </thead>
     <tbody>
+        <div class="course_table_content">
         <tr>
             <td>Difficulty Level</td>
             <td>Beginner</td>
@@ -36,63 +35,80 @@
         <tr>
             <td>Course Cost</td>
             <td>$500</td>
+            
         </tr>
+        </div>
+    
         <tr>
         <td colspan="2">{{ course.description }}</td>
     </tr>
     </tbody>
-</table>
-</div>
+    
+</v-table>
   </v-container>
 </template>
   
-  <script>
+<script>
   export default {
   name: 'CoursePage',
   data() {
     return {
       course: {
-        title: 'Course Title',
-        courseTitle: "SQL for Beginners",
+        title: 'SQL for Beginners',
         description: 'This is a detailed description of the course. :3'
         + ' in theory, if we actually had content to put here',
       },
     };
   }
 }
-  </script>
+</script>
 
-<style>
+<style scoped>
 
 /*These are just temporary styles, we need to edit this but this is simply for the "functional" aspect
 Maybe we can add a picture or something to the right to fill the web page a bit more? */
 
-.table_component {
-    overflow: auto;
-    width: 100%;
-}
-
 .table_component table {
-    border: 1px solid #dededf;
-    height: 100%;
-    width: 100%;
+    flex: auto;
     table-layout: fixed;
     border-collapse: collapse;
     border-spacing: 1px;
-    text-align: left;
+    text-align: center;
 }
 
-.table_component th {
-    border: 1px solid #dededf;
-    /*background-color: #eceff1;*/
-    /*color: #000000;*/
-    padding: 5px;
+
+img {
+    float: right;
+    margin: 10 px;
 }
 
-.table_component td {
+.table_component {
+    overflow: auto;
+
+}
+
+.course_table_content td {
+    width: 25vh;
+}
+
+.course_table_content td {
     border: 1px solid #dededf;
     /*background-color: #ffffff;
     color: #000000;*/
-    padding: 5px;
+    padding: 10px;
 }
+
+thead {
+    padding: 20px;
+    font-size: x-large;
+}
+
+
+
+
+h3 {
+    text-align: center;
+}
+
+
 </style>
