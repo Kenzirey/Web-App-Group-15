@@ -153,11 +153,12 @@ export default {
 
 <style lang="scss" scoped>
 #app-bar {
-  /**Test if this is even necessary, but found these online for older browser compabiility for browsers */
-  background-image: -webkit-linear-gradient(to right, #a8c0ff, #3f2b96); /* For Chrome 25 and Safari 6, iOS Safari 6.1 to 6.2 */
-  background-image:    -moz-linear-gradient(to right, #a8c0ff, #3f2b96); /* For Firefox 3.6 to 15 */
-  background-image:      -o-linear-gradient(to right, #a8c0ff, #3f2b96); /* For Opera 11.1 to 12 */
-  background-image: linear-gradient(to right, #a8c0ff, #3f2b96);
+  /**Test if this is even necessary, but found these online for older browser compabiility for browsers
+  also add rgb variable instead? */
+  background-image: -webkit-linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo))); /* For Chrome 25 and Safari 6, iOS Safari 6.1 to 6.2 */
+  background-image:    -moz-linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo))); /* For Firefox 3.6 to 15 */
+  background-image:      -o-linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo))); /* For Opera 11.1 to 12 */
+  background-image: linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo)));
 }
 
 .v-btn {
@@ -175,7 +176,5 @@ export default {
    */
   color: rgb(var(--v-theme-background));
 }
-
-
 
 </style>

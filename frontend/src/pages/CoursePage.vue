@@ -50,6 +50,7 @@
   text-align: center;
   font-size: 1.5em; 
   padding-bottom: 40px;
+  color: rgb(var(--v-theme-primary));
 }
 
 .content-container {

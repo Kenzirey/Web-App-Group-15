@@ -15,9 +15,11 @@ const lightTheme = {
   dark: false,
   colors: {
     /*Need to add colors to features course background etc */
-    primary: '#3F51B5',
+    primary: '#3f2b96',
     secondary: '#b4bbe4',
-    background: '#e4e8f1',  //Background of main content area
+    background: '#d6e1ff',  //Background of main content area
+    gradiantOne:'#a8c0ff',
+    gradiantTwo:'#3f2b96',
     accent: '#2196f3',
     error: '#f44336',
     warning: '#ff9800',
