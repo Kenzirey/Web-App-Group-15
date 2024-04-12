@@ -14,10 +14,10 @@ import { createVuetify } from 'vuetify'
 const lightTheme = {
   dark: false,
   colors: {
+    /*Need to add colors to features course background etc */
     primary: '#3F51B5',
     secondary: '#b4bbe4',
     background: '#e4e8f1',  //Background of main content area
-    surface: '#e4e8f1',     //Background of the toolbar
     accent: '#2196f3',
     error: '#f44336',
     warning: '#ff9800',

@@ -3,8 +3,7 @@
     <div id="bar">
       <div id="topbar-left">
         <!--Look under! To use vuetify color, just set color to the variable you want to use-->
-        <v-btn color="primary" prepend-icon="mdi-home" stacked size="small" @click="navigateFrontPage">Home</v-btn>
-        <v-text>Learniverse</v-text>
+        <v-btn prepend-icon="mdi-home" stacked size="small" @click="navigateFrontPage">Learniverse Logo Goes Here</v-btn>
       </div>
       
       <v-form v-on:submit.prevent="submitSearch(null, false)" id="suggestions-container">
@@ -39,8 +38,8 @@
   
       <!-- Hidden, but kept for future reference -->
       <div id="topbar-right">
-        <v-btn color="primary" prepend-icon="mdi-account" stacked size="small" @click="navigateToAccount">View Account</v-btn>
-        <v-btn color="primary" prepend-icon="mdi-heart" stacked size="small" @click="navigateToFavorites">View Favorites</v-btn>
+        <v-btn prepend-icon="mdi-account" stacked size="small" @click="navigateToAccount">View Account</v-btn>
+        <v-btn prepend-icon="mdi-heart" stacked size="small" @click="navigateToFavorites">View Favorites</v-btn>
       </div>
     </div>
     
@@ -151,3 +150,32 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+#app-bar {
+  /**Test if this is even necessary, but found these online for older browser compabiility for browsers */
+  background-image: -webkit-linear-gradient(to right, #a8c0ff, #3f2b96); /* For Chrome 25 and Safari 6, iOS Safari 6.1 to 6.2 */
+  background-image:    -moz-linear-gradient(to right, #a8c0ff, #3f2b96); /* For Firefox 3.6 to 15 */
+  background-image:      -o-linear-gradient(to right, #a8c0ff, #3f2b96); /* For Opera 11.1 to 12 */
+  background-image: linear-gradient(to right, #a8c0ff, #3f2b96);
+}
+
+.v-btn {
+  color: rgb(var(--v-theme-background));
+}
+
+.v-text {
+  color: brown;
+  background-color: brown;
+}
+
+.v-form {
+  /** Kom opp med en bedre kontrast farge, den er litt for mørk kanskje?
+  Tror det har noe med search baren ellers.
+   */
+  color: rgb(var(--v-theme-background));
+}
+
+
+
+</style>
