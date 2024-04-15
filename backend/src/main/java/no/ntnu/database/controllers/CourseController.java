@@ -43,7 +43,7 @@ public class CourseController {
 	 *
 	 * @return all the courses in the database.
 	 */
-	@GetMapping
+	@GetMapping(produces = {"application/json"})
 	public Iterable<Course> getAllCourses() {
 		LOGGER.info("Getting all courses, test!");
 		return courseService.getAllCourses();
@@ -59,7 +59,7 @@ public class CourseController {
 	 *         <li>If no match is found, returns status 404.</li>
 	 *     </ul>
 	 */
-	@GetMapping("/{id}")
+	@GetMapping(value = "/{id}", produces = {"application/json"})
 	public ResponseEntity<Course> getCourse(@PathVariable Integer id) {
 		ResponseEntity<Course> response;
 		Optional<Course> course = courseService.findById(id);
@@ -142,7 +142,7 @@ public class CourseController {
 	 * @param query The query to use when searching for courses
 	 * @return Courses that match the search query
 	 */
-	@GetMapping("/search/{query}")
+	@GetMapping(value = "/search/{query}", produces = {"application/json"})
 	public Iterable<Course> searchCategory(@PathVariable String query) {
 		return query == null || query.isBlank()
 				? courseService.getAllCourses()

@@ -46,7 +46,7 @@ public class CourseProviderController {
 	 *
 	 * @return all the course providers in the database.
 	 */
-	@GetMapping
+	@GetMapping(produces = {"application/json"})
 	public Iterable<CourseProvider> getAllCourseProviders() {
 		LOGGER.info("Getting all providers, test!");
 		return service.getAllProviders();
@@ -63,7 +63,7 @@ public class CourseProviderController {
 	 *         <li>If no match is found, returns status 404.</li>
 	 *     </ul>
 	 */
-	@GetMapping("/{id}")
+	@GetMapping(value = "/{id}", produces = {"application/json"})
 	public ResponseEntity<CourseProvider> getProvider(@PathVariable int id) {
 		ResponseEntity<CourseProvider> response;
 		Optional<CourseProvider> provider = service.findById(id);
@@ -146,7 +146,7 @@ public class CourseProviderController {
 	 * @param query The query to use when searching for providers
 	 * @return Providers that match the search query
 	 */
-	@GetMapping("/search/{query}")
+	@GetMapping(value = "/search/{query}", produces = {"application/json"})
 	public Iterable<CourseProvider> searchCategory(@PathVariable String query) {
 		return query == null || query.isBlank()
 				? service.getAllProviders()

@@ -3,6 +3,7 @@ package no.ntnu.database.repositories;
 import no.ntnu.database.entities.CourseProvider;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,10 +14,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CourseProviderRepository extends CrudRepository<CourseProvider, Integer> {
 	@Query(value = """
-			SELECT *
-			FROM Course_provider c
-			WHERE REPLACE(c.provider_name, ' ', '') LIKE '%' || REPLACE(?1, ' ', '') || '%'
-			""", nativeQuery = true
+			SELECT c
+			FROM CourseProvider c
+			WHERE REPLACE(c.providerName, ' ', '') LIKE '%' || REPLACE(:#{#query}, ' ', '') || '%'
+			"""
 	)
-	Iterable<CourseProvider> searchProvider(String query);
+	Iterable<CourseProvider> searchProvider(@Param("query") String query);
 }
