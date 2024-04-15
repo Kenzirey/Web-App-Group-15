@@ -152,7 +152,7 @@ export default {
     const route = useRoute();
     useRouter().isReady().then(function() {
       if (route.query.q) {
-        vueComponent.search = ref(route.query.q);
+        vueComponent.search = route.query.q;
       }
     })
   }
