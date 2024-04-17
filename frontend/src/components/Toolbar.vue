@@ -49,6 +49,7 @@
 
 <script>
 import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 let suggestions_loaded = false;
 export default {
@@ -147,6 +148,13 @@ export default {
         document.getElementById("search-suggestions").style.display = "none";
       }
     });
+    
+    const route = useRoute();
+    useRouter().isReady().then(function() {
+      if (route.query.q) {
+        vueComponent.search = route.query.q;
+      }
+    })
   }
 }
 </script>

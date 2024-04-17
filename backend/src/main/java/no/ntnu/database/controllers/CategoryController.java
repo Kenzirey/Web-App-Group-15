@@ -32,7 +32,7 @@ public class CategoryController {
 	 *
 	 * @return All categories
 	 */
-	@GetMapping("/categories")
+	@GetMapping(value = "/categories", produces = {"application/json"})
 	public Iterable<Category> getAllCategories() {
 		return service.getAllCategories();
 	}
@@ -43,7 +43,7 @@ public class CategoryController {
 	 * @param query The query to use when searching for categories
 	 * @return Categories that match the search queries
 	 */
-	@GetMapping("/categories/{query}")
+	@GetMapping(value = "/categories/{query}", produces = {"application/json"})
 	public Iterable<Category> searchCategory(@PathVariable String query) {
 		return query == null || query.isBlank()
 				? service.getAllCategories()

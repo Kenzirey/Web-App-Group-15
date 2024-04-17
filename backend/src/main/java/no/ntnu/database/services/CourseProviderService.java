@@ -97,4 +97,14 @@ public class CourseProviderService {
 		return repository.findAll();
 	}
 
+	/**
+	 * Searches for a specific providers.
+	 *
+	 * @param query The search query to use when searching for providers
+	 * @return Any providers that match the search query
+	 */
+	public Iterable<CourseProvider> searchProvider(String query) {
+		return repository.searchProvider(query);
+	}
+
 }
