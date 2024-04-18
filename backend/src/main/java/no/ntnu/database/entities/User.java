@@ -28,6 +28,8 @@ public class User {
 			inverseJoinColumns = @JoinColumn(name = "role_id")
 	)
 	private Set<Role> roles = new LinkedHashSet<>();
+    private String twoFactorSecret;
+	private boolean isTwoFactorEnabled;
 
 	/**
 	 * Empty constructor needed for JPA.
@@ -89,4 +91,20 @@ public class User {
 	public void addRole(Role role) {
 		roles.add(role);
 	}
+	
+	public String getTwoFactorSecret() {
+        return twoFactorSecret;
+    }
+
+    public void setTwoFactorSecret(String twoFactorSecret) {
+        this.twoFactorSecret = twoFactorSecret;
+    }
+
+    public boolean isTwoFactorEnabled() {
+        return isTwoFactorEnabled;
+    }
+
+    public void setTwoFactorEnabled(boolean twoFactorEnabled) {
+        isTwoFactorEnabled = twoFactorEnabled;
+    }
 }
