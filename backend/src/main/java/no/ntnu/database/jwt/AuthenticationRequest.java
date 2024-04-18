@@ -6,6 +6,7 @@ package no.ntnu.database.jwt;
 public class AuthenticationRequest {
 	private String username;
 	private String password;
+	private String twoFactorToken;
 
 	public AuthenticationRequest() {
 	}
@@ -30,4 +31,12 @@ public class AuthenticationRequest {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+	
+	public String getTwoFactorToken() {
+        return twoFactorToken;
+    }
+
+    public void setTwoFactorToken(String twoFactorToken) {
+        this.twoFactorToken = twoFactorToken;
+    }
 }
