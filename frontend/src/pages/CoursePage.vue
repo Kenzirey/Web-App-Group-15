@@ -8,6 +8,7 @@
                   <div class="info-item"><span class="key">Course Providers:</span> <span class="value">NTNU</span></div>
                   <div class="info-item"><span class="key">Difficulty Level:</span> <span class="value">Beginner</span></div>
                   <div class="info-item"><span class="key">Course Size:</span> <span class="value">ECTs Credits</span></div>
+                  
                   <div class="info-item"><span class="key">Hours per week:</span> <span class="value">4</span></div>
                   <div class="info-item"><span class="key">Related Certifications:</span> <span class="value">SQL Wizard</span></div>
                   <div class="info-item"><span class="key">Course Cost:</span> <span class="value">$500</span></div>
@@ -37,7 +38,8 @@ export default {
 </script>
   
   <style lang="scss" scoped>
-
+/* The items, have 2 columns to break up the information
+ */
 .session-date {
   text-align: center;
   font-size: 1.2em;
@@ -58,26 +60,25 @@ export default {
 
 .content-container {
   display: grid;
-  /** fr = fractions, give fractions to grids.
-  Use min content
-   */
-  grid-template-columns: max-content auto;
+  /*grid-template-columns: max-content auto;*/
   width: 100%;
+  justify-content: center;
   
   gap: 20px;
 }
 
 .course-info {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 10px; 
+  width: 100%; 
+  justify-items: start; 
 }
 
 .info-item {
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-self: auto;
 }
 
 .key {
@@ -92,8 +93,9 @@ export default {
 }
 
 .course-image img {
-  width: 80%; /* Ensure the image fills the container */
+ 
   min-width: 30%;
+  max-width:50%;
   height: auto;
 }
   </style>
