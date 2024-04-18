@@ -1,106 +1,71 @@
 package no.ntnu.service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import no.ntnu.database.DbConnectionWrapper;
-import no.ntnu.database.Query;
+import java.util.Optional;
+import no.ntnu.database.entities.User;
+import no.ntnu.database.repositories.UserRepository;
+import no.ntnu.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 
 /**
- * Contains various database requests for two factor operations.
+ * Service for handling two-factor authentication operations.
  */
-//@Component("twoFactorRequests")
+@Service("twoFactorRequests")
 public class TwoFactorRequests {
-	private final Connection connection;
+  	private final UserRepository userRepository;
+
+  	@Autowired
+  	public TwoFactorRequests(UserRepository userRepository) {
+		this.userRepository = userRepository;
+  	}
+	
+	public Optional<String> get2FaSecretKey(String username) {
+		return userRepository.findByUsername(username)
+						 .map(User::getTwoFactorSecret);
+ 	}
 
 	/**
-	 * Makes the object for sending requests.
+	 * Checks if two-factor authentication is enabled for a specified user.
 	 *
-	 * @param dbConnectionWrapper Autowired wrapper object containing a database connection
+	 * @param username the username of the user to check
+	 * @return true if 2FA is enabled, false otherwise
 	 */
-	//@Autowired
-	public TwoFactorRequests(DbConnectionWrapper dbConnectionWrapper) {
-		this.connection = dbConnectionWrapper.getConnection();
+	public boolean get2FaEnabled(String username) {
+		return userRepository.findByUsername(username)
+						.map(User::isTwoFactorEnabled)
+						.orElse(false);
+	}
+
+
+	/**
+	 * Saves the two-factor authentication secret key for a specified user and enables 2FA.
+	 *
+	 * @param username the username of the user whose 2FA secret key is to be saved
+	 * @param secretKey the new 2FA secret key to be set
+	 */
+	public void saveUser2FaSecretKey(String username, String secretKey) {
+		userRepository.findByUsername(username).ifPresent(user -> {
+			user.setTwoFactorSecret(secretKey);
+			user.setTwoFactorEnabled(true);
+			userRepository.save(user);
+		});
 	}
 
 	/**
-	 * Retrieves the 2FA secret key for a user from the database.
+	 * Enables two-factor authentication for a user by generating a new secret key, saving it and
+	 * updating their 2FA enabled status.
 	 *
-	 * @param username The username for which the 2FA secret key is to be retrieved.
-	 * @return The retrieved secret key or null if not found.
-	 * @throws SQLException If an error occurs during the database query operation.
+	 * @param username the username of the user for who 2FA is to be enabled
 	 */
-	public String get2FaSecretKey(String username) throws SQLException {
-		try (PreparedStatement statement = connection.prepareStatement(
-				Query.GET_2FA_SECRET.getString()
-		)) {
-			statement.setString(1, username);
-			String twoFaSecret = null;
-			ResultSet resultSet = statement.executeQuery();
-			if (resultSet.next()) {
-				twoFaSecret = resultSet.getString("two_factor_secret");
+	public void enable2FaForUser(String username) {
+		userRepository.findByUsername(username).ifPresent(user -> {
+			if (!user.isTwoFactorEnabled()) {
+				String secretKey = SecurityUtil.generate2FaSecretKey();
+				user.setTwoFactorSecret(secretKey);
+				user.setTwoFactorEnabled(true);
+				userRepository.save(user);
 			}
-			return twoFaSecret;
-		}
-	}
-
-
-	/**
-	 * Updates the 2FA enabled status for a user in the database.
-	 *
-	 * @param username  The username for which the 2FA status is to be updated.
-	 * @param isEnabled The new 2FA enabled status to be set.
-	 * @throws SQLException If an error occurs during the database update operation.
-	 */
-	public void set2FaEnabled(String username, boolean isEnabled) throws SQLException {
-		try (PreparedStatement statement = connection.prepareStatement(
-				Query.SET_2FA_ENABLED.getString()
-		)) {
-			statement.setBoolean(1, isEnabled);
-			statement.setString(2, username);
-			statement.executeUpdate();
-		}
-	}
-
-
-	/**
-	 * Retrieves the 2FA enabled status for a user from the database.
-	 *
-	 * @param username The username for which the 2FA status is to be checked.
-	 * @return The 2FA enabled status.
-	 * @throws SQLException If an error occurs during the database query operation.
-	 */
-	public boolean get2FaEnabled(String username) throws SQLException {
-		try (PreparedStatement statement = connection.prepareStatement(
-				Query.GET_2FA_ENABLED.getString()
-		)) {
-			statement.setString(1, username);
-			boolean twoFaEnabled = false;
-			ResultSet resultSet = statement.executeQuery();
-			if (resultSet.next()) {
-				twoFaEnabled = resultSet.getBoolean("is_2fa_enabled");
-			}
-			return twoFaEnabled;
-		}
-	}
-
-	/**
-	 * Stores the 2FA secret key for a user in the database.
-	 *
-	 * @param username  The username for which the 2FA secret key is to be saved.
-	 * @param secretKey The secret key to be stored.
-	 * @throws SQLException If an error occurs during the database update operation.
-	 */
-	public void saveUser2FaSecretKey(String username, String secretKey) throws SQLException {
-		try (PreparedStatement statement = connection.prepareStatement(
-				Query.INSERT_2FA_SECRET.getString()
-		)) {
-			statement.setString(1, username);
-			statement.setString(2, secretKey);
-			statement.executeUpdate();
-		}
+		});
 	}
 }
