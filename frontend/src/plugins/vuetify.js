@@ -24,7 +24,7 @@ const lightTheme = {
     error: '#f44336',
     warning: '#ff9800',
     info: '#03a9f4',
-    success: '#8bc34'
+    success: '#8bc34' //TODO: Make this a valid hex color
   },
   variables: {
     'border-color': '#000000',
