@@ -8,13 +8,16 @@
 
     <!-- Any other sections we want on the homepage -->
     
+    <swiper-container style="height:100px;" slides-per-view="5" speed="5000" loop="true" css-mode="true" navigation="true" pagination="true">
+      <swiper-slide v-for="n in 20">Slide {{ n }}</swiper-slide>
+    </swiper-container>
     <section class="carousel-test">
       
-        <v-slide-group ref="slideGroup" :model-value="slideActive" center-active>
-          <v-slide-group-item :ref="n" :key="n" v-for="n in slidesTotal">
-            <v-card :class="['bruh', 'test' + (n - 1) % 3]">{{ n - 1 }}</v-card>
-          </v-slide-group-item>
-        </v-slide-group>
+      <v-slide-group style="display: none;" ref="slideGroup" :model-value="slideActive" center-active>
+        <v-slide-group-item :ref="n" :key="n" v-for="n in slidesTotal">
+          <v-card :class="['bruh', 'test' + (n - 1) % 3]">{{ n - 1 }}</v-card>
+        </v-slide-group-item>
+      </v-slide-group>
 
       <!-- Test Section for Carousels-->
       <section>
@@ -66,6 +69,7 @@
 </style>
 
 <script>
+
 /**
  * Carousel component allows us to add multiple carousels with reusable code.
  * We just need to change its category, sale, or its difficulty. We can expand on whatever we want.
