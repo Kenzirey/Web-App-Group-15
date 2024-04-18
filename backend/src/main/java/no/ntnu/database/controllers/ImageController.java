@@ -1,6 +1,7 @@
 package no.ntnu.database.controllers;
 
 
+import no.ntnu.database.entities.Favorite;
 import no.ntnu.database.entities.Image;
 import no.ntnu.database.services.ImageService;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import java.util.Optional;
  */
 @CrossOrigin
 @RestController
+@RequestMapping("/image")
 public class ImageController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
@@ -47,6 +49,8 @@ public class ImageController {
 	}
 
 
+
+
 	/**
 	 * Endpoint to search for a specific image.
 	 *
@@ -57,7 +61,7 @@ public class ImageController {
 	 * 		  <li>If no match is found, return status 404</li>
 	 * 		</ul>
 	 */
-	@GetMapping("/{Id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<Image> getImage(@PathVariable Integer id) {
 		ResponseEntity<Image> response;
 		Optional<Image> image = imageService.findById(id);
@@ -71,8 +75,8 @@ public class ImageController {
 
 
 	/**
-	 * Adds an image to the collection
-	 * TODO:Fix recursion
+	 * Adds an image to the collection.
+	 *
 	 *
 	 * @param image The image added
 	 * @return 201 CREATED status on success, 400 Bad request on error
@@ -81,13 +85,14 @@ public class ImageController {
 	public ResponseEntity<String> add(@RequestBody Image image) {
 		ResponseEntity<String> response;
 		try {
-			add(image);
-			response = new ResponseEntity<>(HttpStatus.CREATED);
-		}  catch (IllegalArgumentException ia) {
+			int id = imageService.add(image);
+			response = new ResponseEntity<>(String.valueOf(id), HttpStatus.CREATED);
+		} catch (IllegalArgumentException ia) {
 			response = new ResponseEntity<>(ia.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 		return response;
- 	}
+
+	}
 
 
 	/**
@@ -96,8 +101,8 @@ public class ImageController {
 	 * @param id The id of image to be removed.
 	 * @return 200 OK status on success, 404 NOT FOUND on error
 	 */
-	@DeleteMapping
-	public ResponseEntity<String> remove(@PathVariable int id) {
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> delete(@PathVariable int id) {
 		ResponseEntity<String> response;
 		if (imageService.deleteImage(id)) {
 			response = new ResponseEntity<>(HttpStatus.OK);
@@ -114,11 +119,11 @@ public class ImageController {
 	 * @param image New image data to store.
 	 * @return 200 OK status on success, 400 Bad request on error
 	 */
-	@PutMapping
+	@PutMapping("/{id}")
 	public ResponseEntity<String> update(@PathVariable int id, @RequestBody Image image) {
 		ResponseEntity<String> response;
 		try {
-			update(id, image);
+			imageService.update(id, image);
 			response = new ResponseEntity<>(HttpStatus.OK);
 		} catch (IllegalArgumentException ia) {
 			response = new ResponseEntity<>(ia.getMessage(), HttpStatus.BAD_REQUEST);
