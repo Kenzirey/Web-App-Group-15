@@ -1,24 +1,57 @@
 <template>
-    <form @submit.prevent="submitLogin">
-      <input type="text" v-model="username" placeholder="Username" required>
-      <input type="password" v-model="password" placeholder="Password" required>
-      <button type="submit">Login</button>
-    </form>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        username: '',
-        password: ''
-      };
+  <v-container>
+    <v-card>
+      <v-card-title class="text-h5">Sign In</v-card-title>
+      <v-card-text>
+        <v-form ref="loginForm" @submit.prevent="login">
+          <v-text-field
+            label="Email"
+            v-model="email"
+            required
+            autocomplete="username"
+          ></v-text-field>
+          <v-text-field
+            label="Password"
+            type="password"
+            v-model="password"
+            required
+            autocomplete="current-password"
+          ></v-text-field>
+          <v-btn type="submit" color="primary" class="mr-4">Sign In</v-btn>
+        </v-form>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn text @click="clear">Clear</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-container>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      email: '',
+      password: '',
+    };
+  },
+  methods: {
+    async login() {
+      // TODO login logic
+      console.log('Attempting to log in with:', this.email, this.password);
+      // call auth service
+
     },
-    methods: {
-      async submitLogin() {
-        // TODO: Validate credentials and trigger 2FA token generation
+    clear() {
+      this.email = '';
+      this.password = '';
+      if (this.$refs.loginForm) {
+        this.$refs.loginForm.reset();
       }
-    }
-  };
-  </script>
-  
+    },
+  },
+};
+</script>
+
+<style scoped>
+</style>

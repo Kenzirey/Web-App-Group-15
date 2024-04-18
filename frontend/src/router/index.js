@@ -12,6 +12,7 @@ import AdminCourses from '../pages/AdminCourses.vue';
 import AdminUsers from '../pages/AdminUsers.vue';
 import FormsPage from '../pages/FormsPage.vue';
 import SearchResults from '@/pages/SearchResults.vue';
+import LoginForm from '@/components/LoginForm.vue';
 
 
 
@@ -27,7 +28,8 @@ const routes = [
   { path: '/admin/courses', component: AdminCourses, name: 'AdminCourses' },
   { path: '/admin/users', component: AdminUsers, name: 'AdminUsers' },
   { path: '/forms', component: FormsPage, name: 'Forms' },
-  { path: '/search', component: SearchResults, name: 'SearchResults'}
+  { path: '/search', component: SearchResults, name: 'SearchResults'},
+  { path: '/login', component: LoginForm, name: 'Login' } 
 
   // Define routes for other pages
 ];

@@ -38,7 +38,8 @@
   
       <!-- Hidden, but kept for future reference -->
       <div id="topbar-right">
-        <v-btn prepend-icon="mdi-account" stacked size="small" @click="navigateToAccount">View Account</v-btn>
+        <v-btn v-if="isLoggedIn" prepend-icon="mdi-account" stacked size="small" @click="navigateToAccount">View Account</v-btn>
+        <v-btn v-else prepend-icon="mdi-login" stacked size="small" @click="navigateToSignIn">Sign In</v-btn>
         <v-btn prepend-icon="mdi-heart" stacked size="small" @click="navigateToFavorites">View Favorites</v-btn>
       </div>
     </div>
@@ -63,6 +64,9 @@ export default {
     },
     navigateFrontPage() {
       this.$router.push('/');
+    },
+    navigateToSignIn() {
+      this.$router.push('/login');
     },
     searchify(str) {
       return str.toLowerCase().replace(/\s/g, "");
