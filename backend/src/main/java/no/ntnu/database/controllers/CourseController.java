@@ -52,7 +52,7 @@ public class CourseController {
 			description = "Returns a list of all existing courses in the database"
 	)
 	@ApiResponse(responseCode = "200", description = "Retrieved list successfully")
-	@GetMapping
+	@GetMapping(produces = {"application/json"})
 	public Iterable<Course> getAllCourses() {
 		LOGGER.info("Getting all courses, test!");
 		return courseService.getAllCourses();
@@ -76,7 +76,7 @@ public class CourseController {
 			responseCode = "200", description = "A corresponding course was successfully found")
 	@ApiResponse(
 			responseCode = "404", description = "A course with a corresponding id was not found")
-	@GetMapping("/{id}")
+	@GetMapping(value = "/{id}", produces = {"application/json"})
 	public ResponseEntity<Course> getCourse(@PathVariable Integer id) {
 		ResponseEntity<Course> response;
 		Optional<Course> course = courseService.findById(id);
@@ -171,6 +171,19 @@ public class CourseController {
 			response = ResponseEntity.notFound().build();
 		}
 		return  response;
+	}
+
+	/**
+	 * Endpoint to search for courses.
+	 *
+	 * @param query The query to use when searching for courses
+	 * @return Courses that match the search query
+	 */
+	@GetMapping(value = "/search/{query}", produces = {"application/json"})
+	public Iterable<Course> searchCategory(@PathVariable String query) {
+		return query == null || query.isBlank()
+				? courseService.getAllCourses()
+				: courseService.searchCourse(query);
 	}
 
 }

@@ -1,6 +1,7 @@
 package no.ntnu.database.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -14,7 +15,7 @@ import jakarta.persistence.Id;
 public final class Image {
 
 	@Id
-	@Schema(description = "An Unique ID for the image", example = "1111")
+	@Schema(description = "An Unique ID for the image", example = "1")
 	private int imageId;
 
 	@Schema(description = "The unique id for the course the image is used for", example = "1")
@@ -95,6 +96,20 @@ public final class Image {
 		return imageUrl;
 	}
 
+
+	/**
+	 * Checks if the object is valid.
+	 *
+	 * @return True when valid, false when invalid
+	 */
+	@JsonIgnore
+	public boolean isValid() {
+		boolean  valid = false;
+		if (imageId > 0 && courseId > 0) {
+			valid = true;
+		}
+		return valid;
+	}
 
 
 }

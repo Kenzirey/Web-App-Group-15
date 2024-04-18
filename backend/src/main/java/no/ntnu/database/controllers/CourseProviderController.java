@@ -53,7 +53,7 @@ public class CourseProviderController {
 			description = "Returns a list of all existing course providers in the database"
 	)
 	@ApiResponse(responseCode = "200", description = "Retrieved list successfully")
-	@GetMapping
+	@GetMapping(produces = {"application/json"})
 	public Iterable<CourseProvider> getAllCourseProviders() {
 		LOGGER.info("Getting all providers, test!");
 		return service.getAllProviders();
@@ -78,7 +78,7 @@ public class CourseProviderController {
 			responseCode = "200", description = "A corresponding course provider was found")
 	@ApiResponse(
 			responseCode = "404", description = "A corresponding course provider was not found")
-	@GetMapping("/{id}")
+	@GetMapping(value = "/{id}", produces = {"application/json"})
 	public ResponseEntity<CourseProvider> getProvider(@PathVariable int id) {
 		ResponseEntity<CourseProvider> response;
 		Optional<CourseProvider> provider = service.findById(id);
@@ -176,5 +176,18 @@ public class CourseProviderController {
 			response = ResponseEntity.notFound().build();
 		}
 		return response;
+	}
+
+	/**
+	 * Endpoint to search for providers.
+	 *
+	 * @param query The query to use when searching for providers
+	 * @return Providers that match the search query
+	 */
+	@GetMapping(value = "/search/{query}", produces = {"application/json"})
+	public Iterable<CourseProvider> searchCategory(@PathVariable String query) {
+		return query == null || query.isBlank()
+				? service.getAllProviders()
+				: service.searchProvider(query);
 	}
 }

@@ -1,7 +1,9 @@
 package no.ntnu.database.repositories;
 
 import no.ntnu.database.entities.Course;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -9,4 +11,11 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface CourseRepository extends CrudRepository<Course, Integer> {
+	@Query(value = """
+			SELECT c
+			FROM Course c
+			WHERE REPLACE(c.courseName, ' ', '') LIKE '%' || REPLACE(:#{#query}, ' ', '') || '%'
+			"""
+	)
+	Iterable<Course> searchCourse(@Param("query") String query);
 }
