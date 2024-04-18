@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 /**
  * Contains various database requests for admin operations.
  */
-@Component("adminRequests")
+//@Component("adminRequests")
 public class AdminRequests {
 	private final Connection connection;
 
@@ -21,7 +21,7 @@ public class AdminRequests {
 	 *
 	 * @param dbConnectionWrapper Autowired wrapper object containing a database connection
 	 */
-	@Autowired
+	//@Autowired
 	public AdminRequests(DbConnectionWrapper dbConnectionWrapper) {
 		this.connection = dbConnectionWrapper.getConnection();
 	}

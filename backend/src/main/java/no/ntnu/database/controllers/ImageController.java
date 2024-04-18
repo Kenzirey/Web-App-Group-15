@@ -20,6 +20,8 @@ import java.util.Optional;
  */
 @CrossOrigin
 @RestController
+@RequestMapping("/images")
+//TODO: var problem når denne ikke hadde mapping.
 public class ImageController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);

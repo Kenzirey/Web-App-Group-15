@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 /**
  * Contains various database requests for two factor operations.
  */
-@Component("twoFactorRequests")
+//@Component("twoFactorRequests")
 public class TwoFactorRequests {
 	private final Connection connection;
 
@@ -21,7 +21,7 @@ public class TwoFactorRequests {
 	 *
 	 * @param dbConnectionWrapper Autowired wrapper object containing a database connection
 	 */
-	@Autowired
+	//@Autowired
 	public TwoFactorRequests(DbConnectionWrapper dbConnectionWrapper) {
 		this.connection = dbConnectionWrapper.getConnection();
 	}
