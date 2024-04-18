@@ -1,16 +1,8 @@
 <template>
-  <div id="app">
-    <v-app id="main app">
+    <v-app id="app" color="background" >
       <TopToolbar class="toolbar" />
       <div class="course-content">
-        <header>
-          <h1><router-link to="/">Learniverse Connect</router-link></h1>
-          <nav>
-            <ul>
-              <li><router-link to="/course"><v-btn color="primary">Go to Course Page</v-btn></router-link></li>
-            </ul>
-          </nav>
-        </header>
+
         
         <!-- The main content of the page, replaced based on the current route -->
         <router-view id="content"></router-view>
@@ -25,7 +17,6 @@
 </footer>
       </div>
     </v-app>
-  </div>
 </template>
 
 <script>
@@ -35,17 +26,25 @@ export default {
   name: 'App',
   components: {
     TopToolbar
-  }
+  },
 };
 </script>
 
-<style>
+<style lang="scss">
 .footer-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  place-items: center;
+  /*As this area is not a vuetify component, added color here */
+  background-color: rgb(var(--v-theme-background))
 }
 
 #contact {
@@ -56,5 +55,22 @@ export default {
 .footer-container > p {
   flex-basis: 100%; /* Ensure the paragraph takes the full width when wrapping */
   text-align: center; /* Center-align the text of the paragraph */
+}
+
+h2 {
+  color: rgb(var(--v-theme-primary))
+}
+
+
+
+button {
+
+  &:hover {
+    background-color: rgb(var(--v-theme-secondary))
+  }
+
+  img {
+
+  }
 }
 </style>
