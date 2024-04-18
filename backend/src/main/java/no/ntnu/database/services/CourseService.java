@@ -1,10 +1,8 @@
 package no.ntnu.database.services;
 
 import java.util.Optional;
-
 import no.ntnu.database.entities.Course;
 import no.ntnu.database.repositories.CourseRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +32,8 @@ public class CourseService {
 	/**
 	 * Adds a course to the database.
 	 *
-	 * @param course 	the {@link Course} being added to the database.
-	 * @return 			the added {@link Course}'s id.
+	 * @param course the {@link Course} being added to the database.
+	 * @return the added {@link Course}'s id.
 	 */
 	public int add(Course course) {
 		if (!course.isValid()) {
@@ -78,8 +76,8 @@ public class CourseService {
 	/**
 	 * Deletes a course from the database corresponding to its ID.
 	 *
-	 * @param id 	the ID of the course to delete.
-	 * @return 		True if the course was found and was deleted. False if not.
+	 * @param id the ID of the course to delete.
+	 * @return True if the course was found and was deleted. False if not.
 	 */
 	public boolean delete(int id) {
 		Optional<Course> course = repository.findById(id);
@@ -95,11 +93,21 @@ public class CourseService {
 	/**
 	 * Returns a course from the database corresponding to its ID.
 	 *
-	 * @param id 	the ID of the course to return.
-	 * @return 		the course with the given ID, or an empty Optional if not found.
+	 * @param id the ID of the course to return.
+	 * @return the course with the given ID, or an empty Optional if not found.
 	 */
 	public Optional<Course> findById(int id) {
 		//To access findById inside the course controller.
 		return repository.findById(id);
+	}
+
+	/**
+	 * Searches for a specific courses.
+	 *
+	 * @param query The search query to use when searching for courses
+	 * @return Any courses that match the search query
+	 */
+	public Iterable<Course> searchCourse(String query) {
+		return repository.searchCourse(query);
 	}
 }

@@ -1,11 +1,11 @@
 package no.ntnu.database.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
-
 import no.ntnu.database.entities.CourseProvider;
 import no.ntnu.database.services.CourseProviderService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,12 @@ public class CourseProviderController {
 	 *
 	 * @return all the course providers in the database.
 	 */
-	@GetMapping
+	@Operation(
+			summary = "Get all course providers",
+			description = "Returns a list of all existing course providers in the database"
+	)
+	@ApiResponse(responseCode = "200", description = "Retrieved list successfully")
+	@GetMapping(produces = {"application/json"})
 	public Iterable<CourseProvider> getAllCourseProviders() {
 		LOGGER.info("Getting all providers, test!");
 		return service.getAllProviders();
@@ -65,7 +70,15 @@ public class CourseProviderController {
 	 *         <li>If no match is found, returns status 404.</li>
 	 *     </ul>
 	 */
-	@GetMapping("/{id}")
+	@Operation(
+			summary = "Get a course provider via its id",
+			description = "Returns one single course provider matching the given id"
+	)
+	@ApiResponse(
+			responseCode = "200", description = "A corresponding course provider was found")
+	@ApiResponse(
+			responseCode = "404", description = "A corresponding course provider was not found")
+	@GetMapping(value = "/{id}", produces = {"application/json"})
 	public ResponseEntity<CourseProvider> getProvider(@PathVariable int id) {
 		ResponseEntity<CourseProvider> response;
 		Optional<CourseProvider> provider = service.findById(id);
@@ -83,9 +96,17 @@ public class CourseProviderController {
 	 * @param provider 	the data of the {@link CourseProvider} being added.
 	 * @return 			<p>Returns a {@link ResponseEntity} with status 201 if successfully
 	 * 					created and the value of the new ID.</p>
-	 * 					<p>Returns a {@link ResponseEntity} with status 401 for bad request
+	 * 					<p>Returns a {@link ResponseEntity} with status 400 for bad request
 	 * 					if data is illegal or inappropriate.</p>
 	 */
+	@Operation(
+			summary = "Adds a new course provider",
+			description = "Creates a new course provider with the data provided"
+	)
+	@ApiResponse(
+			responseCode = "201", description = "A course provider was successfully added")
+	@ApiResponse(
+			responseCode = "400", description = "Course provider failed to be added, bad request")
 	@PostMapping
 	public ResponseEntity<String> add(@RequestBody CourseProvider provider) {
 		ResponseEntity<String> response;
@@ -106,6 +127,12 @@ public class CourseProviderController {
 	 * 				<p>Returns a {@link ResponseEntity} with status 404
 	 * 				if course to be deleted was not found.</p>
 	 */
+	@Operation(
+			summary = "Deletes a course provider",
+			description = "Deletes the course provider corresponding to the given id"
+	)
+	@ApiResponse(responseCode = "200", description = "Course provider was successfully deleted")
+	@ApiResponse(responseCode = "404", description = "Course provider was not found")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable int id) {
 		ResponseEntity<String> response;
@@ -126,19 +153,41 @@ public class CourseProviderController {
 	 *                 stored from the {@link RequestBody}.
 	 *
 	 * @return 		<p>a {@link ResponseEntity} with code 204 on success.</p>
+	 * 				<p>a {@link ResponseEntity} with code 400 if illegal argument is provided.</p>
 	 * 				<p>a {@link ResponseEntity} with code 404 if course to update is not found.</p>
 	 */
+	@Operation(
+			summary = "Updates an existing course provider",
+			description = "Updates the course provider corresponding to the given id"
+	)
+	@ApiResponse(responseCode = "204", description = "Course successfully updated")
+	@ApiResponse(responseCode = "400", description = "Bad request")
+	@ApiResponse(responseCode = "404", description = "Course provider was not found")
 	@PutMapping("/{id}")
 	public ResponseEntity<String> update(
 			@PathVariable int id, @RequestBody CourseProvider provider) {
 		ResponseEntity<String> response;
 		try {
 			service.updateCourseProvider(id, provider);
-			//Because there's not a "body" response to client/us when this method is called.
 			response = ResponseEntity.noContent().build();
+		} catch (IllegalArgumentException e) {
+			response = ResponseEntity.badRequest().build();
 		} catch (EntityNotFoundException e) {
 			response = ResponseEntity.notFound().build();
 		}
 		return response;
+	}
+
+	/**
+	 * Endpoint to search for providers.
+	 *
+	 * @param query The query to use when searching for providers
+	 * @return Providers that match the search query
+	 */
+	@GetMapping(value = "/search/{query}", produces = {"application/json"})
+	public Iterable<CourseProvider> searchCategory(@PathVariable String query) {
+		return query == null || query.isBlank()
+				? service.getAllProviders()
+				: service.searchProvider(query);
 	}
 }

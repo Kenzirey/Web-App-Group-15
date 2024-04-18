@@ -2,8 +2,8 @@
   <v-app-bar class="toolbar-app" :elevation="0"  scroll-behavior="hide" id="app-bar">
     <div id="bar">
       <div id="topbar-left">
-        <v-btn prepend-icon="mdi-home" stacked size="small" @click="navigateFrontPage"></v-btn>
-        <v-text>Learniverse</v-text>
+        <!--Look under! To use vuetify color, just set color to the variable you want to use-->
+        <v-btn prepend-icon="mdi-home" stacked size="small" @click="navigateFrontPage">Learniverse Logo Goes Here</v-btn>
       </div>
       
       <v-form v-on:submit.prevent="submitSearch(null, false)" id="suggestions-container">
@@ -49,6 +49,7 @@
 
 <script>
 import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 let suggestions_loaded = false;
 export default {
@@ -147,6 +148,41 @@ export default {
         document.getElementById("search-suggestions").style.display = "none";
       }
     });
+    
+    const route = useRoute();
+    useRouter().isReady().then(function() {
+      if (route.query.q) {
+        vueComponent.search = route.query.q;
+      }
+    })
   }
 }
 </script>
+
+<style lang="scss" scoped>
+#app-bar {
+  /**Test if this is even necessary, but found these online for older browser compabiility for browsers
+  also add rgb variable instead? */
+  background-image: -webkit-linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo))); /* For Chrome 25 and Safari 6, iOS Safari 6.1 to 6.2 */
+  background-image:    -moz-linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo))); /* For Firefox 3.6 to 15 */
+  background-image:      -o-linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo))); /* For Opera 11.1 to 12 */
+  background-image: linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo)));
+}
+
+.v-btn {
+  color: rgb(var(--v-theme-background));
+}
+
+.v-text {
+  color: brown;
+  background-color: brown;
+}
+
+.v-form {
+  /** Kom opp med en bedre kontrast farge, den er litt for mørk kanskje?
+  Tror det har noe med search baren ellers.
+   */
+  color: rgb(var(--v-theme-background));
+}
+
+</style>

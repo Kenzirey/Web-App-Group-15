@@ -1,10 +1,10 @@
 package no.ntnu.database.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.Optional;
-
 import no.ntnu.database.entities.Course;
 import no.ntnu.database.services.CourseService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RestController
 @RequestMapping("/courses")
+
 public class CourseController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CourseController.class);
 
@@ -36,7 +37,8 @@ public class CourseController {
 	 *
 	 * @param courseService The service class for communication
 	 */
-	public CourseController(@Autowired CourseService courseService) {
+	@Autowired
+	public CourseController(CourseService courseService) {
 		this.courseService = courseService;
 	}
 
@@ -45,7 +47,12 @@ public class CourseController {
 	 *
 	 * @return all the courses in the database.
 	 */
-	@GetMapping
+	@Operation(
+			summary = "Get all courses",
+			description = "Returns a list of all existing courses in the database"
+	)
+	@ApiResponse(responseCode = "200", description = "Retrieved list successfully")
+	@GetMapping(produces = {"application/json"})
 	public Iterable<Course> getAllCourses() {
 		LOGGER.info("Getting all courses, test!");
 		return courseService.getAllCourses();
@@ -61,7 +68,15 @@ public class CourseController {
 	 *         <li>If no match is found, returns status 404.</li>
 	 *     </ul>
 	 */
-	@GetMapping("/{id}")
+	@Operation(
+			summary = "Get a course via its id",
+			description = "Returns one single course matching the given id"
+	)
+	@ApiResponse(
+			responseCode = "200", description = "A corresponding course was successfully found")
+	@ApiResponse(
+			responseCode = "404", description = "A course with a corresponding id was not found")
+	@GetMapping(value = "/{id}", produces = {"application/json"})
 	public ResponseEntity<Course> getCourse(@PathVariable Integer id) {
 		ResponseEntity<Course> response;
 		Optional<Course> course = courseService.findById(id);
@@ -82,6 +97,12 @@ public class CourseController {
 	 * 					<p>Returns a {@link ResponseEntity} with status 401 for bad request
 	 * 					if data is illegal or inappropriate.</p>
 	 */
+	@Operation(
+			summary = "Add a new course",
+			description = "Creates a new course with course data provided"
+	)
+	@ApiResponse(responseCode = "201", description = "A course was successfully added")
+	@ApiResponse(responseCode = "400", description = "Course failed to be added, bad request")
 	@PostMapping
 	public ResponseEntity<String> add(@RequestBody Course course) {
 		ResponseEntity<String> response;
@@ -102,6 +123,12 @@ public class CourseController {
 	 * 				<p>Returns a {@link ResponseEntity} with status 404
 	 * 				if course to be deleted was not found.</p>
 	 */
+	@Operation(
+			summary = "Deletes a course",
+			description = "Deletes the course corresponding to the given id"
+	)
+	@ApiResponse(responseCode = "200", description = "Course successfully deleted")
+	@ApiResponse(responseCode = "404", description = "Course was not found")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable int id) {
 		ResponseEntity<String> response;
@@ -119,8 +146,16 @@ public class CourseController {
 	 * @param id 		the id of the course to be updated.
 	 * @param course 	the new course information to be stored from the {@link RequestBody}.
 	 * @return 		<p>a {@link ResponseEntity} with code 204 on success.</p>
+	 * 				<p>a {@link ResponseEntity} with code 400 if illegal argument is provided.</p>
 	 * 				<p>a {@link ResponseEntity} with code 404 if course to update is not found.</p>
 	 */
+	@Operation(
+			summary = "Update an existing course",
+			description = "Updates the course corresponding to the given id"
+	)
+	@ApiResponse(responseCode = "204", description = "Course updated")
+	@ApiResponse(responseCode = "400", description = "Bad request")
+	@ApiResponse(responseCode = "404", description = "Course was not found")
 	@PutMapping("/{id}")
 	public ResponseEntity<String> update(@PathVariable int id, @RequestBody Course course) {
 		ResponseEntity<String> response;
@@ -136,6 +171,19 @@ public class CourseController {
 			response = ResponseEntity.notFound().build();
 		}
 		return  response;
+	}
+
+	/**
+	 * Endpoint to search for courses.
+	 *
+	 * @param query The query to use when searching for courses
+	 * @return Courses that match the search query
+	 */
+	@GetMapping(value = "/search/{query}", produces = {"application/json"})
+	public Iterable<Course> searchCategory(@PathVariable String query) {
+		return query == null || query.isBlank()
+				? courseService.getAllCourses()
+				: courseService.searchCourse(query);
 	}
 
 }

@@ -1,30 +1,19 @@
 <!-- src/pages/HomePage.vue -->
 <template>
-    <div>
-      <section id="introduction">
-        <h2>Welcome to Learniverse Connect</h2>
-        <p>Placeholder text for introduction. This section will give an overview of what Learniverse Connect offers.</p>
-      </section>
+  <v-container style="align-items: center; display: flex; flex-direction: column;" class="home-page-container" color="background">
+    <section id="introduction">
+      <h2>Welcome to Learniverse Connect</h2>
+      <p>Placeholder text for introduction. This section will give an overview of what Learniverse Connect offers.</p>
+    </section>
   
-      <!-- Any other sections we want on the homepage -->
-      
-      <section class="Carousel test">
-       
-        <!-- Test Section for Carousels-->
-    <section>
+    <!-- Any other sections we want on the homepage -->
+    <section class="Carousel test">
       <CourseCarousel :title="'Featured Courses'" :courses="testCourses" />
-    </section>
-    <section>
       <CourseCarousel :title="'Beginner Courses'" :courses="testCourses" difficulty="Beginner" />
-    </section>
-    <section>
       <CourseCarousel :title="'Advanced Courses'" :courses="testCourses" difficulty="Advanced" />
-    </section>
-    <section>
       <CourseCarousel :title="'Expert Courses'" :courses="testCourses" difficulty="Expert" />
     </section>
-      </section>
-    </div>
+  </v-container>
   </template>
   
  
