@@ -151,7 +151,7 @@
   min-height: 95vh; /* Ensure minimum height */
   display: flex;
   flex-direction: column;
-  padding-top: 60px;
+  padding-top: 30px;
 }
 
 #content h2 {
