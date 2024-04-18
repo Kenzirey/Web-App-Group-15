@@ -20,6 +20,8 @@ public class AccessUserDetails implements UserDetails {
 	private final String password;
 	private final boolean isActive;
 	private final List<GrantedAuthority> authorities = new LinkedList<>();
+	private final String twoFactorSecret;
+    private final boolean isTwoFactorEnabled;
 
 	/**
 	 * Create access object.
@@ -31,6 +33,8 @@ public class AccessUserDetails implements UserDetails {
 		this.password = user.getPassword();
 		this.isActive = user.isActive();
 		this.convertRoles(user.getRoles());
+		this.twoFactorSecret = user.getTwoFactorSecret();
+        this.isTwoFactorEnabled = user.isTwoFactorEnabled();
 	}
 
 	private void convertRoles(Set<Role> roles) {
@@ -74,4 +78,12 @@ public class AccessUserDetails implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
+	public String getTwoFactorSecret() {
+        return twoFactorSecret;
+    }
+
+    public boolean isTwoFactorEnabled() {
+        return isTwoFactorEnabled;
+    }
 }
