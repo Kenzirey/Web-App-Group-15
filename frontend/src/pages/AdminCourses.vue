@@ -1,14 +1,26 @@
 <template>
-  <div>
-    <h1>Course Management</h1>
-    <course-form @course-submitted="addOrUpdateCourse" />
-    <course-list :courses="courses" @edit-course="prepareCourseForEdit" @delete-course="deleteCourse" />
-  </div>
+  <v-container>
+    <v-row>
+      <v-col cols="12">
+        <h1 class="text-h4 my-4">Course Management</h1>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <course-form @course-submitted="addOrUpdateCourse" />
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <course-list :courses="courses" @edit-course="prepareCourseForEdit" @delete-course="deleteCourse" />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import axios from 'axios';
-import CourseForm from '@/components/CourseForm.vue'; 
+import CourseForm from '@/components/CourseForm.vue';
 import CourseList from '@/components/CourseList.vue';
 
 export default {
@@ -37,15 +49,11 @@ export default {
       const method = this.currentCourse ? 'put' : 'post';
 
       try {
-        const response = await axios[method](url, courseData);
-        console.log(response.data);
-        // Refresh the course list
+        await axios[method](url, courseData);
         this.fetchCourses();
       } catch (error) {
         console.error('Failed to add/update course:', error);
       }
-
-
       this.currentCourse = null;
     },
     prepareCourseForEdit(course) {
