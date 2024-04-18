@@ -207,6 +207,7 @@
 </template>
 
 <style scoped>
+
 .formBox {
   max-width: 1049px;
   margin: auto;
