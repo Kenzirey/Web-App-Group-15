@@ -28,6 +28,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -37,10 +38,24 @@ export default {
   },
   methods: {
     async login() {
-      // TODO login logic
-      console.log('Attempting to log in with:', this.email, this.password);
-      // call auth service
+      try {
+        const response = await axios.post('/auth/authenticate', {
+          username: this.email,
+          password: this.password
+        });
+        setCookie('authToken', response.data.jwt, 1);
 
+        const decoded = jwtDecode(response.data.jwt);
+        const roles = decoded.roles;
+
+        if (roles && roles.includes('admin')) {
+          this.$router.push('/AdminDashboard');
+        } else {
+          this.$router.push('/Home');
+        }
+      } catch (error) {
+        console.error('Login failed:', error.response.data);
+      }
     },
     clear() {
       this.email = '';
@@ -52,6 +67,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-</style>
