@@ -5,10 +5,14 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -37,9 +41,13 @@ public class JwtUtil {
 		final long millisecondsInHour = 60 * 60 * 1000;
 		final long timeAfterOneHour = timeNow + millisecondsInHour;
 
+		List<String> roles = userDetails.getAuthorities().stream()
+                                        .map(GrantedAuthority::getAuthority)
+                                        .collect(Collectors.toList());
+
 		return Jwts.builder()
 				.subject(userDetails.getUsername())
-				.claim(ROLE_KEY, userDetails.getAuthorities())
+				.claim(ROLE_KEY, roles)
 				.issuedAt(new Date(timeNow))
 				.expiration(new Date(timeAfterOneHour))
 				.signWith(getSigningKey())
