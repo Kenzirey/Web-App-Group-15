@@ -1,12 +1,10 @@
 <template>
-    <v-app id="app" color="background" >
+    <v-app id ="courseApp" color="background">
       <TopToolbar class="toolbar" />
       <div class="course-content">
-
         
         <!-- The main content of the page, replaced based on the current route -->
         <router-view id="content"></router-view>
-        
         
         <footer class="footer-container">
           <div class="footer-links">
@@ -31,13 +29,55 @@ export default {
 </script>
 
 <style lang="scss">
-.footer-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Inspector complained about duplicate ID of "app" due to v-app inherently having an id named app
+But noticed a bug on favorites and account page if I didn't target both
+That is where app + courseApp comes from. */
+#app, #courseApp {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2vh 2rem;
+  text-align: center;
+}
+
+
+/* Carousel */
+#app .v-carousel {
+  width: 100%; /* Make images responsive */
+  height: auto;
+}
+
+.test {
+  padding-bottom: 50px; /* Adjust the value as needed */
+}
+
+/* Course content, i.e. everything except the toolbar(topbar) */
+.course-content {
+  min-height: 95vh; /* Ensure minimum height */
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+}
+
+#content h2 {
+  margin-top: 20px;
+}
+
+
+
+
 
 html, body {
   height: 100%;
@@ -57,20 +97,44 @@ html, body {
   text-align: center; /* Center-align the text of the paragraph */
 }
 
-h2 {
-  color: rgb(var(--v-theme-primary))
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.25s;
+
+  &:hover {
+    background-color: rgb(var(--v-theme-buttonHover))
+  }
+  &:focus,button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
 }
 
 
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
 
-button {
+/* Footer */
+.footer-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
 
-  &:hover {
-    background-color: rgb(var(--v-theme-secondary))
-  }
-
-  img {
-
-  }
+.footer-links {
+  display: flex;
+  width: 100%;
+  justify-content: center; 
+  gap: 20px; 
 }
 </style>
