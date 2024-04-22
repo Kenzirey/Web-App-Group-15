@@ -38,8 +38,9 @@ export default {
   },
   methods: {
     async login() {
+      console.log("Logging in with:", this.email, this.password);
       try {
-        const response = await axios.post('/auth/authenticate', {
+        const response = await axios.post('http://localhost:8082/authenticate', {
           username: this.email,
           password: this.password
         });
@@ -47,6 +48,7 @@ export default {
 
         const decoded = jwtDecode(response.data.jwt);
         const roles = decoded.roles;
+        console.log(decoded); // Debugging
 
         if (roles && roles.includes('admin')) {
           this.$router.push('/AdminDashboard');
