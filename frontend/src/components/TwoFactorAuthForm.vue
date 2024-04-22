@@ -20,7 +20,12 @@ export default {
   },
   methods: {
     async submitToken() {
-      // TODO: Verify the 2FA token
+      try {
+        const response = await axios.post('/auth/verify-2fa', { token: this.token });
+        alert('2FA Verification Successful: ' + response.data);
+      } catch (error) {
+        alert('2FA Verification Failed: ' + (error.response.data || 'something doesnt work'));
+      }
     }
   }
 };
