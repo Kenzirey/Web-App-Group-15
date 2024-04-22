@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +32,8 @@ public class JwtUtil {
 	 * Key inside JWT token where roles are stored.
 	 */
 	private static final String ROLE_KEY = "roles";
+	private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
+
 
 	/**
 	 * Generate a JWT token for an authenticated user.
@@ -101,4 +106,8 @@ public class JwtUtil {
 	private Boolean isTokenExpired(String token) {
 		return extractExpiration(token).before(new Date());
 	}
+
+	public JwtUtil() {
+        logger.info("Loaded jwt_secret_key: {}", secretKey);
+    }
 }
