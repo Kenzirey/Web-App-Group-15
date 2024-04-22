@@ -114,9 +114,20 @@ export default {
     };
   },
   methods: {
-    handleSubmit() {
-      this.$emit('user-submitted', this.user);
-      this.resetForm();
+    async handleSubmit() {
+      try {
+        const method = this.user.id ? 'put' : 'post';
+        const url = this.user.id ? `${this.apiEndpoint}/${this.user.id}` : this.apiEndpoint;
+        
+        const response = await axios[method](url, this.user);
+        console.log(response.data);
+        
+        this.$emit('user-submitted', response.data); 
+        
+        this.resetForm();
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      }
     },
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
@@ -124,6 +135,9 @@ export default {
     resetForm() {
       this.user = { ...this.initialUser };
       this.showPassword = false;
+      if (this.$refs.form) {
+        this.$refs.form.resetValidation();
+      }
     }
   },
 };
