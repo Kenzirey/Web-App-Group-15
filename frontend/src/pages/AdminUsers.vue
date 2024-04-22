@@ -7,7 +7,10 @@
     </v-row>
     <v-row>
       <v-col cols="12">
-        <user-form @user-submitted="fetchUsers" />
+        <user-form 
+          :initial-user="currentUser"
+          :api-endpoint="'http://localhost:8082/admin/users'"
+          @user-submitted="fetchUsers" />
       </v-col>
     </v-row>
     <v-row>
@@ -42,11 +45,8 @@ export default {
   },
   data() {
     return {
-      users: [
-        { id: 1, name: 'kenzirey', email: 'kenzirey@example.com', role: 'admin', twoFactorEnabled: true },
-        { id: 2, name: 'Smiley', email: 'smiley@example.com', role: 'user', twoFactorEnabled: false },
-        { id: 3, name: 'Tpp', email: 'Tpp@example.com', role: 'user', twoFactorEnabled: true },
-      ],
+      users: [],
+      currentUser: null,
       deleteDialog: false,
       userToDelete: null,
     };
@@ -54,7 +54,7 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const response = await axios.get('/admin/users');
+        const response = await axios.get('http://localhost:8082/admin/users');
         this.users = response.data;
       } catch (error) {
         console.error('Failed to fetch users:', error);
@@ -73,7 +73,7 @@ export default {
       this.closeDeleteDialog();
     },
     editUser(user) {
-      // TODO: Handle user edit
+      this.currentUser = user;
     },
     async deleteUser(userId) {
       try {
@@ -83,6 +83,13 @@ export default {
         console.error('Failed to delete user:', error);
       }
     },
+    handleUserSubmitted(responseData) {
+      this.fetchUsers();
+      this.currentUser = null;
+    },
+    handleSubmissionFailed(error) {
+      console.error('User submission failed:', error);
+    }
   },
   mounted() {
     this.fetchUsers();
