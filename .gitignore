@@ -93,5 +93,3 @@ nb-configuration.xml
 *.log
 
 application.properties
-package.json
-package-lock.json
