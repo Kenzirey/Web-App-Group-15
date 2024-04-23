@@ -39,6 +39,7 @@
       <!-- Hidden, but kept for future reference -->
       <div id="topbar-right">
         <v-btn v-if="isLoggedIn" prepend-icon="mdi-account" stacked size="small" @click="navigateToAccount">View Account</v-btn>
+        <v-btn v-if="isLoggedIn" prepend-icon="mdi-logout" stacked size="small" @click="handleLogout">Log Out</v-btn>
         <v-btn v-else prepend-icon="mdi-login" stacked size="small" @click="navigateToSignIn">Sign In</v-btn>
         <v-btn prepend-icon="mdi-heart" stacked size="small" @click="navigateToFavorites">View Favorites</v-btn>
       </div>
@@ -49,12 +50,24 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { store } from '../utility/store';
+
 
 let suggestions_loaded = false;
 export default {
   name: 'TopToolbar',
+  setup() {
+    const router = useRouter();
+    let search = ref("");
+    const isLoggedIn = computed(() => store.user.isLoggedIn);
+    return {
+      search,
+      user: store.user,
+      isLoggedIn
+    };
+  },
   methods: {
     navigateToAccount() {
       this.$router.push('/account');
@@ -68,6 +81,11 @@ export default {
     navigateToSignIn() {
       this.$router.push('/login');
     },
+    handleLogout() {
+    store.logout();
+    localStorage.removeItem('authToken');
+    this.$router.push('/login');
+  },
     searchify(str) {
       return str.toLowerCase().replace(/\s/g, "");
     },
@@ -109,10 +127,6 @@ export default {
       this.filterCourses(val);
       this.filterProviders(val);
     }
-  },
-  setup() {
-    let search = ref("");
-    return {search};
   },
   data() {
     return {courses: [], providers: [], filteredCourses: [], filteredProviders: []};
