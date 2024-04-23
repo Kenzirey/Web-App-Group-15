@@ -1,29 +1,28 @@
 <template>
     <v-app id ="courseApp" color="background">
+
       <TopToolbar class="toolbar" />
-      <div class="course-content">
-        
+      <body class="body-content">
+        <div class="course-content">
         <!-- The main content of the page, replaced based on the current route -->
         <router-view id="content"></router-view>
-        
-        <footer class="footer-container">
-          <div class="footer-links">
-            <h2><router-link to="/about">About Us</router-link></h2>
-            <h2><router-link to="/contact">Contact Us</router-link></h2>
-          </div>
-        <p>This website is a result of a university group project performed in the course IDATA2301 Web technologies at NTNU. All the information provided here is a result of imagination. Any resemblance with real companies or products is a coincidence.</p>
-</footer>
       </div>
+      </body>
+      
+      <!--Footer component-->
+      <Footer></Footer>
     </v-app>
 </template>
 
 <script>
 import TopToolbar from './components/Toolbar.vue';
+import Footer from './components/Footer.vue';
 
 export default {
   name: 'App',
   components: {
-    TopToolbar
+    TopToolbar,
+    Footer
   },
 };
 </script>
@@ -43,12 +42,10 @@ export default {
 }
 
 /* Inspector complained about duplicate ID of "app" due to v-app inherently having an id named app
-But noticed a bug on favorites and account page if I didn't target both
-That is where app + courseApp comes from. */
-#app, #courseApp {
-  max-width: 1280px;
+  But noticed a bug on favorites and account page if I didn't target both
+  That is where app + courseApp comes from. */
+.body-content {
   margin: 0 auto;
-  padding: 2vh 2rem;
   text-align: center;
 }
 
@@ -57,10 +54,6 @@ That is where app + courseApp comes from. */
 #app .v-carousel {
   width: 100%; /* Make images responsive */
   height: auto;
-}
-
-.test {
-  padding-bottom: 50px; /* Adjust the value as needed */
 }
 
 /* Course content, i.e. everything except the toolbar(topbar) */
@@ -76,15 +69,12 @@ That is where app + courseApp comes from. */
 }
 
 
-
-
-
 html, body {
   height: 100%;
   margin: 0;
   place-items: center;
   /*As this area is not a vuetify component, added color here */
-  background-color: rgb(var(--v-theme-background))
+  
 }
 
 #contact {
@@ -92,10 +82,6 @@ html, body {
   flex-grow: 1;
 }
 
-.footer-container > p {
-  flex-basis: 100%; /* Ensure the paragraph takes the full width when wrapping */
-  text-align: center; /* Center-align the text of the paragraph */
-}
 
 
 button {
@@ -122,19 +108,5 @@ h1 {
   line-height: 1.1;
 }
 
-/* Footer */
-.footer-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-}
 
-.footer-links {
-  display: flex;
-  width: 100%;
-  justify-content: center; 
-  gap: 20px; 
-}
 </style>

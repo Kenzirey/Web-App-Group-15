@@ -18,7 +18,7 @@ const lightTheme = {
     primary: '#3f2b96',
     secondary: '#b4bbe4', 
     buttonHover: '#77a8f8',  //Hover color?
-    background: '#d6e1ff',  //Background of main content area
+    background: '#eeeeee',  //Background of main content area
     gradiantOne:'#336dff',  //left color
     gradiantTwo:'#3f2b96',  //Right color
     accent: '#2196f3',
