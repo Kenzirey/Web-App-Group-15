@@ -1,8 +1,10 @@
 <template>
   <v-card>
     <v-card-title>{{ title }}</v-card-title>
+
+    
     <!-- Hiding delimeter makes it look more clean -->
-    <v-carousel hide-delimiter-background	cycle multiple="true" class="carousel-multiple" :interval="15000" >
+    <v-carousel style="display: none;" hide-delimiter-background	cycle multiple="true" class="carousel-multiple" :interval="15000" >
       <v-carousel-item 
         v-for="(course, index) in filteredCourses"
         :key="index">
@@ -10,10 +12,26 @@
         <div class="course-name">{{ course.name }}</div>
       </v-carousel-item>
     </v-carousel>
+
+    <swiper-container @swiperprogress="test" ref="carousel" slides-per-view="2" speed="5000" loop="true" css-mode="true" navigation="true" pagination="true">
+      <swiper-slide v-for="(course, index) in ensureAtLeastThree(filteredCourses)">
+        <div style="padding-bottom: 8%;">
+          <v-img :src="course.image" aspect-ratio="1.333" cover></v-img>
+          <div class="course-name">{{ course.name }}</div>
+        </div>
+      </swiper-slide>
+    </swiper-container>
   </v-card>
-</template>
   
-  <script>
+</template>
+
+<style scoped>
+  swiper-container {
+    width: calc(50vw + 100px);
+  }
+</style>
+
+<script>
   export default {
 
     /**
@@ -43,6 +61,30 @@
           return matchesDifficulty && matchesCategory && matchesSale;1
         });
       }
+    },
+    methods: {
+      ensureAtLeastThree(courses) {
+        if (courses.length < 3) {
+          for (let course of [...courses, ...courses]) {
+            courses.push(course);
+          }
+        }
+        return courses;
+      },
+      test() {
+        console.log("owo");
+      }
+    },
+    data() {
+      return {
+        interval: null
+      }
+    },
+    mounted() {
+      const self = this;
+      this.interval = setInterval(function() {
+        self.$refs.carousel.swiper.slideNext();
+      }, 5000);
     }
   }
-  </script>
+</script>

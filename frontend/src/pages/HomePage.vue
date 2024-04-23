@@ -47,9 +47,6 @@
   .v-slide-group {
     width: 80vw;
   }
-  .v-card {
-    min-height: 400px;
-  }
 
   .bruh {
     width: calc(80vw / 3);
