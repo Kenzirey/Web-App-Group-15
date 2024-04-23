@@ -9,6 +9,7 @@
             v-model="email"
             required
             autocomplete="username"
+            :error-messages="emailErrors"
           ></v-text-field>
           <v-text-field
             label="Password"
@@ -16,8 +17,10 @@
             v-model="password"
             required
             autocomplete="current-password"
+            :error-messages="passwordErrors"
           ></v-text-field>
           <v-btn type="submit" color="primary" class="mr-4">Sign In</v-btn>
+          <v-alert type="error" v-if="errorMessage" class="mt-4">{{ errorMessage }}</v-alert>
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -28,44 +31,61 @@
 </template>
 
 <script>
+import axios from 'axios';
+import VueJwtDecode from 'vue-jwt-decode';
+import { store} from '../utility/store';
 
 export default {
   data() {
     return {
       email: '',
       password: '',
+      errorMessage: '',
+      emailErrors: [],
+      passwordErrors: [],
     };
   },
   methods: {
     async login() {
+      this.clearErrors();
       console.log("Logging in with:", this.email, this.password);
       try {
         const response = await axios.post('http://localhost:8082/authenticate', {
           username: this.email,
           password: this.password
         });
-        setCookie('authToken', response.data.jwt, 1);
 
-        const decoded = jwtDecode(response.data.jwt);
-        const roles = decoded.roles;
-        console.log(decoded); // Debugging
+        const decoded = VueJwtDecode.decode(response.data.jwt);
+        store.login(response.data.jwt);
+        console.log('Decoded JWT:', decoded);
+        this.$emit('login-success', { user: decoded.sub, roles: decoded.roles });
 
-        if (roles && roles.includes('admin')) {
-          this.$router.push('/AdminDashboard');
+        if (decoded.roles && decoded.roles.includes('admin')) {
+          this.$router.push('/admin');
         } else {
-          this.$router.push('/Home');
+          this.$router.push('/');
+        }
+        if (this.$refs.loginForm) {
+          this.$refs.loginForm.reset();
         }
       } catch (error) {
-        console.error('Login failed:', error.response.data);
+        this.errorMessage = error.response?.data?.message || 'Login failed';
+        console.error('Login failed:', this.errorMessage);
+        this.$emit('login-failed', this.errorMessage);
       }
     },
+
     clear() {
       this.email = '';
       this.password = '';
-      if (this.$refs.loginForm) {
-        this.$refs.loginForm.reset();
-      }
+      this.clearErrors();
     },
+
+    clearErrors() {
+      this.errorMessage = '';
+      this.emailErrors = [];
+      this.passwordErrors = [];
+    }
   },
 };
 </script>
