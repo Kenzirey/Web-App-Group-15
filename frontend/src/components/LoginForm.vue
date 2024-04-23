@@ -56,7 +56,7 @@ export default {
         });
 
         const decoded = VueJwtDecode.decode(response.data.jwt);
-        store.login(response.data.jwt);
+        store.login(response.data.jwt, decoded.roles);
         console.log('Decoded JWT:', decoded);
         this.$emit('login-success', { user: decoded.sub, roles: decoded.roles });
 
