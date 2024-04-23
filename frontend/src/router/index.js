@@ -52,9 +52,9 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
     next({ name: 'Login' });
   } else if (isLoggedIn) {
-    if (userRoles.includes('admin') && !to.path.startsWith('/admin')) {
+    if (userRoles.includes('ROLE_ADMIN') && !to.path.startsWith('/admin')) {
       next({ path: '/admin' });
-    } else if (!userRoles.includes('admin') && to.path.startsWith('/admin')) {
+    } else if (!userRoles.includes('ROLE_ADMIN') && to.path.startsWith('/admin')) {
       next({ path: '/' });
     } else {
       next();

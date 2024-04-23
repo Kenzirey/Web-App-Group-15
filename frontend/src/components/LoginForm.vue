@@ -60,7 +60,7 @@ export default {
         console.log('Decoded JWT:', decoded);
         this.$emit('login-success', { user: decoded.sub, roles: decoded.roles });
 
-        if (decoded.roles && decoded.roles.includes('admin')) {
+        if (decoded.roles && decoded.roles.includes('ROLE_ADMIN')) {
           this.$router.push('/admin');
         } else {
           this.$router.push('/');
