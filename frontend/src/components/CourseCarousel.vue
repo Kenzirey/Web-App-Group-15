@@ -3,9 +3,9 @@
 		<v-card-title>{{ title }}</v-card-title>
 
 		<swiper-container @swipernavigationprev="resetSlideTimer" @swipernavigationnext="resetSlideTimer" ref="carousel"
-			:slides-per-view="slidesPerView" loop="true" css-mode="true" navigation="true" pagination="true">
+			:slides-per-view="slidesPerView" :loop="loopMode" css-mode="true" navigation="true" pagination="true">
 			<swiper-slide v-for="course in filteredCourses">
-				<div style="padding-bottom: 8%;">
+				<div class="bullet-positioning-box">
 					<v-img :src="course.image" :aspect-ratio="aspectRatio" cover></v-img>
 					<div class="course-name">{{ course.name }}</div>
 				</div>
@@ -16,9 +16,24 @@
 </template>
 
 <style scoped>
-swiper-container {
-	width: calc(50vw + 100px);
-}
+	.v-card {
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+
+	swiper-container {
+		width: calc(50vw + 100px);
+	}
+
+	swiper-slide {
+		padding-left: 10px;
+		padding-right: 10px;
+		box-sizing: border-box;
+	}
+
+	.bullet-positioning-box {
+		margin-bottom: 30px;
+	}
 </style>
 
 <script>
@@ -44,18 +59,22 @@ export default {
 			 * Filters the courses, can filter based on only difficulty, category OR both.
 			 * Easily expandable by just creating a new const and following the pattern.
 			 */
-			return this.courses.filter(course => {
+			const filtered = this.courses.filter(course => {
 				const matchesDifficulty = this.difficulty ? course.difficulty === this.difficulty : true;
 				const matchesCategory = this.category ? course.category === this.category : true;
 				const matchesSale = this.onSale ? course.onSale === this.onSale : true;
 				return matchesDifficulty && matchesCategory && matchesSale;
 			});
+			return [...filtered, ...filtered];
+		},
+		loopMode() {
+			return this.filteredCourses.length > 3;
 		},
 		slidesPerView() {
-			return this.filteredCourses.length == 1 ? 1 : 2;
+			return Math.min(this.filteredCourses.length, 3);
 		},
 		aspectRatio() {
-			return this.filteredCourses.length == 1 ? 2.667 : 1.333;
+			return 4 / Math.min(Math.max(this.filteredCourses.length, 1), 3);
 		}
 	},
 	methods: {
@@ -64,7 +83,7 @@ export default {
 		},
 		resetSlideTimer() {
 			clearInterval(this.interval);
-			this.interval = setInterval(this.intervalFunction, this.autoSlideInterval)
+			this.interval = setInterval(this.intervalFunction, this.autoSlideInterval);
 		}
 	},
 	data() {
