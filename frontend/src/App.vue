@@ -1,9 +1,9 @@
 <template>
-    <v-app id ="courseApp" color="background">
+    <v-app @click="lastClick = $event;" @focus="console.log('owo')" id="courseApp" color="background">
 
-      <TopToolbar class="toolbar" />
+      <TopToolbar class="toolbar" :lastGlobalClick="lastClick"/>
       <body class="body-content">
-        <div class="course-content">
+        <div @clickedAnywhere="console.log('owo')" class="course-content">
         <!-- The main content of the page, replaced based on the current route -->
         <router-view id="content"></router-view>
       </div>
@@ -24,6 +24,9 @@ export default {
     TopToolbar,
     Footer
   },
+  data() {
+    return {lastClick: null}
+  }
 };
 </script>
 
