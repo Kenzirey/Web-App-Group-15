@@ -1,5 +1,5 @@
 <template>
-    <v-app @click="lastClick = $event;" @focus="console.log('owo')" id="courseApp" color="background">
+    <v-app @click="lastClick = $event" id="courseApp" color="background">
 
       <TopToolbar class="toolbar" :lastGlobalClick="lastClick"/>
       <body class="body-content">
