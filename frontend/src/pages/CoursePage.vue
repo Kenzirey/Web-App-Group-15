@@ -28,7 +28,7 @@
       </div>
       <div class="course-description">{{ course.description }}</div>
     </div>
-  </v-container>
+  
 
   <v-card title="SQL for beginners" variant="outlined">
     <v-card-text>
@@ -49,12 +49,12 @@
     </v-card-text>
 
     <v-card-actions>
-      <v-btn text="Apply to course" type="apply" href="/forms"></v-btn>
+      <v-btn text="Apply to course" type="apply" href="/forms" variant="outlined"></v-btn>
     </v-card-actions>
   </v-card>
 
 
-
+</v-container>
 </template>
 
 <script>
@@ -83,9 +83,7 @@ export default {
   }
   .grid-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    justify-content: space-between;
   }
 
   .course-title {
@@ -98,7 +96,6 @@ export default {
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    
     gap: 20px;
   }
 
