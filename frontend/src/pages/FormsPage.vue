@@ -1,4 +1,4 @@
-<!-- src/pages/Forms.vue -->
+<!-- src/pages/FormsPage.vue -->
 
 <template>
   <form class="formBox">
@@ -125,29 +125,6 @@
       ></v-select>
     </fieldset>
 
-    <!--Education background-->
-
-    <fieldset class="fieldBox">
-      <h2 class="formSections">Education Background</h2>
-      <p class="labelParagraph">List your previous schools</p>
-
-      <v-col cols="12" md="15">
-        <v-text-field
-          v-model="highSchoolAddress"
-          label="HighSchool address"
-          required
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12" md="15">
-        <v-text-field
-          v-model="dateGraduated"
-          label="Date graduated"
-          required
-        ></v-text-field>
-      </v-col>
-    </fieldset>
-
     <!-- Application Details -->
     <!--Temporary name finner på noe senere enn Application Details-->
     <fieldset class="fieldBox">
@@ -179,14 +156,6 @@
           required
         ></v-text-field>
       </v-col>
-
-      <v-col cols="12" md="15">
-        <v-text-field
-          v-model="courseId"
-          label="Course id:"
-          required
-        ></v-text-field>
-      </v-col>
     </fieldset>
 
     <fieldset class="fieldBox">
@@ -199,74 +168,46 @@
     </fieldset>
 
     <!--TODO: Action-->
-    <v-btn text="submit" type="submit" href="/submit"/>
-
-  
-
+    <v-btn text="submit" type="submit" href="/submit" />
   </form>
+
+  <!-- Vue card med generel info om course, knapp går til forms der brukeren kan fylle ut info-->
+  <v-card title="SQL for beginners" variant="outlined">
+    <v-card-text>
+      <!-- Fyll in  text her med info om course-->
+
+      <div class="info-item">
+        <span class="key">Course Providers:</span>
+        <span class="value">NTNU</span>
+      </div>
+      <div class="info-item">
+        <span class="key">Difficulty Level:</span>
+        <span class="value">Beginner</span>
+      </div>
+      <div class="info-item">
+        <span class="key">Course Size:</span>
+        <span class="value">ECTs Credits</span>
+      </div>
+    </v-card-text>
+
+    <v-card-actions>
+      <v-btn text="Apply to course" type="apply" href="/forms"></v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
-<style scoped>
-
+<style lang="scss" scoped>
 .formBox {
   max-width: 1049px;
   margin: auto;
-  background: rgb(81, 132, 190);
+  background: rgb(var(--v-theme-primary));
   padding: 40px;
   border-radius: 4px;
   border-style: solid;
-  border: 3px solid black;
 }
 
 .fieldBox {
   background: white;
-}
-
-.labelName {
-  color: Black;
-  padding: 10px;
-  display: block;
-  margin: 25px 0 15px;
-  text-align: left;
-  font-size: 15px;
-  letter-spacing: 1px;
-  font-weight: bold;
-}
-
-.userInput {
-  font-size: 20px;
-  border-style: solid;
-  border-radius: 4px;
-  border-width: 1px;
-  border-color: #474b56;
-  margin-bottom: 20px;
-}
-
-.userInputLong {
-  width: 475px;
-  height: 32px;
-  font-size: 20px;
-  border-style: solid;
-  border-radius: 4px;
-  border-width: 1px;
-  border-color: #474b56;
-  margin-bottom: 20px;
-}
-
-.inputGroup {
-  display: flex;
-  flex-direction: column;
-  width: 45%;
-}
-
-.labelNameSide {
-  color: Black;
-  padding: 10px;
-  margin: 25px 0 15px;
-  text-align: left;
-  font-size: 15px;
-  letter-spacing: 1px;
-  font-weight: bold;
 }
 
 .labelParagraph {
@@ -295,14 +236,8 @@
   display: flex;
   justify-content: space-between;
 }
-
-.textareaFormat {
-  width: 100%;
-  height: 200px;
-}
 </style>
 
-<!--TODO Finne ut hvor dataen skal bli sendt til?????????-->
 <script>
 export default {
   data() {
