@@ -1,6 +1,6 @@
 <template>
   <v-container class="course-page" fluid>
-    <div class="grid-course-container">
+    <div class="grid-container">
       <h3 class="course-title">{{ course.title }}</h3>
       <div class="session-date"><span class="key">Course Session:</span> <span class="value">{{ course.sessionDate }}</span></div>
       <div class="content-container">
@@ -28,38 +28,23 @@
       </div>
       <div class="course-description">{{ course.description }}</div>
     </div>
+
+    <courseCard></courseCard>
   
-
-  <v-card title="SQL for beginners" variant="outlined">
-    <v-card-text>
-      <!-- Fyll in  text her med info om course-->
-
-      <div class="info-item">
-        <span class="key">Course Providers:</span>
-        <span class="value">NTNU</span>
-      </div>
-      <div class="info-item">
-        <span class="key">Difficulty Level:</span>
-        <span class="value">Beginner</span>
-      </div>
-      <div class="info-item">
-        <span class="key">Course Size:</span>
-        <span class="value">ECTs Credits</span>
-      </div>
-    </v-card-text>
-
-    <v-card-actions>
-      <v-btn text="Apply to course" type="apply" href="/forms" variant="outlined"></v-btn>
-    </v-card-actions>
-  </v-card>
 
 
 </v-container>
 </template>
 
 <script>
+
+import courseCard from '@/components/InformationCardCourse.vue';
+
 export default {
   name: 'CoursePage',
+  components: {
+    courseCard
+  },
   data() {
     return {
       course: {
@@ -70,6 +55,8 @@ export default {
     };
   }
 }
+
+
 </script>
   
 <style lang="scss" scoped>
@@ -82,8 +69,9 @@ export default {
     margin-bottom: 15px;
   }
   .grid-container {
-    display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
   }
 
   .course-title {
