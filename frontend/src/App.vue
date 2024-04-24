@@ -18,6 +18,12 @@
 import TopToolbar from './components/Toolbar.vue';
 import Footer from './components/Footer.vue';
 
+// import function to register Swiper custom elements
+import { register } from 'swiper/element/bundle';
+// register Swiper custom elements
+register();
+
+
 export default {
   name: 'App',
   components: {
