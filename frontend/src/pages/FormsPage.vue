@@ -130,7 +130,7 @@
     <fieldset class="fieldBox">
       <h3 class="formSections">Application Details</h3>
       <p class="labelParagraph">
-        Information about the course you are attendending
+        Information about the course you are attending
       </p>
 
       <v-col cols="12" md="15">
