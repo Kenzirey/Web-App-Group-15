@@ -1,98 +1,130 @@
 <template>
-  <v-container>
-<div class="table_component" role="region" tabindex="0">
-<table>
-    <thead>
-        <tr>
-            <th><h3>{{ course.title }}</h3></th>
-            <th><h3>{{ course.courseTitle }}</h3></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Difficulty Level</td>
-            <td>Beginner</td>
-        </tr>
-        <tr>
-            <td>Course Session</td>
-            <td>Date</td>
-        </tr>
-        <tr>
-            <td>Course Size</td>
-            <td>ECTs Credits</td>
-        </tr>
-        <tr>
-            <td>Hours per week</td>
-            <td>4</td>
-        </tr>
-        <tr>
-            <td>Related Certifications</td>
-            <td>SQL Wizard</td>
-        </tr>
-        <tr>
-            <td>Course Providers</td>
-            <td>NTNU</td>
-        </tr>
-        <tr>
-            <td>Course Cost</td>
-            <td>$500</td>
-        </tr>
-        <tr>
-        <td colspan="2">{{ course.description }}</td>
-    </tr>
-    </tbody>
-</table>
-</div>
+  <v-container class="course-page" fluid>
+    <div class="grid-course-container">
+      <h3 class="course-title">{{ course.title }}</h3>
+      <div class="session-date"><span class="key">Course Session:</span> <span class="value">{{ course.sessionDate }}</span></div>
+      <div class="content-container">
+        <div class="course-info">
+          <div class="info-box-left">
+            <div class="info-container" style="display: inline-flex; flex-direction: column;">
+              <div class="info-item"><span class="key">Course Providers:</span> <span class="value">NTNU</span></div>
+              <div class="info-item"><span class="key">Difficulty Level:</span> <span class="value">Beginner</span></div>
+              <div class="info-item"><span class="key">Course Size:</span> <span class="value">ECTs Credits</span></div>
+            </div>
+          </div>
+          <div class="info-item-separator"></div>
+          <div class="info-box-right">
+            <div class="info-container">
+              <div class="info-item"><span class="key">Hours per week:</span> <span class="value">4</span></div>
+              <div class="info-item"><span class="key">Related Certifications:</span> <span class="value">SQL Wizard</span></div>
+              <div class="info-item"><span class="key">Course Cost:</span> <span class="value">$500</span></div>
+            </div>
+          </div>
+          
+        </div>
+        <div class="course-image">
+          <img src="/images/AWS.png" alt="AWS Course Image">
+        </div>
+      </div>
+      <div class="course-description">{{ course.description }}</div>
+    </div>
   </v-container>
 </template>
-  
-  <script>
-  export default {
+
+<script>
+export default {
   name: 'CoursePage',
   data() {
     return {
       course: {
-        title: 'Course Title',
-        courseTitle: "SQL for Beginners",
-        description: 'This is a detailed description of the course. :3'
-        + ' in theory, if we actually had content to put here',
+          title: 'SQL for Beginners',
+          sessionDate: '2024-04-25', // Example date
+          description: 'This is a detailed description of the course. :3 in theory, if we actually had content to put here',
       },
     };
   }
 }
-  </script>
+</script>
+  
+<style lang="scss" scoped>
+  
+/* The items, have 2 columns to break up the information
+ */
+  .session-date {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 15px;
+  }
+  .grid-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
 
-<style>
+  .course-title {
+    text-align: center;
+    font-size: 1.5em; 
+  }
 
-/*These are just temporary styles, we need to edit this but this is simply for the "functional" aspect
-Maybe we can add a picture or something to the right to fill the web page a bit more? */
+  .content-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    
+    gap: 20px;
+  }
 
-.table_component {
-    overflow: auto;
+  .course-info {
+    display: grid;
+    gap: 10px; 
     width: 100%;
-}
+    grid-template-columns: minmax(0, 1fr) calc(10vw - 80px) minmax(0, 1fr);
+  }
 
-.table_component table {
-    border: 1px solid #dededf;
-    height: 100%;
-    width: 100%;
-    table-layout: fixed;
-    border-collapse: collapse;
-    border-spacing: 1px;
-    text-align: left;
-}
+  .info-item-separator {
+    grid-row: 1;
+  }
 
-.table_component th {
-    border: 1px solid #dededf;
-    background-color: #eceff1;
-    color: #000000;
-    padding: 5px;
-}
+  .info-box-left {
+    display: flex;
+    grid-row: 1;
+    justify-content: end;
+  }
 
-.table_component td {
-    border: 1px solid #dededf;
-    background-color: #ffffff;
-    color: #000000;
-    padding: 5px;
-}
+  .info-box-right {
+    display: flex;
+    grid-row: 1;
+    justify-content: start;
+  }
+
+  .info-container {
+    display: inline-flex;
+    flex-direction: column;
+  }
+
+  .info-item {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .key {
+    font-weight: bold;
+    margin-right: 8px; /* Adjust the space between key and value */
+  }
+
+  .course-title, .course-description {
+      margin-top: 5px;
+      width: 100%;
+      text-align: center;
+  }
+
+  .course-image img {
+  
+    min-width: 30%;
+    max-width:50%;
+    height: auto;
+  }
 </style>
+    

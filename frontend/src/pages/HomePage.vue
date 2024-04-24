@@ -1,29 +1,19 @@
 <!-- src/pages/HomePage.vue -->
 <template>
-  <div>
+  <v-container class="home-page-container">
     <section id="introduction">
       <h2>Welcome to Learniverse Connect</h2>
       <p>Placeholder text for introduction. This section will give an overview of what Learniverse Connect offers.</p>
     </section>
-
+  
     <!-- Any other sections we want on the homepage -->
-    
-    <section class="carousel-test">
-      <!-- Test Section for Carousels-->
-      <section>
-        <CourseCarousel :title="'Featured Courses'" :courses="testCourses" />
-      </section>
-      <section>
-        <CourseCarousel :title="'Beginner Courses'" :courses="testCourses" difficulty="Beginner" />
-      </section>
-      <section>
-        <CourseCarousel :title="'Advanced Courses'" :courses="testCourses" difficulty="Advanced" />
-      </section>
-      <section>
-        <CourseCarousel :title="'Expert Courses'" :courses="testCourses" difficulty="Expert" />
-      </section>
+    <section class="Carousel test">
+      <CourseCarousel :title="'Featured Courses'" :courses="testCourses" />
+      <CourseCarousel :title="'Beginner Courses'" :courses="testCourses" difficulty="Beginner" />
+      <CourseCarousel :title="'Advanced Courses'" :courses="testCourses" difficulty="Advanced" />
+      <CourseCarousel :title="'Expert Courses'" :courses="testCourses" difficulty="Expert" />
     </section>
-  </div>
+  </v-container>
 </template>
 
 <style scoped>
@@ -32,6 +22,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+  
+  .home-page-container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
   }
 </style>
 

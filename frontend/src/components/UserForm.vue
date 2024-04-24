@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<style>
+<style scoped>
 
 @import '../assets/forms.css';
 

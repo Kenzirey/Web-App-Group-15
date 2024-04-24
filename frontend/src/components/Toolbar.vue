@@ -2,8 +2,8 @@
   <v-app-bar class="toolbar-app" :elevation="0"  scroll-behavior="hide" id="app-bar">
     <div id="bar">
       <div id="topbar-left">
-        <v-btn prepend-icon="mdi-home" stacked size="small" @click="navigateFrontPage"></v-btn>
-        <v-text>Learniverse</v-text>
+        <!--Look under! To use vuetify color, just set color to the variable you want to use-->
+        <v-btn size="large" @click="navigateFrontPage">Learniverse</v-btn>
       </div>
       
       <v-form v-on:submit.prevent="submitSearch(null, false)" id="suggestions-container">
@@ -158,3 +158,143 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+#app-bar {
+  /* Was not necessary to keep all the moz, opera etc as it is all supported by default now. */
+  background-image: linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo)));
+}
+
+.v-btn {
+  color: rgb(var(--v-theme-background));
+}
+
+.v-form {
+  color: rgb(var(--v-theme-background));
+}
+
+.card {
+  padding: 2em;
+}
+
+#content {
+  flex-grow: 1;
+}
+
+#suggestions-container {
+  position: relative;
+  justify-content: center;
+}
+
+#topbar-left {
+  justify-content: flex-start;
+  gap: 14px 26px;
+}
+
+#topbar-right {
+  justify-content: flex-end;
+  gap: 10px 20px;
+}
+
+/* Search bar */
+#suggestions-container, #topbar-left, #topbar-right {
+  display: flex;
+  align-items: center;
+}
+
+#bar {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  width: 100%;
+}
+
+#app-bar {
+  overflow: visible;
+}
+
+#search-suggestions-center-align {
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 0;
+}
+
+#search-suggestions {
+  /*background-color: #dfdfdf;*/
+  border-radius: 30px;
+  border-style: solid;
+  border-width: 5px;
+  position: relative;
+  display: none;
+  height: 40vw;
+  max-height: 80vh;
+  width: 40vw;
+  left: -20vw;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  overflow: auto;
+}
+
+.suggestion-box {
+  border-style: solid;
+  display: inline-flex;
+  flex-direction: column;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  text-align: left;
+  padding: 10px;
+}
+
+.suggestion-box ul {
+  flex-grow: 1;
+}
+
+.suggestion-box li {
+  margin-left: 15px;
+}
+
+.suggestion-box a:hover {
+  cursor: pointer;
+}
+
+#courses-suggestions {
+  border-width: 0 2.5px 2.5px 0;
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 1;
+  grid-row-end: 1;
+}
+
+#providers-suggestions {
+  border-width: 2.5px 2.5px 0 0;
+  grid-column-start: 1;
+  grid-column-end: 1;
+  grid-row-start: 2;
+  grid-row-end: 2;
+}
+
+#all-suggestions {
+  border-width: 0 0 0 2.5px;
+  grid-column-start: 2;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline;
+  margin-right: 10px;
+}
+
+a {
+  font-weight: 500;
+  padding: 10%;
+  text-decoration: inherit;
+}
+</style>
