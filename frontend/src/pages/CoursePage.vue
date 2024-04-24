@@ -69,6 +69,7 @@ export default {
     margin-bottom: 15px;
   }
   .grid-container {
+    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
