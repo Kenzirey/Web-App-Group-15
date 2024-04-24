@@ -13,7 +13,7 @@ import AdminUsers from '../pages/AdminUsers.vue';
 import FormsPage from '../pages/FormsPage.vue';
 import SubmitPage from '../pages/SubmitPage';
 import SearchResults from '@/pages/SearchResults.vue';
-import FavoritePage from '../pages/FavoritePage.vue';
+
 
 
 
@@ -30,8 +30,8 @@ const routes = [
   { path: '/admin/users', component: AdminUsers, name: 'AdminUsers' },
   { path: '/forms', component: FormsPage, name: 'Forms' },
   { path: '/submit', component: SubmitPage, name: 'Submit' },
-  { path: '/search', component: SearchResults, name: 'SearchResults'},
-  { path: '/favorite', component: FavoritePage, name: 'Favorite' }
+  { path: '/search', component: SearchResults, name: 'SearchResults'}
+  
 
   // Define routes for other pages
 ];
