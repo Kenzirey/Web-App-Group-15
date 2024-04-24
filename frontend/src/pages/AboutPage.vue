@@ -29,5 +29,19 @@
 </template>
 
 <style scoped>
-@import '../assets/about.css';
+.photo {
+    background-color: #ff0000;
+    min-width: 200px;
+    min-height: 200px;
+}
+
+#members-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#members-container > * {
+    margin: 10px;
+}
 </style>

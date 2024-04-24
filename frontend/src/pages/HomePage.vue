@@ -1,6 +1,6 @@
 <!-- src/pages/HomePage.vue -->
 <template>
-  <v-container style="align-items: center; display: flex; flex-direction: column;" class="home-page-container" color="background">
+  <v-container class="home-page-container">
     <section id="introduction">
       <h2>Welcome to Learniverse Connect</h2>
       <p>Placeholder text for introduction. This section will give an overview of what Learniverse Connect offers.</p>
@@ -59,6 +59,11 @@
   };
   </script>
   
-  <style>
+  <style scoped>
+    .home-page-container {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+    }
   </style>
   

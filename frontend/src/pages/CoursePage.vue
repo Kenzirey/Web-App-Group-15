@@ -65,7 +65,6 @@ export default {
   .course-title {
     text-align: center;
     font-size: 1.5em; 
-    color: rgb(var(--v-theme-primary));
   }
 
   .content-container {
