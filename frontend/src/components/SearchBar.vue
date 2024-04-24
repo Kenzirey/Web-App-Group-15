@@ -54,7 +54,6 @@
 
 #search-suggestions {
 	background-color: rgb(var(--v-theme-secondary));
-	border-radius: 30px;
 	border-style: solid;
 	border-width: 5px;
 	color: rgb(var(--v-theme-text));
