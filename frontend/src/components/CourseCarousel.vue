@@ -13,10 +13,20 @@
       </v-carousel-item>
     </v-carousel>
 
-    <swiper-container @swiperprogress="test" ref="carousel" slides-per-view="2" speed="5000" loop="true" css-mode="true" navigation="true" pagination="true">
-      <swiper-slide v-for="(course, index) in ensureAtLeastThree(filteredCourses)">
+    <swiper-container
+      @swipernavigationprev="resetSlideTimer"
+      @swipernavigationnext="resetSlideTimer"
+      ref="carousel"
+      :slides-per-view="slidesPerView"
+      speed="2"
+      loop="true"
+      css-mode="true"
+      navigation="true"
+      pagination="true"
+    >
+      <swiper-slide v-for="(course, index) in filteredCourses">
         <div style="padding-bottom: 8%;">
-          <v-img :src="course.image" aspect-ratio="1.333" cover></v-img>
+          <v-img :src="course.image" :aspect-ratio="aspectRatio" cover></v-img>
           <div class="course-name">{{ course.name }}</div>
         </div>
       </swiper-slide>
@@ -63,28 +73,31 @@
       }
     },
     methods: {
-      ensureAtLeastThree(courses) {
-        if (courses.length < 3) {
-          for (let course of [...courses, ...courses]) {
-            courses.push(course);
-          }
-        }
-        return courses;
+      intervalFunction() {
+        this.$refs.carousel.swiper.slideNext();
       },
-      test() {
-        console.log("owo");
+      resetSlideTimer() {
+        clearInterval(this.interval);
+        this.interval = setInterval(this.intervalFunction, this.autoSlideInterval)
       }
     },
     data() {
       return {
+        aspectRatio: 1.333,
+        slidesPerView: 2,
+        autoSlideInterval: 5000,
         interval: null
       }
     },
     mounted() {
-      const self = this;
-      this.interval = setInterval(function() {
-        self.$refs.carousel.swiper.slideNext();
-      }, 5000);
+      if (this.filteredCourses.length == 1) {
+        this.slidesPerView = 1;
+        this.aspectRatio *= 2;
+      }
+      this.interval = setInterval(this.intervalFunction, this.autoSlideInterval);
+    },
+    unmounted() {
+      clearInterval(this.interval);
     }
   }
 </script>

@@ -8,17 +8,7 @@
 
     <!-- Any other sections we want on the homepage -->
     
-    <swiper-container style="height:100px;" slides-per-view="5" speed="5000" loop="true" css-mode="true" navigation="true" pagination="true">
-      <swiper-slide v-for="n in 20">Slide {{ n }}</swiper-slide>
-    </swiper-container>
     <section class="carousel-test">
-      
-      <v-slide-group style="display: none;" ref="slideGroup" :model-value="slideActive" center-active>
-        <v-slide-group-item :ref="n" :key="n" v-for="n in slidesTotal">
-          <v-card :class="['bruh', 'test' + (n - 1) % 3]">{{ n - 1 }}</v-card>
-        </v-slide-group-item>
-      </v-slide-group>
-
       <!-- Test Section for Carousels-->
       <section>
         <CourseCarousel :title="'Featured Courses'" :courses="testCourses" />
@@ -42,26 +32,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
-
-  .v-slide-group {
-    width: 80vw;
-  }
-
-  .bruh {
-    width: calc(80vw / 3);
-  }
-
-  .test0 {
-    background-color: #FF0000;
-  }
-
-  .test1 {
-    background-color: #00FF00;
-  }
-
-  .test2 {
-    background-color: #0000FF;
   }
 </style>
 
@@ -102,20 +72,8 @@ export default {
           category: 'SQL', 
           image: '/images/SQL-image.jpg'
         }
-      ],
-      slideActive: 0,
-      slidesTotal: 20,
-      interval: null
+      ]
     }
-  },
-  mounted() {
-    const self = this;
-    this.interval = setInterval(function() {
-      self.slideActive = (self.slideActive % (self.slidesTotal - 2) + 1);
-    }, 500);
-  },
-  unmounted() {
-    clearInterval(this.interval);
   }
 };
 </script>
