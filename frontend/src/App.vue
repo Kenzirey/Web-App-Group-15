@@ -3,7 +3,7 @@
 
       <TopToolbar class="toolbar" :lastGlobalClick="lastClick"/>
       <body class="body-content">
-        <div @clickedAnywhere="console.log('owo')" class="course-content">
+        <div class="course-content">
         <!-- The main content of the page, replaced based on the current route -->
         <router-view id="content"></router-view>
       </div>
