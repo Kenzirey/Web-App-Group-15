@@ -1,6 +1,6 @@
 <template>
     <v-app @click="lastClick = $event" id="courseApp" color="background">
-
+      <!--The header is the v-app-bar from the toolbar-->
       <TopToolbar class="toolbar" :lastGlobalClick="lastClick"/>
       <body class="body-content">
         <div @clickedAnywhere="console.log('owo')" class="course-content">
@@ -8,7 +8,6 @@
         <router-view id="content"></router-view>
       </div>
       </body>
-      
       <!--Footer component-->
       <Footer></Footer>
     </v-app>
@@ -54,14 +53,15 @@ export default {
   But noticed a bug on favorites and account page if I didn't target both
   That is where app + courseApp comes from. */
 .body-content {
-  margin: 0 auto;
+  /* top right bottom left */
+  margin: 80px auto 0 auto;
   text-align: center;
 }
 
 
 /* Carousel */
 #app .v-carousel {
-  width: 100%; /* Make images responsive */
+  width: 100%;
   height: auto;
 }
 
@@ -70,20 +70,6 @@ export default {
   min-height: 95vh; /* Ensure minimum height */
   display: flex;
   flex-direction: column;
-  padding-top: 30px;
-}
-
-#content h2 {
-  margin-top: 20px;
-}
-
-
-html, body {
-  height: 100%;
-  margin: 0;
-  place-items: center;
-  /*As this area is not a vuetify component, added color here */
-  
 }
 
 #contact {
