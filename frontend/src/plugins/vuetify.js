@@ -16,7 +16,7 @@ const lightTheme = {
   colors: {
     /*Need to add colors to features course background etc */
     primary: '#3f2b96',
-    secondary: '#b4bbe4', 
+    secondary: '#8775d7', 
     buttonHover: '#77a8f8',  //Hover color?
     background: '#eeeeee',  //Background of main content area
     gradiantOne:'#336dff',  //left color
@@ -26,7 +26,9 @@ const lightTheme = {
     warning: '#ff9800',
     info: '#03a9f4',
     success: '#8bc34A',
-    text: '#000000'
+    text: '#000000',
+    hyperlink: '#0000ef', // Universal standard for hyperlinks
+    hyperlinkVisited: '#551A8B' // Universal standard for hyperlinks
   },
   variables: {
     'border-color': '#000000',

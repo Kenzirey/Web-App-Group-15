@@ -2,7 +2,8 @@
 	<v-form ref="searchBar" @submit.prevent="submitSearch(null, false)">
 		<button style="display: none;"></button>
 		<!-- Prevents other buttons from being invoked as the submit when clicking enter -->
-		<v-text-field @keydown.tab="showSuggestions=false" id="search-bar" @click="searchBarFocused" @focus="searchBarFocused" v-model="search" append-icon="mdi-magnify"
+		<v-text-field @keydown.tab="showSuggestions = false" id="search-bar" @click="searchBarFocused"
+			@focus="searchBarFocused" v-model="search" append-icon="mdi-magnify"
 			@click:append="submitSearch(null, false)" placeholder="Search..." required autocomplete="off"
 			hide-details />
 		<div id="search-suggestions-center-align">
@@ -19,16 +20,21 @@
 				<div id="providers-suggestions" class="suggestion-box">
 					<h2>Course providers:</h2>
 					<ul>
-						<li @click="selectSuggestion(provider)" v-for="provider in filteredProviders"
-							:key="provider.name"><a>{{ provider.name }}</a></li>
+						<li v-for="provider in filteredProviders" :key="provider.name">
+							<a :href="provider.url">{{ provider.name }}</a>
+						</li>
 					</ul>
 					<p class="show-more" @click.prevent="submitSearch('providers')">More providers...</p>
 				</div>
 				<div id="all-suggestions" class="suggestion-box">
 					<h2>All results:</h2>
 					<ul>
-						<li @click="selectSuggestion(suggestion)" v-for="suggestion in getAllSuggestions()"
-							:key="suggestion.name"><a>{{ suggestion.name }} [{{ suggestion.type }}]</a></li>
+						<li @click="suggestion.type == 'course' ? selectSuggestion(suggestion) : null" v-for="suggestion in getAllSuggestions()"
+							:key="suggestion.name">
+							<a :href="suggestion.type == 'provider' ? suggestion.url : null">
+								{{ suggestion.name }} [{{ suggestion.type }}]
+							</a>
+						</li>
 					</ul>
 					<p class="show-more" @click.prevent="submitSearch()">More results...</p>
 				</div>
@@ -53,7 +59,7 @@
 }
 
 #search-suggestions {
-	background-color: rgb(var(--v-theme-secondary));
+	background-color: rgb(var(--v-theme-surface));
 	border-style: solid;
 	border-width: 5px;
 	color: rgb(var(--v-theme-text));
@@ -68,8 +74,17 @@
 	overflow: auto;
 }
 
-#search-suggestions button {
-	color: rgb(var(--v-theme-background));
+#search-suggestions a {
+	color: rgb(var(--v-theme-hyperlink));
+	text-decoration: none;
+}
+
+#search-suggestions a:hover {
+	text-decoration: underline;
+}
+
+#search-suggestions a:visited {
+	color: rgb(var(--v-theme-hyperlinkVisited));
 }
 
 .suggestion-box {
@@ -93,6 +108,10 @@
 .show-more {
 	color: rgb(var(--v-theme-primary));
 	text-decoration: underline;
+}
+
+.show-more:hover {
+	color: rgb(var(--v-theme-secondary));
 }
 
 .suggestion-box a:hover,
@@ -149,8 +168,6 @@ export default {
 			if (suggestion.type == "course" && suggestion.id != null) {
 				this.$router.push(`/course/${suggestion.id}`);
 				this.showSuggestions = false;
-			} else if (suggestion.type == "provider" && suggestion.url) {
-				location.href = suggestion.url;
 			}
 		},
 		submitSearch(type, allow_empty_query = true) {

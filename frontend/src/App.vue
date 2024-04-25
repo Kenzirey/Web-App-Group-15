@@ -3,10 +3,10 @@
 
       <TopToolbar class="toolbar" :lastGlobalClick="lastClick"/>
       <body class="body-content">
-        <div class="course-content">
-        <!-- The main content of the page, replaced based on the current route -->
-        <router-view id="content"></router-view>
-      </div>
+        <main class="course-content">
+          <!-- The main content of the page, replaced based on the current route -->
+          <router-view id="content"></router-view>
+        </main>
       </body>
       
       <!--Footer component-->
