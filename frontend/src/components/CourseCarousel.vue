@@ -15,34 +15,13 @@
 
 </template>
 
-<style scoped>
-	.v-card {
-		margin-top: 20px;
-		margin-bottom: 20px;
-	}
-
-	swiper-container {
-		width: calc(50vw + 100px);
-	}
-
-	swiper-slide {
-		padding-left: 10px;
-		padding-right: 10px;
-		box-sizing: border-box;
-	}
-
-	.bullet-positioning-box {
-		margin-bottom: 30px;
-	}
-</style>
-
 <script>
 export default {
 
 	/**
-	 * In vue, props are custom attributes one can register to a component. 
+	 * In vue, props are custom attributes one can register to a component.
 	 * When a value is passed to a prop attribute, it comes a property on that component instance.
-	 * We do this as we want to be able to filter what courses are added into the carousel, per "category" 
+	 * We do this as we want to be able to filter what courses are added into the carousel, per "category"
 	 * or by "sale".
 	 * These become basically "props" for our filter criteria.
 	 */
@@ -100,3 +79,24 @@ export default {
 	}
 }
 </script>
+
+<style scoped>
+	.v-card {
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+
+	swiper-container {
+		width: calc(50vw + 100px);
+	}
+
+	swiper-slide {
+		padding-left: 10px;
+		padding-right: 10px;
+		box-sizing: border-box;
+	}
+
+	.bullet-positioning-box {
+		margin-bottom: 30px;
+	}
+</style>

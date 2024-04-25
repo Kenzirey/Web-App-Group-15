@@ -1,11 +1,11 @@
 <!-- src/pages/HomePage.vue -->
 <template>
-  <v-container class="home-page-container">
+  <div class="home-page-container">
     <section id="introduction">
       <h2>Welcome to Learniverse Connect</h2>
       <p>Placeholder text for introduction. This section will give an overview of what Learniverse Connect offers.</p>
     </section>
-  
+
     <!-- Any other sections we want on the homepage -->
     <section class="Carousel test">
       <CourseCarousel :title="'Featured Courses'" :courses="testCourses" />
@@ -13,7 +13,7 @@
       <CourseCarousel :title="'Advanced Courses'" :courses="testCourses" difficulty="Advanced" />
       <CourseCarousel :title="'Expert Courses'" :courses="testCourses" difficulty="Expert" />
     </section>
-  </v-container>
+  </div>
 </template>
 
 <style scoped>
@@ -23,7 +23,7 @@
     justify-content: center;
     align-items: center;
   }
-  
+
   .home-page-container {
     align-items: center;
     display: flex;
@@ -49,17 +49,17 @@ export default {
        * These are purely for testing the carousel component.
        */
       testCourses: [
-        { 
-          name: 'Microsoft SQL', 
-          difficulty: 'Beginner', 
-          category: 'SQL', 
+        {
+          name: 'Microsoft SQL',
+          difficulty: 'Beginner',
+          category: 'SQL',
           onSale: false,
           image: '/images/AWS.png' // Directly reference images from the public/images folder for testing!
         },
-        { 
-          name: 'Advanced SQL', 
-          difficulty: 'Advanced', 
-          category: 'SQL', 
+        {
+          name: 'Advanced SQL',
+          difficulty: 'Advanced',
+          category: 'SQL',
           image: '/images/machine-learning.jpg'
         },
         {
