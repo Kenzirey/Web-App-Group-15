@@ -7,9 +7,9 @@
     <div class="content-container">
       <div class="course-info">
         <div class="info-box-left">
-          <div class="info-container" style="display: inline-flex; flex-direction: column;">
-            <div class="info-item"><span class="key">Difficulty Level:</span> <span class="value">Beginner</span></div>
-            <div class="info-item"><span class="key">Course Size:</span> <span class="value">ECTs Credits</span></div>
+          <div class="info-container">
+            <div class="info-item"><span class="key">Difficulty Level:</span> <span class="value">{{course.level}}</span></div>
+            <div class="info-item"><span class="key">Course Size:</span> <span class="value">{{course.credits}}</span></div>
             <div class="info-item" v-for="(provider, index) in course.providers" :key="index">
               <span class="key">Provider:</span>
               <span class="value">{{ provider.name }}</span>
@@ -21,9 +21,8 @@
         <div class="info-item-separator"></div>
         <div class="info-box-right">
           <div class="info-container">
-            <div class="info-item"><span class="key">Hours per week:</span> <span class="value">4</span></div>
-            <div class="info-item"><span class="key">Related Certifications:</span> <span class="value">SQL
-                Wizard</span></div>
+            <div class="info-item"><span class="key">Hours per week:</span> <span class="value">{{course.hours}}</span></div>
+            <div class="info-item"><span class="key">Related Certifications:</span> <span class="value">{{course.certification}}</span></div>
             <div class="info-item" v-for="(provider, index) in course.providers" :key="'cost' + index">
               <span class="key">Cost:</span>
               <span class="value">${{ provider.cost }}</span>
@@ -45,18 +44,19 @@
 
 <script>
 
-import courseCard from '@/components/InformationCardCourse.vue';
-
 export default {
   name: 'CoursePage',
   components: {
-    courseCard
   },
   data() {
     return {
       course: {
         title: 'SQL for Beginners',
-        sessionDate: '2024-04-25', // Example date
+        sessionDate: '2024-04-25',
+        level: 'Beginner',
+        credits: '4 ECT Credits',
+        hours: 4,
+        certification: 'SQL Wizard',
         description: 'This is a detailed description of the course. :3 in theory, if we actually had content to put here',
         providers: [
           { name: 'NTNU', cost: 500 },
