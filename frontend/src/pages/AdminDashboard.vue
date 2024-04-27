@@ -42,7 +42,7 @@
 <script>
 import axios from 'axios';
 import { Chart, registerables } from 'chart.js';
-
+import { getCookie } from '../utility/cookieHelper';
 Chart.register(...registerables);
 
 export default {
@@ -73,73 +73,110 @@ export default {
         }
       ],
       chartData: {
-        labels: ['January', 'February', 'March', 'April'],
+        labels: [],
         datasets: [
           {
             label: 'Total Users',
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgba(255, 99, 132, 1)',
-            data: [50, 150, 100, 200],
+            data: [],
           },
           {
             label: 'Users with 2FA',
             backgroundColor: 'rgba(54, 162, 235, 0.2)',
             borderColor: 'rgba(54, 162, 235, 1)',
-            data: [30, 90, 70, 150],
+            data: [],
           },
           {
             label: 'Total Courses',
             backgroundColor: 'rgba(255, 206, 86, 0.2)',
             borderColor: 'rgba(255, 206, 86, 1)',
-            data: [4, 6, 8, 10],
+            data: [],
           },
         ],
       },
     };
   },
-  created() {
-    this.fetchSummaryData();
-  },
+  async created() {
+  try {
+    await this.fetchSummaryData();
+  } catch (error) {
+    console.error('Failed to fetch summary data:', error);
+  }
+},
   mounted() {
     this.$nextTick(this.initChart);
   },
   methods: {
-    fetchSummaryData() {
-      this.totalCourses = 120;
-      this.totalUsers = 450
-      this.totalUsersWith2FA = 320;
-      this.summaryCards[0].value = this.totalCourses;
-      this.summaryCards[1].value = this.totalUsers;
-      this.summaryCards[2].value = this.totalUsersWith2FA;
-    },
-    initChart() {
-      const ctx = this.$refs.growthChart.getContext('2d');
-      new Chart(ctx, {
-        type: 'line',
-        data: this.chartData,
-        options: {
-          scales: {
-            y: {
+    async fetchSummaryData() {
+  const authToken = getCookie('authToken');
+  const authConfig = {
+    headers: { 'Authorization': `Bearer ${authToken}` }
+  };
+
+  try {
+    const responses = await Promise.all([
+      axios.get('http://localhost:8082/admin/courses/count', authConfig),
+      axios.get('http://localhost:8082/admin/users/count', authConfig),
+      axios.get('http://localhost:8082/admin/users/count/2fa', authConfig)
+    ]);
+
+    this.totalCourses = responses[0].data;
+    this.totalUsers = responses[1].data;
+    this.totalUsersWith2FA = responses[2].data;
+
+    this.summaryCards[0].value = this.totalCourses;
+    this.summaryCards[1].value = this.totalUsers;
+    this.summaryCards[2].value = this.totalUsersWith2FA;
+
+    this.chartData.labels = ['New Label 1', 'New Label 2', 'New Label 3', 'New Label 4'];
+
+    this.chartData.datasets.forEach(dataset => {
+      switch (dataset.label) {
+        case 'Total Users':
+          dataset.data = [this.totalUsers,];
+          break;
+        case 'Users with 2FA':
+          dataset.data = [this.totalUsersWith2FA,];
+          break;
+        case 'Total Courses':
+          dataset.data = [this.totalCourses,];
+          break;
+      }
+    });
+
+    if (this.chartInstance) {
+      this.chartInstance.update();
+    }
+  } catch (error) {
+    console.error('Failed to fetch summary data:', error);
+  }
+},
+
+  initChart() {
+    const ctx = this.$refs.growthChart.getContext('2d');
+    this.chartInstance = new Chart(ctx, {
+      type: 'line',
+      data: this.chartData,
+      options: {
+        scales: {
+          y: {
               beginAtZero: true
-            }
-          },
-          maintainAspectRatio: false
-        }
-      });
-    },
+          }
+        },
+        maintainAspectRatio: false
+      }
+    });
+  },
     goToCourses() {
-      // TODO routing logic
+      this.$router.push('/courses');
     },
     goToUsers() {
-      // TODO routing logic 
+      this.$router.push('/users');
     },
     goTo2FAUsers() {
-      // TODO routing logic 
+      this.$router.push('/users/2fa');
     },
   },
 };
 </script>
-
-<style scoped>
-
-</style>
