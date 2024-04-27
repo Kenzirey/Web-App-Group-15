@@ -16,8 +16,10 @@ public class UserProfileDto {
     private String username;
     private Set<String> roles;
     private boolean isTwoFactorEnabled;
+    private Long id;
 
-    public UserProfileDto(String username, Set<Role> roles, boolean isTwoFactorEnabled) {
+    public UserProfileDto(Long id,String username, Set<Role> roles, boolean isTwoFactorEnabled) {
+        this.id = id;
         this.username = username;
         this.roles = roles.stream().map(Role::getName).collect(Collectors.toSet());
         this.isTwoFactorEnabled = isTwoFactorEnabled;
