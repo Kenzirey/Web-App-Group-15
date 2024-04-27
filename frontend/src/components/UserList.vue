@@ -28,7 +28,7 @@
               <v-row align="center" justify="space-between" no-gutters>
                 <v-col cols="8">
                   <div class="user-info">
-                    <v-list-item-title>{{ user.name }}</v-list-item-title>
+                    <v-list-item-title>{{ user.username }}</v-list-item-title>
                     <v-list-item-subtitle
                       :class="{'text-green': user.twoFactorEnabled, 'text-red': !user.twoFactorEnabled}"
                     >
@@ -70,7 +70,7 @@ export default {
   computed: {
     filteredUsers() {
       return this.users.filter(user =>
-        user.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+        user.username.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
   },
