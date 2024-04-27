@@ -32,10 +32,12 @@
   </v-container>
 </template>
 
+
 <script>
 import axios from 'axios';
 import UserForm from '@/components/UserForm.vue';
 import UserList from '@/components/UserList.vue';
+import { getCookie } from '../utility/cookieHelper';
 
 export default {
   name: 'AdminUsers',
@@ -53,8 +55,11 @@ export default {
   },
   methods: {
     async fetchUsers() {
+      const authToken = getCookie('authToken');
       try {
-        const response = await axios.get('http://localhost:8082/admin/users');
+        const response = await axios.get('http://localhost:8082/admin/users', {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
         this.users = response.data;
       } catch (error) {
         console.error('Failed to fetch users:', error);
@@ -69,21 +74,26 @@ export default {
       this.userToDelete = null;
     },
     async confirmDeleteUser() {
-      await this.deleteUser(this.userToDelete);
-      this.closeDeleteDialog();
+      if (this.userToDelete) {
+        await this.deleteUser(this.userToDelete);
+        this.closeDeleteDialog();
+      }
     },
     editUser(user) {
       this.currentUser = user;
     },
     async deleteUser(userId) {
+      const authToken = getCookie('authToken');
       try {
-        await axios.delete(`/admin/users/${userId}`);
+        await axios.delete(`http://localhost:8082/admin/users/${userId}`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
         this.users = this.users.filter(user => user.id !== userId);
       } catch (error) {
         console.error('Failed to delete user:', error);
       }
     },
-    handleUserSubmitted(responseData) {
+    handleUserSubmitted() {
       this.fetchUsers();
       this.currentUser = null;
     },
