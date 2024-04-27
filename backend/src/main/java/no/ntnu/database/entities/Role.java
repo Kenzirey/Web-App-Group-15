@@ -7,6 +7,8 @@ import jakarta.persistence.ManyToMany;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 /**
  * Role entity class.
  * Taken from 05-jwt-authentication from app-dev repository by Gist.
@@ -20,6 +22,7 @@ public class Role {
 	private String name;
 
 	@ManyToMany(mappedBy = "roles")
+	@JsonBackReference
 	private Set<User> users = new LinkedHashSet<>();
 
 	/**

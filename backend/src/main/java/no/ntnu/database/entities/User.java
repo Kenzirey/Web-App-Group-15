@@ -1,5 +1,6 @@
 package no.ntnu.database.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +12,8 @@ import jakarta.persistence.ManyToMany;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 /**
  * User entity class. Taken from 05-jwt-authentication from app-dev repository by Gist.
  */
@@ -21,14 +24,17 @@ public class User {
 	private Long id;
 	private String username;
 	private String password;
+	@Column(name = "active")
 	private boolean active = true;
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_role",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "role_id")
 	)
+	@JsonManagedReference
 	private Set<Role> roles = new LinkedHashSet<>();
     private String twoFactorSecret;
+	@Column(name = "two_factor_enabled")
 	private boolean isTwoFactorEnabled;
 
 	/**
