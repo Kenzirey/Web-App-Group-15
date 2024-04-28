@@ -1,22 +1,28 @@
 package no.ntnu.database.controllers;
 
-
-import no.ntnu.database.entities.Favorite;
 import no.ntnu.database.entities.Image;
 import no.ntnu.database.services.ImageService;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-//TODO: Avoid .*; imports
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
+
 /**
- * REST API controller for Image colelction
+ * REST API controller for Image collection.
  *
  */
 @CrossOrigin
@@ -56,10 +62,11 @@ public class ImageController {
 	 *
 	 * @param id 	The id of the image to return.
 	 * @return 		{@link ResponseEntity} object containing either:
-	 * 		<ul>
-	 * 		  <li>A corresponding image that matches the id, returns status 200</li>
-	 * 		  <li>If no match is found, return status 404</li>
-	 * 		</ul>
+	 * <ul>
+	 *     <li>A corresponding image that matches the id, returns status 200</li>
+	 *     <li>If no match is found, return status 404</li>
+	 * </ul>
+
 	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<Image> getImage(@PathVariable Integer id) {
@@ -96,7 +103,7 @@ public class ImageController {
 
 
 	/**
-	 * Removes an image from the collection
+	 * Removes an image from the collection.
 	 *
 	 * @param id The id of image to be removed.
 	 * @return 200 OK status on success, 404 NOT FOUND on error
@@ -113,7 +120,7 @@ public class ImageController {
 	}
 
 	/**
-	 * Update image in the repository
+	 * Update image in the repository.
 	 *
 	 * @param id The id of the image to update.
 	 * @param image New image data to store.

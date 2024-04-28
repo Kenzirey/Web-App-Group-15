@@ -2,11 +2,18 @@ package no.ntnu.database.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 
 /**
  * The Course class represents a course entity within the application,
@@ -19,13 +26,16 @@ public final class Course {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Schema(description = "Unique ID for the course", example = "1")
+	@Column(name = "course_id")
 	private int courseId;
+
 	@Schema(description = "Name of the course", example = "SQL for Beginners")
 	private String courseName;
 	@Schema(description = "Difficulty level of the course", example = "Beginner")
 	private String difficultyLevel;
 	//Note, data starts YYYY-MM-DD.
 	@Schema(description = "Start date of the course", example = "2021-09-25")
+	@Column(name = "start_date")
 	private Date startDate;
 	@Schema(description = "End date of the course", example = "2021-12-31")
 	private Date endDate;
@@ -39,7 +49,18 @@ public final class Course {
 			"This course teaches the basics of SQL.")
 	private String courseDescription;
 
-	//TODO: Add many-to-many relationship with course provider?
+
+	@OneToMany(mappedBy = "course")
+	private Set<CourseProviderLink> courseProviderLink = new HashSet<>();
+
+	@ManyToMany(mappedBy = "courses")
+	private Set<Category> categories = new HashSet<>();
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
+	private Set<Image> images = new HashSet<>();
+
+
+
 
 	/**
 	 * Empty constructor for JPA requirement.
@@ -47,7 +68,6 @@ public final class Course {
 	public Course() {
 		// Empty constructor for JPA. checkstyle complains.
 	}
-
 
 	/**
 	 * Checks if the object is a valid course.
@@ -224,4 +244,17 @@ public final class Course {
 	public int getCourseId() {
 		return courseId;
 	}
+
+	public Set<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
+	}
+
+
+
+
+
 }

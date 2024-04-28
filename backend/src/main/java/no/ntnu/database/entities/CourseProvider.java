@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * CourseProvider class represents a course provider entity within the application,
@@ -21,8 +24,11 @@ public final class CourseProvider {
 	private int courseProviderId;
 	@Schema(description = "Name of the course provider", example = "University in Oslo")
 	private String providerName;
-	@Schema(description = "URL to the course provider's website", example = "https://www.ntnu.no")
-	private String url;
+
+	@OneToMany(mappedBy = "courseProvider")
+	@JsonIgnore
+	private Set<CourseProviderLink> courseProviderLink = new HashSet<>();
+
 
 	/**
 	 * Empty constructor for JPA requirement.
@@ -61,11 +67,5 @@ public final class CourseProvider {
 		return courseProviderId;
 	}
 
-	public String getUrl() {
-		return url;
-	}
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
 }

@@ -1,7 +1,5 @@
 package no.ntnu.database.services;
 
-
-import no.ntnu.database.entities.Favorite;
 import no.ntnu.database.entities.Image;
 import no.ntnu.database.repositories.ImageRepository;
 
@@ -59,11 +57,12 @@ public class ImageService {
 		if (existingImage.isEmpty()) {
 			throw new IllegalStateException(String.format("No favorite: ", id));
 		} else {
-			image.setCourseId(id);
+			image.setImageId(id);
 			imageRepository.save(image);
 		}
 
 	}
+
 
 
 	/**

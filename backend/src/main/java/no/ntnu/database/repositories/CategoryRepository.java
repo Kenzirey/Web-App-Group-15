@@ -7,6 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import no.ntnu.database.entities.Category;
 
+
+/**
+ * An interface for SQL access to our database category table.
+ */
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
 	@Query(value = """

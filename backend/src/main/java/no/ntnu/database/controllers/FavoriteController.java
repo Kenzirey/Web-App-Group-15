@@ -37,7 +37,7 @@ public class FavoriteController {
 	/**
 	 * Makes the favorite controller.
 	 *
-	 * @param favoriteService
+	 * @param favoriteService The service class for communication
 	 */
 	public FavoriteController(@Autowired FavoriteService favoriteService) {
 		this.favoriteService = favoriteService;

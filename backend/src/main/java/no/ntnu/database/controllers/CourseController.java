@@ -186,4 +186,5 @@ public class CourseController {
 				: courseService.searchCourse(query);
 	}
 
+
 }

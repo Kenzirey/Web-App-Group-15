@@ -17,11 +17,11 @@ import jakarta.persistence.Id;
 @Entity
 public final class Favorite {
 
-
+	@Id
 	@Schema(description = "An Unique ID for the product whom the user has marked favorite", example = "1111")
 	private int productId;
 
-	@Id
+
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Schema(description = "An Unique ID for the user", example = "0")
 	private int userId;
