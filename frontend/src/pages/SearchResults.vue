@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { watch } from 'vue';
 import { ref } from 'vue';
 export default {
 	setup() {
@@ -58,10 +59,16 @@ export default {
 		},
 		sortExactMatches(array, query) {
 			array.sort((a, b) => (this.getName(b) == query) - (this.getName(a) == query));
+		},
+		watchQuery(val) {
+			console.log(val);
 		}
 	},
 	data() {
-		return { results: [] };
+		return {
+			results: [],
+			query: ""
+		};
 	},
 	mounted() {
 		const backend_base_url = "http://localhost:8080/";
@@ -100,7 +107,9 @@ export default {
 
 		let all;
 		combinedPromise.then(() => all = [...courses, ...providers]).then(() => {
+			this.query = this.$route.query.q;
 			if (this.$route.query.q) {
+				watch(this.$route.query.q, this.watchQuery);
 				this.sortExactMatches(all, this.$route.query.q)
 			}
 		}).then(() => this.results = all);

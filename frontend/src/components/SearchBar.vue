@@ -1,21 +1,20 @@
 <template>
 	<v-form ref="searchBar" @submit.prevent="submitSearch(null, false)">
-		<button style="display: none;"></button>
 		<!-- Prevents other buttons from being invoked as the submit when clicking enter -->
 		<v-text-field @keydown.tab="showSuggestions = false" id="search-bar" @click="searchBarFocused"
 			@focus="searchBarFocused" v-model="search" append-icon="mdi-magnify"
-			@click:append="submitSearch(null, false)" placeholder="Search..." required autocomplete="off"
+			@click:append="submitSearch()" placeholder="Search..." required autocomplete="off"
 			hide-details />
 		<div id="search-suggestions-center-align">
 			<div v-if="showSuggestions" id="search-suggestions">
 				<div id="courses-suggestions" class="suggestion-box">
 					<h2>Courses:</h2>
 					<ul>
-						<li @click="selectSuggestion(course)" v-for="course in filteredCourses" :key="course.name">
-							<a>{{ course.name }}</a>
+						<li  v-for="course in filteredCourses" :key="course.name">
+							<router-link :to="'course/' + course.id">{{ course.name }}</router-link>
 						</li>
 					</ul>
-					<p class="show-more" @click.prevent="submitSearch('courses')">More courses...</p>
+					<router-link :to="{path: 'search', query: {type: 'courses', q: this.search}}">More courses...</router-link>
 				</div>
 				<div id="providers-suggestions" class="suggestion-box">
 					<h2>Course providers:</h2>
@@ -24,19 +23,22 @@
 							<a :href="provider.url">{{ provider.name }}</a>
 						</li>
 					</ul>
-					<p class="show-more" @click.prevent="submitSearch('providers')">More providers...</p>
+					<router-link :to="{path: 'search', query: {type: 'providers', q: this.search}}">More providers...</router-link>
 				</div>
 				<div id="all-suggestions" class="suggestion-box">
 					<h2>All results:</h2>
 					<ul>
 						<li @click="suggestion.type == 'course' ? selectSuggestion(suggestion) : null" v-for="suggestion in getAllSuggestions()"
 							:key="suggestion.name">
-							<a :href="suggestion.type == 'provider' ? suggestion.url : null">
+							<a v-if="suggestion.type == 'provider'" :href="suggestion.url">
 								{{ suggestion.name }} [{{ suggestion.type }}]
 							</a>
+							<router-link v-if="suggestion.type == 'course'" :to="'course/' + suggestion.id">
+								{{ suggestion.name }} [{{ suggestion.type }}]
+							</router-link>
 						</li>
 					</ul>
-					<p class="show-more" @click.prevent="submitSearch()">More results...</p>
+					<router-link :to="{path: 'search', query: {q: this.search}}">More results...</router-link>
 				</div>
 			</div>
 		</div>
@@ -170,12 +172,9 @@ export default {
 				this.showSuggestions = false;
 			}
 		},
-		submitSearch(type, allow_empty_query = true) {
+		submitSearch(type) {
 			const params = { q: this.search }
-			if (type) {
-				params.type = type;
-			}
-			if (allow_empty_query || this.searchify(params["q"])) {
+			if (this.searchify(params["q"])) {
 				this.$router.push({ path: "/search", query: { q: this.search, type: type } })
 				this.showSuggestions = false;
 			}
