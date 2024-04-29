@@ -1,6 +1,6 @@
 <template>
   <v-container class="course-page" fluid>
-    <div class="grid-course-container">
+    <div class="grid-container">
       <h3 class="course-title">{{ course.title }}</h3>
       <div class="session-date"><span class="key">Course Session:</span> <span class="value">{{ course.sessionDate }}</span></div>
       <div class="content-container">
@@ -28,12 +28,23 @@
       </div>
       <div class="course-description">{{ course.description }}</div>
     </div>
-  </v-container>
+
+    <courseCard></courseCard>
+  
+
+
+</v-container>
 </template>
 
 <script>
+
+import courseCard from '@/components/InformationCardCourse.vue';
+
 export default {
   name: 'CoursePage',
+  components: {
+    courseCard
+  },
   data() {
     return {
       course: {
@@ -44,6 +55,8 @@ export default {
     };
   }
 }
+
+
 </script>
   
 <style lang="scss" scoped>
@@ -72,7 +85,6 @@ export default {
     justify-content: center;
     flex-direction: column;
     align-items: center;
-    
     gap: 20px;
   }
 

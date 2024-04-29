@@ -16,6 +16,7 @@ import SearchResults from '@/pages/SearchResults.vue';
 
 
 
+
 //Add the routes / paths to the "pages" here.
 const routes = [
   { path: '/', component: HomePage, name: 'Home' },
@@ -30,6 +31,7 @@ const routes = [
   { path: '/forms', component: FormsPage, name: 'Forms' },
   { path: '/submit', component: SubmitPage, name: 'Submit' },
   { path: '/search', component: SearchResults, name: 'SearchResults'}
+  
 
   // Define routes for other pages
 ];
