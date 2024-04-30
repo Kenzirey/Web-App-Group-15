@@ -16,21 +16,6 @@
   </div>
 </template>
 
-<style scoped>
-  .carousel-test {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .home-page-container {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-  }
-</style>
-
 <script>
 
 /**
@@ -63,9 +48,9 @@ export default {
           image: '/images/machine-learning.jpg'
         },
         {
-          name: 'SQL Basics', 
-          difficulty: 'Beginner', 
-          category: 'SQL', 
+          name: 'SQL Basics',
+          difficulty: 'Beginner',
+          category: 'SQL',
           image: '/images/SQL-image.jpg'
         }
       ]
@@ -73,3 +58,18 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+  .carousel-test {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .home-page-container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+</style>
