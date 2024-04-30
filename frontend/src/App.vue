@@ -4,8 +4,8 @@
       <TopToolbar class="toolbar" :lastGlobalClick="lastClick"/>
       <body class="body-content">
         <main class="course-content">
-        <!-- The main content of the page, replaced based on the current route -->
-        <router-view id="content"></router-view>
+          <!-- The main content of the page, replaced based on the current route -->
+          <router-view id="content"></router-view>
         </main>
       </body>
       <!--Footer component-->

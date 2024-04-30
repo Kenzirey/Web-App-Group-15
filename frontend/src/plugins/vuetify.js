@@ -17,7 +17,7 @@ const lightTheme = {
   colors: {
     /*Need to add colors to features course background etc */
     primary: '#3f2b96',
-    secondary: '#b4bbe4',
+    secondary: '#8775d7',
     buttonHover: '#77a8f8',  //Hover color?
     background: '#eeeeee',  //Background of main content area
     gradiantOne:'#336dff',  //left color
@@ -34,7 +34,7 @@ const lightTheme = {
   }
 }
 
-//constant of custom theme goes here, 
+//constant of custom theme goes here,
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
