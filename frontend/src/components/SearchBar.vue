@@ -44,88 +44,6 @@
 	</v-form>
 </template>
 
-<style scoped lang="scss">
-.v-form {
-	position: relative;
-	justify-content: center;
-	display: flex;
-	align-items: center;
-}
-
-#search-suggestions-center-align {
-	position: absolute;
-	left: 50%;
-	top: 100%;
-	width: 0;
-}
-
-#search-suggestions {
-	background-color: rgb(var(--v-theme-surface));
-	border-style: solid;
-	border-width: 5px;
-	color: rgb(var(--v-theme-text));
-	position: relative;
-	display: grid;
-	height: 40vw;
-	max-height: 80vh;
-	width: 40vw;
-	left: -20vw;
-	grid-template-columns: 50% 50%;
-	grid-template-rows: 50% 50%;
-	overflow: auto;
-}
-
-#search-suggestions a {
-	text-decoration: none;
-}
-
-#search-suggestions a:hover {
-	text-decoration: underline;
-}
-
-.suggestion-box {
-	border-style: solid;
-	display: inline-flex;
-	flex-direction: column;
-	overflow-wrap: break-word;
-	word-break: break-word;
-	text-align: left;
-	padding: 10px;
-}
-
-.suggestion-box ul {
-	flex-grow: 1;
-}
-
-.suggestion-box li {
-	margin-left: 15px;
-}
-
-#courses-suggestions {
-	border-width: 0 2.5px 2.5px 0;
-	grid-column-start: 1;
-	grid-column-end: 1;
-	grid-row-start: 1;
-	grid-row-end: 1;
-}
-
-#providers-suggestions {
-	border-width: 2.5px 2.5px 0 0;
-	grid-column-start: 1;
-	grid-column-end: 1;
-	grid-row-start: 2;
-	grid-row-end: 2;
-}
-
-#all-suggestions {
-	border-width: 0 0 0 2.5px;
-	grid-column-start: 2;
-	grid-column-end: 2;
-	grid-row-start: 1;
-	grid-row-end: 3;
-}
-</style>
-
 <script>
 import { ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -212,3 +130,85 @@ export default {
 	}
 }
 </script>
+
+<style scoped lang="scss">
+.v-form {
+	position: relative;
+	justify-content: center;
+	display: flex;
+	align-items: center;
+}
+
+#search-suggestions-center-align {
+	position: absolute;
+	left: 50%;
+	top: 100%;
+	width: 0;
+}
+
+#search-suggestions {
+	background-color: rgb(var(--v-theme-surface));
+	border-style: solid;
+	border-width: 5px;
+	color: rgb(var(--v-theme-text));
+	position: relative;
+	display: grid;
+	height: 40vw;
+	max-height: 80vh;
+	width: 40vw;
+	left: -20vw;
+	grid-template-columns: 50% 50%;
+	grid-template-rows: 50% 50%;
+	overflow: auto;
+}
+
+#search-suggestions a {
+	text-decoration: none;
+}
+
+#search-suggestions a:hover {
+	text-decoration: underline;
+}
+
+.suggestion-box {
+	border-style: solid;
+	display: inline-flex;
+	flex-direction: column;
+	overflow-wrap: break-word;
+	word-break: break-word;
+	text-align: left;
+	padding: 10px;
+}
+
+.suggestion-box ul {
+	flex-grow: 1;
+}
+
+.suggestion-box li {
+	margin-left: 15px;
+}
+
+#courses-suggestions {
+	border-width: 0 2.5px 2.5px 0;
+	grid-column-start: 1;
+	grid-column-end: 1;
+	grid-row-start: 1;
+	grid-row-end: 1;
+}
+
+#providers-suggestions {
+	border-width: 2.5px 2.5px 0 0;
+	grid-column-start: 1;
+	grid-column-end: 1;
+	grid-row-start: 2;
+	grid-row-end: 2;
+}
+
+#all-suggestions {
+	border-width: 0 0 0 2.5px;
+	grid-column-start: 2;
+	grid-column-end: 2;
+	grid-row-start: 1;
+	grid-row-end: 3;
+}
+</style>
