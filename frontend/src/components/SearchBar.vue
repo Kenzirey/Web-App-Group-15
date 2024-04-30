@@ -10,11 +10,11 @@
 				<div id="courses-suggestions" class="suggestion-box">
 					<h2>Courses:</h2>
 					<ul>
-						<li  v-for="course in filteredCourses" :key="course.name">
-							<router-link :to="'course/' + course.id">{{ course.name }}</router-link>
+						<li v-for="course in filteredCourses" :key="course.name">
+							<router-link @click="showSuggestions = false" :to="'/course/' + course.id">{{ course.name }}</router-link>
 						</li>
 					</ul>
-					<router-link :to="{path: 'search', query: {type: 'courses', q: this.search}}">More courses...</router-link>
+					<router-link @click="showSuggestions = false" :to="{path: '/search', query: {type: 'courses', q: this.search}}">More courses...</router-link>
 				</div>
 				<div id="providers-suggestions" class="suggestion-box">
 					<h2>Course providers:</h2>
@@ -23,7 +23,7 @@
 							<a :href="provider.url">{{ provider.name }}</a>
 						</li>
 					</ul>
-					<router-link :to="{path: 'search', query: {type: 'providers', q: this.search}}">More providers...</router-link>
+					<router-link @click="showSuggestions = false" :to="{path: '/search', query: {type: 'providers', q: this.search}}">More providers...</router-link>
 				</div>
 				<div id="all-suggestions" class="suggestion-box">
 					<h2>All results:</h2>
@@ -32,12 +32,12 @@
 							<a v-if="suggestion.type == 'provider'" :href="suggestion.url">
 								{{ suggestion.name }} [{{ suggestion.type }}]
 							</a>
-							<router-link v-if="suggestion.type == 'course'" :to="'course/' + suggestion.id">
+							<router-link @click="showSuggestions = false" v-if="suggestion.type == 'course'" :to="'/course/' + suggestion.id">
 								{{ suggestion.name }} [{{ suggestion.type }}]
 							</router-link>
 						</li>
 					</ul>
-					<router-link :to="{path: 'search', query: {q: this.search}}">More results...</router-link>
+					<router-link @click="showSuggestions = false" :to="{path: '/search', query: {q: this.search}}">More results...</router-link>
 				</div>
 			</div>
 		</div>
@@ -76,16 +76,11 @@
 }
 
 #search-suggestions a {
-	color: rgb(var(--v-theme-hyperlink));
 	text-decoration: none;
 }
 
 #search-suggestions a:hover {
 	text-decoration: underline;
-}
-
-#search-suggestions a:visited {
-	color: rgb(var(--v-theme-hyperlinkVisited));
 }
 
 .suggestion-box {
@@ -104,20 +99,6 @@
 
 .suggestion-box li {
 	margin-left: 15px;
-}
-
-.show-more {
-	color: rgb(var(--v-theme-primary));
-	text-decoration: underline;
-}
-
-.show-more:hover {
-	color: rgb(var(--v-theme-secondary));
-}
-
-.suggestion-box a:hover,
-.show-more:hover {
-	cursor: pointer;
 }
 
 #courses-suggestions {
