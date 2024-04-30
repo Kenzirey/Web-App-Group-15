@@ -1,9 +1,9 @@
 <template>
-	<v-form ref="searchBar" @submit.prevent="submitSearch(null, false)">
+	<v-form ref="searchBar" @submit.prevent="submitSearch">
 		<!-- Prevents other buttons from being invoked as the submit when clicking enter -->
 		<v-text-field @keydown.tab="showSuggestions = false" id="search-bar" @click="searchBarFocused"
 			@focus="searchBarFocused" v-model="search" append-icon="mdi-magnify"
-			@click:append="submitSearch()" placeholder="Search..." required autocomplete="off"
+			@click:append="submitSearch" placeholder="Search..." required autocomplete="off"
 			hide-details />
 		<div id="search-suggestions-center-align">
 			<div v-if="showSuggestions" id="search-suggestions">
@@ -28,8 +28,7 @@
 				<div id="all-suggestions" class="suggestion-box">
 					<h2>All results:</h2>
 					<ul>
-						<li @click="suggestion.type == 'course' ? selectSuggestion(suggestion) : null" v-for="suggestion in getAllSuggestions()"
-							:key="suggestion.name">
+						<li v-for="suggestion in filteredCourses.concat(filteredProviders)" :key="suggestion.name">
 							<a v-if="suggestion.type == 'provider'" :href="suggestion.url">
 								{{ suggestion.name }} [{{ suggestion.type }}]
 							</a>
@@ -155,58 +154,50 @@ export default {
 	props: ['lastGlobalClick'],
 	methods: {
 		searchify(str) {
-			return str == null ? str.toLowerCase().replace(/\s/g, "") : str;
+			return str != null ? str.toLowerCase().replace(/\s/g, "") : str;
 		},
-		filterCourses(query) {
-			this.filteredCourses = this.courses.filter(course => this.searchify(course.name).includes(this.searchify(query)));
+		filterResults(results, query) {
+			return results.filter(result => this.searchify(result.name).includes(this.searchify(query)));
 		},
-		filterProviders(query) {
-			this.filteredProviders = this.providers.filter(provider => this.searchify(provider.name).includes(this.searchify(query)));
-		},
-		getAllSuggestions() {
-			return this.filteredCourses.concat(this.filteredProviders);
-		},
-		selectSuggestion(suggestion) {
-			if (suggestion.type == "course" && suggestion.id != null) {
-				this.$router.push(`/course/${suggestion.id}`);
-				this.showSuggestions = false;
-			}
-		},
-		submitSearch(type) {
-			const params = { q: this.search }
-			if (this.searchify(params["q"])) {
-				this.$router.push({ path: "/search", query: { q: this.search, type: type } })
+		submitSearch() {
+			const query = this.searchify(this.search);
+			if (query) {
+				this.$router.push({ path: "/search", query: { q: query } })
 				this.showSuggestions = false;
 			}
 		},
 		searchBarFocused() {
 			this.showSuggestions = true;
 			if (!suggestions_loaded) {
-				const self = this;
 				suggestions_loaded = true;
-				this.fetchCourses().then(data => {
-					self.courses = data.map(course => { return { type: "course", id: course.courseId, name: course.courseName }; });
-					self.filterCourses(self.search);
-				});
-				this.fetchProviders().then(data => {
-					self.providers = data.map(provider => { return { type: "provider", id: provider.courseProviderId, name: provider.providerName, url: provider.url }; });
-					self.filterProviders(self.search);
-				});
+				this.fetchCourses();
+				this.fetchProviders();
 			}
 		},
 		async fetchCourses() {
 			const response = await fetch(this.backendBaseUrl + "courses");
-			return await response.json();
+			this.courses = (await response.json()).map(course => { return {
+				type: "course",
+				id: course.courseId,
+				name: course.courseName
+			}; });
+			this.filteredCourses = this.filterResults(this.courses, this.search);
 		},
 		async fetchProviders() {
 			const response = await fetch(this.backendBaseUrl + "providers");
-			return await response.json();
+			this.providers = (await response.json()).map(provider => { return {
+				type: "provider",
+				id: provider.courseProviderId,
+				name: provider.providerName,
+				url: provider.url
+			}; });
+			this.filteredProviders = this.filterResults(this.providers, this.search);
 		}
 	},
 	watch: {
-		search(val) {
-			this.filterCourses(val);
-			this.filterProviders(val);
+		search(query) {
+			this.filteredCourses = this.filterResults(this.courses, query);
+			this.filteredProviders = this.filterResults(this.providers, query);
 		},
 		lastGlobalClick(event) {
 			if (!this.$refs.searchBar.contains(event.target)) {

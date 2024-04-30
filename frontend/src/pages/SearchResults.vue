@@ -13,8 +13,10 @@
 </template>
 
 <script>
+import SearchBar from '@/components/SearchBar.vue';
 import { watch } from 'vue';
 import { ref } from 'vue';
+
 export default {
 	setup() {
 		const page = ref(1);
@@ -60,8 +62,47 @@ export default {
 		sortExactMatches(array, query) {
 			array.sort((a, b) => (this.getName(b) == query) - (this.getName(a) == query));
 		},
-		watchQuery(val) {
-			console.log(val);
+		loadResults() {
+			const backend_base_url = "http://localhost:8080/";
+			let coursesPromise;
+			let providersPromise;
+
+			const courses = [];
+			const providers = [];
+			if (this.$route.query.type != "providers") {
+				coursesPromise = fetch(backend_base_url + (this.$route.query.q ? `courses/search/${this.$route.query.q}` : "courses"))
+					.then(response => response.json())
+					.then(data => data.map(course => {
+						course.type = "course";
+						return course;
+					}))
+					.then(courseArray => courses.push(...courseArray));
+			}
+			if (this.$route.query.type != "courses") {
+				providersPromise = fetch(backend_base_url + (this.$route.query.q ? `providers/search/${this.$route.query.q}` : "providers"))
+					.then(response => response.json())
+					.then(data => data.map(provider => {
+						provider.type = "provider";
+						return provider;
+					}))
+					.then(providerArray => providers.push(...providerArray));
+			}
+			
+			let combinedPromise;
+			if (providersPromise == null) {
+				combinedPromise = coursesPromise;
+			} else if (coursesPromise == null) {
+				combinedPromise = providersPromise;
+			} else {
+				combinedPromise = Promise.all([coursesPromise, providersPromise]);
+			}
+
+			combinedPromise.then(() => [...courses, ...providers]).then(all => {
+				if (this.$route.query.q) {
+					this.sortExactMatches(all, this.$route.query.q)
+				}
+				this.results = all;
+			});
 		}
 	},
 	data() {
@@ -71,50 +112,8 @@ export default {
 		};
 	},
 	mounted() {
-		const backend_base_url = "http://localhost:8080/";
-		let coursesPromise;
-		let providersPromise;
-
-		const courses = [];
-		const providers = [];
-		if (this.$route.query.type != "providers") {
-			coursesPromise = fetch(backend_base_url + (this.$route.query.q ? `courses/search/${this.$route.query.q}` : "courses"))
-				.then(response => response.json())
-				.then(data => data.map(course => {
-					course.type = "course";
-					return course;
-				}))
-				.then(courseArray => courses.push(...courseArray));
-		}
-		if (this.$route.query.type != "courses") {
-			providersPromise = fetch(backend_base_url + (this.$route.query.q ? `providers/search/${this.$route.query.q}` : "providers"))
-				.then(response => response.json())
-				.then(data => data.map(provider => {
-					provider.type = "provider";
-					return provider;
-				}))
-				.then(providerArray => providers.push(...providerArray));
-		}
-		
-		let combinedPromise;
-		if (providersPromise == null) {
-			combinedPromise = coursesPromise;
-		} else if (coursesPromise == null) {
-			combinedPromise = providersPromise;
-		} else {
-			combinedPromise = Promise.all([coursesPromise, providersPromise]);
-		}
-
-		let all;
-		combinedPromise.then(() => all = [...courses, ...providers]).then(() => {
-			this.query = this.$route.query.q;
-			if (this.$route.query.q) {
-				watch(this.$route.query.q, this.watchQuery);
-				this.sortExactMatches(all, this.$route.query.q)
-			}
-		}).then(() => this.results = all);
-
-
+		watch(() => this.$route.query, this.loadResults);
+		this.loadResults();
 	}
 }
 </script>
