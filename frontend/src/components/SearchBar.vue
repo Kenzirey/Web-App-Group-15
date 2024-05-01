@@ -7,6 +7,12 @@
 			hide-details />
 		<div id="search-suggestions-center-align">
 			<div v-if="showSuggestions" id="search-suggestions">
+				<v-chip-group id="difficulties" class="suggestion-box">
+					<v-chip>Featured</v-chip>
+					<v-chip>Beginner</v-chip>
+					<v-chip>Advanced</v-chip>
+					<v-chip>Expert</v-chip>
+				</v-chip-group>
 				<div id="courses-suggestions" class="suggestion-box">
 					<h2>Courses:</h2>
 					<ul>
@@ -16,23 +22,25 @@
 					</ul>
 					<router-link @click="showSuggestions = false" :to="{path: '/search', query: {type: 'courses', q: this.search}}">More courses...</router-link>
 				</div>
-				<div id="providers-suggestions" class="suggestion-box">
-					<h2>Course providers:</h2>
+				<div id="categories-suggestions" class="suggestion-box">
+					<h2>Categories:</h2>
 					<ul>
-						<li v-for="provider in filteredProviders" :key="provider.name">
-							<a :href="provider.url">{{ provider.name }}</a>
+						<li v-for="category in filteredCategories" :key="category.name">
+							<router-link @click="showSuggestions = false" :to="{path: '/search', query: {category: category.id}}">{{ category.name }}</router-link>
 						</li>
 					</ul>
-					<router-link @click="showSuggestions = false" :to="{path: '/search', query: {type: 'providers', q: this.search}}">More providers...</router-link>
 				</div>
 				<div id="all-suggestions" class="suggestion-box">
-					<h2>All results:</h2>
+					<h2>All Results:</h2>
 					<ul>
-						<li v-for="suggestion in filteredCourses.concat(filteredProviders)" :key="suggestion.name">
+						<li v-for="suggestion in allSuggestionsFiltered" :key="suggestion.name">
 							<a v-if="suggestion.type == 'provider'" :href="suggestion.url">
 								{{ suggestion.name }} [{{ suggestion.type }}]
 							</a>
-							<router-link @click="showSuggestions = false" v-if="suggestion.type == 'course'" :to="'/course/' + suggestion.id">
+							<router-link @click="showSuggestions = false"
+								v-if="suggestion.type != 'provider'"
+								:to="suggestion.type == 'course' ? '/course/' + suggestion.id : suggestion.type == 'category' ? {path: '/search', query: {category: suggestion.id}} : null"
+							>
 								{{ suggestion.name }} [{{ suggestion.type }}]
 							</router-link>
 						</li>
@@ -51,9 +59,14 @@ import { useRoute, useRouter } from "vue-router";
 let suggestions_loaded = false;
 export default {
 	props: ['lastGlobalClick'],
+	computed: {
+		allSuggestionsFiltered() {
+			return this.filteredCourses.concat(this.filteredProviders).concat(this.filteredCategories);
+		}	
+	},
 	methods: {
 		searchify(str) {
-			return str != null ? str.toLowerCase().replace(/\s/g, "") : str;
+			return str != null ? str.toLowerCase().replace(/\s/g, "") : "";
 		},
 		filterResults(results, query) {
 			return results.filter(result => this.searchify(result.name).includes(this.searchify(query)));
@@ -71,32 +84,54 @@ export default {
 				suggestions_loaded = true;
 				this.fetchCourses();
 				this.fetchProviders();
+				this.fetchCategories();
 			}
 		},
-		async fetchCourses() {
-			const response = await fetch(this.backendBaseUrl + "courses");
-			this.courses = (await response.json()).map(course => { return {
+		standardizeCourses(courses) {
+			return courses.map(course => { return {
 				type: "course",
 				id: course.courseId,
-				name: course.courseName
-			}; });
-			this.filteredCourses = this.filterResults(this.courses, this.search);
+				name: course.courseName,
+				description: course.courseDescription,
+				difficulty: course.difficultyLevel
+			}})
 		},
-		async fetchProviders() {
-			const response = await fetch(this.backendBaseUrl + "providers");
-			this.providers = (await response.json()).map(provider => { return {
+		standardizeProviders(providers) {
+			return providers.map(provider => { return {
 				type: "provider",
 				id: provider.courseProviderId,
 				name: provider.providerName,
 				url: provider.url
 			}; });
+		},
+		standardizeCategories(categories) {
+			return categories.map(category => { return {
+				type: "category",
+				id: category.categoryId,
+				name: category.categoryName
+			}; });
+		},
+		async fetchCourses() {
+			const response = await fetch(this.backendBaseUrl + "courses");
+			this.courses = this.standardizeCourses(await response.json());
+			this.filteredCourses = this.filterResults(this.courses, this.search);
+		},
+		async fetchProviders() {
+			const response = await fetch(this.backendBaseUrl + "providers")
+			this.providers = this.standardizeProviders(await response.json());
 			this.filteredProviders = this.filterResults(this.providers, this.search);
+		},
+		async fetchCategories() {
+			const response = await fetch(this.backendBaseUrl + "categories");
+			this.categories = this.standardizeCategories(await response.json())
+			this.filteredCategories = this.filterResults(this.categories, this.search);
 		}
 	},
 	watch: {
 		search(query) {
 			this.filteredCourses = this.filterResults(this.courses, query);
 			this.filteredProviders = this.filterResults(this.providers, query);
+			this.filteredCategories = this.filterResults(this.categories, query);
 		},
 		lastGlobalClick(event) {
 			if (!this.$refs.searchBar.contains(event.target)) {
@@ -114,8 +149,10 @@ export default {
 			showSuggestions: false,
 			courses: [],
 			providers: [],
+			categories: [],
 			filteredCourses: [],
-			filteredProviders: []
+			filteredProviders: [],
+			filteredCategories: []
 		};
 	},
 	mounted() {
@@ -157,8 +194,8 @@ export default {
 	max-height: 80vh;
 	width: 40vw;
 	left: -20vw;
-	grid-template-columns: 50% 50%;
-	grid-template-rows: 50% 50%;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
 	overflow: auto;
 }
 
@@ -188,27 +225,36 @@ export default {
 	margin-left: 15px;
 }
 
-#courses-suggestions {
-	border-width: 0 2.5px 2.5px 0;
+#difficulties {
+	align-items: center;
+	border-width: 0 0 2.5px 0;
 	grid-column-start: 1;
-	grid-column-end: 1;
+	grid-column-end: 3;
 	grid-row-start: 1;
-	grid-row-end: 1;
-}
-
-#providers-suggestions {
-	border-width: 2.5px 2.5px 0 0;
-	grid-column-start: 1;
-	grid-column-end: 1;
-	grid-row-start: 2;
 	grid-row-end: 2;
 }
 
-#all-suggestions {
-	border-width: 0 0 0 2.5px;
-	grid-column-start: 2;
+#courses-suggestions {
+	border-width: 2.5px 2.5px 2.5px 0;
+	grid-column-start: 1;
 	grid-column-end: 2;
-	grid-row-start: 1;
+	grid-row-start: 2;
 	grid-row-end: 3;
+}
+
+#categories-suggestions {
+	border-width: 2.5px 2.5px 0 0;
+	grid-column-start: 1;
+	grid-column-end: 2;
+	grid-row-start: 3;
+	grid-row-end: 4;
+}
+
+#all-suggestions {
+	border-width: 2.5px 0 0 2.5px;
+	grid-column-start: 2;
+	grid-column-end: 3;
+	grid-row-start: 2;
+	grid-row-end: 4;
 }
 </style>

@@ -45,13 +45,13 @@ export default {
 		formatResult(result) {
 			if (result.type == "course") {
 				return {
-					title: result.courseName,
-					subtitle: `Difficulty: ${result.difficultyLevel}`,
-					text: result.courseDescription,
+					title: result.name,
+					subtitle: `Difficulty: ${result.difficulty}`,
+					text: result.description,
 				}
 			} else if (result.type == "provider") {
 				return {
-					title: result.providerName,
+					title: result.name,
 					subtitle: result.url
 				}
 			}
@@ -63,6 +63,42 @@ export default {
 			array.sort((a, b) => (this.getName(b) == query) - (this.getName(a) == query));
 		},
 		loadResults() {
+			const backend_base_url = "http://localhost:8080/";
+
+			const coursesPromise = fetch(backend_base_url + "courses")
+				.then(response => response.json())
+				.then(data => SearchBar.methods.standardizeCourses(data))
+				.then(courses => SearchBar.methods.filterResults(courses, this.$route.query.q));
+			
+			const providersPromise = fetch(backend_base_url + "providers")
+				.then(response => response.json())
+				.then(data => SearchBar.methods.standardizeProviders(data))
+				.then(providers => SearchBar.methods.filterResults(providers, this.$route.query.q));
+
+			Promise.all([coursesPromise, providersPromise]).then(responses => {
+				const courses = responses[0];
+				const providers = responses[1];
+
+				const type = this.$route.query.type ? this.$route.query.type.toLowerCase() : null;
+				const category = this.$route.query.category;
+				const difficulty = this.$route.query.difficulty ? this.$route.query.difficulty.toLowerCase() : null;
+				console.log(courses);
+				console.log(providers);
+				this.results = [...courses, ...providers];
+				if (type) {
+					this.results = this.results.filter(result => result.type.toLowerCase() == type);
+				}
+				/* TODO: Make courses have categories, so that this filter is appliccable
+				if (category) {
+					all = all.filter(result => result.type.toLowerCase() != "course" || result.category == category);
+				}
+				*/
+				if (difficulty) {
+					this.results = this.results.filter(result => result.type.toLowerCase() != "course" || result.difficulty.toLowerCase() == difficulty)
+				}
+			})
+		},
+		loadResultsOld() {
 			const backend_base_url = "http://localhost:8080/";
 			let coursesPromise;
 			let providersPromise;

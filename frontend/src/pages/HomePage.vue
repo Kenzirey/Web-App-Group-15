@@ -8,10 +8,10 @@
 
     <!-- Any other sections we want on the homepage -->
     <section class="Carousel test">
-      <CourseCarousel :title="'Featured Courses'" :courses="testCourses" />
-      <CourseCarousel :title="'Beginner Courses'" :courses="testCourses" difficulty="Beginner" />
-      <CourseCarousel :title="'Advanced Courses'" :courses="testCourses" difficulty="Advanced" />
-      <CourseCarousel :title="'Expert Courses'" :courses="testCourses" difficulty="Expert" />
+      <CourseCarousel :courses="testCourses" difficulty="Sale"/>
+      <CourseCarousel :courses="testCourses" difficulty="Beginner"/>
+      <CourseCarousel :courses="testCourses" difficulty="Advanced"/>
+      <CourseCarousel :courses="testCourses" difficulty="Expert"/>
     </section>
   </div>
 </template>
@@ -37,22 +37,22 @@ export default {
         {
           name: 'Microsoft SQL',
           difficulty: 'Beginner',
-          category: 'SQL',
-          onSale: false,
+          category: [{id: 1, name: "SQL"}, {id: 2, name: "Java"}, {id: 3, name: "JPA"}],
+          sale: 0.1,
           image: '/images/AWS.png', // Directly reference images from the public/images folder for testing!
           id: 1
-        },
-        {
+        }, {
           name: 'Advanced SQL',
           difficulty: 'Advanced',
-          category: 'SQL',
+          category: [{id: 1, name: "SQL"}, {id: 2, name: "Java"}, {id: 4, name: "JDBC"}],
+          sale: 0.3,
           image: '/images/machine-learning.jpg',
           id: 2
-        },
-        {
+        }, {
           name: 'SQL Basics',
           difficulty: 'Beginner',
-          category: 'SQL',
+          category: [{id: 1, name: "SQL"}],
+          sale: 0,
           image: '/images/SQL-image.jpg',
           id: 3
         }

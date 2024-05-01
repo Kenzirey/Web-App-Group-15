@@ -1,9 +1,7 @@
 package no.ntnu.database.controllers;
 
 import no.ntnu.database.entities.Category;
-import no.ntnu.database.entities.Favorite;
 import no.ntnu.database.services.CategoryService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/categories")
 public class CategoryController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CategoryController.class);
@@ -37,7 +35,7 @@ public class CategoryController {
 	 *
 	 * @return All categories
 	 */
-	@GetMapping(value = "/categories", produces = {"application/json"})
+	@GetMapping(produces = {"application/json"})
 	public Iterable<Category> getAllCategories() {
 		return service.getAllCategories();
 	}
@@ -48,7 +46,7 @@ public class CategoryController {
 	 * @param query The query to use when searching for categories
 	 * @return Categories that match the search queries
 	 */
-	@GetMapping(value = "/categories/{query}", produces = {"application/json"})
+	@GetMapping(value = "{query}", produces = {"application/json"})
 	public Iterable<Category> searchCategory(@PathVariable String query) {
 		return query == null || query.isBlank()
 				? service.getAllCategories()
