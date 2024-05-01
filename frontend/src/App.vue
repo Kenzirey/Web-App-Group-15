@@ -1,5 +1,5 @@
 <template>
-    <v-app @click="lastClick = $event" id="courseApp" color="background">
+    <v-app @click="lastClick = $event" id="courseApp">
       <!--The header is the v-app-bar from the toolbar-->
       <TopToolbar class="toolbar" :lastGlobalClick="lastClick"/>
       <body class="body-content">
@@ -65,6 +65,10 @@ export default {
   height: auto;
 }
 
+#app {
+  color: rgb(var(--v-theme-background))
+}
+
 /* Course content, i.e. everything except the toolbar(topbar) */
 .course-content {
   min-height: 95vh; /* Ensure minimum height */
@@ -93,7 +97,7 @@ button {
     background-color: rgb(var(--v-theme-buttonHover))
   }
   &:focus,button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
+    outline: 4px auto rgb(var(--v-theme-buttonHover));
   }
 }
 
