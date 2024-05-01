@@ -11,5 +11,4 @@ registerPlugins(courseApp)
 
 
 courseApp.use(router)
-.use(vuetify)
 .mount('#app');

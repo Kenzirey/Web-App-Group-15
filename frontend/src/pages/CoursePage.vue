@@ -8,8 +8,8 @@
       <div class="course-info">
         <div class="info-box-left">
           <div class="info-container">
-            <div class="info-item"><span class="key">Difficulty Level:</span> <span
-                class="value">{{ course.level }}</span></div>
+            <div class="info-item"><span class="key">Difficulty Level:</span> <span class="value">{{ course.level
+                }}</span></div>
             <div class="info-item"><span class="key">Course Size:</span> <span class="value">{{ course.credits }}</span>
             </div>
             <div class="info-item" v-for="(provider, index) in course.providers" :key="index">
@@ -23,10 +23,11 @@
         <div class="info-item-separator"></div>
         <div class="info-box-right">
           <div class="info-container">
-            <div class="info-item"><span class="key">Hours per week:</span> <span class="value">{{ course.hours }}</span>
+            <div class="info-item"><span class="key">Hours per week:</span> <span class="value">{{ course.hours
+                }}</span>
             </div>
-            <div class="info-item"><span class="key">Related Certifications:</span> <span
-                class="value">{{ course.certification }}</span></div>
+            <div class="info-item"><span class="key">Related Certifications:</span> <span class="value">{{
+      course.certification }}</span></div>
             <div class="info-item" v-for="(provider, index) in course.providers" :key="'cost' + index">
               <span class="key">Cost:</span>
               <span class="value">${{ provider.cost }}</span>
@@ -37,10 +38,15 @@
         </div>
 
       </div>
-      <v-btn text="Order Course" type="apply" href="/forms" variant="outlined"></v-btn>
-      <v-btn text="Toggle Favorite" @click="toggleFavorite" :disabled="isFavorite" variant="outlined">
-        {{ isFavorite ? 'Remove from Favorites' : 'Add to Favorites' }}
-      </v-btn>
+      <div class="info-item"><span class="key"><v-btn prepend-icon="mdi-cart-check" text="Order Course" type="apply" href="/forms"
+            variant="outlined"></v-btn></span>
+        <span class="value"><v-btn @click="toggleFavorite" :disabled="isFavorite" :prepend-icon="isFavorite ? 'mdi-heart-off-outline' : 'mdi-heart'">
+  {{ isFavorite ? 'Remove Favorite' : 'Add Favorite' }}
+</v-btn>
+ </span>
+      </div>
+
+
       <div class="course-image">
         <img src="/images/AWS.png" alt="AWS Course Image">
       </div>

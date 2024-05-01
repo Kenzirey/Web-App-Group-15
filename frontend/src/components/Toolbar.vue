@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar class="toolbar-app" :elevation="0"  scroll-behavior="hide" id="app-bar">
+  <v-app-bar class="toolbar-app" :elevation="0" id="app-bar">
     <div id="bar">
       <div id="topbar-left">
         <!--Look under! To use vuetify color, just set color to the variable you want to use-->
