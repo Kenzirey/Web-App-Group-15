@@ -6,8 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,15 +25,17 @@ public class Category {
 	@Schema(description = "The name of the category", example = "Java")
 	private String categoryName;
 
-	@ManyToMany
-	@JoinTable(
-			name = "categoryCourse",
-			joinColumns = @JoinColumn(name = "category_Id"),
-			inverseJoinColumns = @JoinColumn(name = "course_Id")
-	)
+	@ManyToMany(mappedBy = "categories")
 	@JsonIgnore
 	private Set<Course> courses = new HashSet<>();
 
+	public Set<Course> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(Set<Course> courses) {
+		this.courses = courses;
+	}
 
 	/**
 	 * An empty constructor for JPA requirement.

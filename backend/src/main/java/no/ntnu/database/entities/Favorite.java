@@ -18,7 +18,8 @@ import jakarta.persistence.Id;
 public final class Favorite {
 
 	@Id
-	@Schema(description = "An Unique ID for the product whom the user has marked favorite", example = "1111")
+	@Schema(description = "An Unique ID for the product whom the user has marked favorite",
+			example = "1111")
 	private int productId;
 
 

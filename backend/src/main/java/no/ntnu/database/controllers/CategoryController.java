@@ -2,7 +2,6 @@ package no.ntnu.database.controllers;
 
 import no.ntnu.database.entities.Category;
 import no.ntnu.database.services.CategoryService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +45,7 @@ public class CategoryController {
 	 */
 	@GetMapping(value = "/categories", produces = {"application/json"})
 	public Iterable<Category> getAllCategories() {
+		LOGGER.info("Getting all categories");
 		return service.getAllCategories();
 	}
 

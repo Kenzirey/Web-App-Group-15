@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,9 +25,12 @@ public final class CourseProvider {
 	@Schema(description = "Name of the course provider", example = "University in Oslo")
 	private String providerName;
 
-	@OneToMany(mappedBy = "courseProvider")
+	@Schema(description = "URL to the course provider's website", example = "https://www.ntnu.no")
+	private String url;
+
+	@ManyToMany(mappedBy = "courseProviders")
 	@JsonIgnore
-	private Set<CourseProviderLink> courseProviderLink = new HashSet<>();
+	private Set<Course> courses = new HashSet<>();
 
 
 	/**
@@ -67,5 +70,20 @@ public final class CourseProvider {
 		return courseProviderId;
 	}
 
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public Set<Course> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(Set<Course> courses) {
+		this.courses = courses;
+	}
 
 }

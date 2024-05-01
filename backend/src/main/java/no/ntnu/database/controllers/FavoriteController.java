@@ -1,10 +1,8 @@
 package no.ntnu.database.controllers;
 
 import java.util.Optional;
-
 import no.ntnu.database.entities.Favorite;
 import no.ntnu.database.services.FavoriteService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +76,7 @@ public class FavoriteController {
 	}
 
 	/**
-	 * Adds a favorite course to the collection
+	 * Adds a favorite course to the collection.
 	 *
 	 * @param favorite The favorite added
 	 * @return 201 CREATED status on success, 400 Bad request on error
@@ -116,7 +114,7 @@ public class FavoriteController {
 
 
 	/**
-	 * Update a favorite course in the repository
+	 * Update a favorite course in the repository.
 	 *
 	 * @param id The id of the course  to update.
 	 * @param favorite New course data to store.

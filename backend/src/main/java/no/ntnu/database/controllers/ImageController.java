@@ -1,7 +1,9 @@
 package no.ntnu.database.controllers;
 
+import java.util.Optional;
 import no.ntnu.database.entities.Image;
 import no.ntnu.database.services.ImageService;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,14 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.slf4j.Logger;
-
-import java.util.Optional;
-
 
 /**
  * REST API controller for Image collection.
- *
  */
 @CrossOrigin
 @RestController
@@ -37,7 +34,6 @@ public class ImageController {
 
 	/**
 	 * Makes the image controller.
-	 *
 	 */
 	public ImageController(@Autowired ImageService imageService) {
 		this.imageService = imageService;
@@ -55,18 +51,15 @@ public class ImageController {
 	}
 
 
-
-
 	/**
 	 * Endpoint to search for a specific image.
 	 *
-	 * @param id 	The id of the image to return.
-	 * @return 		{@link ResponseEntity} object containing either:
+	 * @param id The id of the image to return.
+	 * @return {@link ResponseEntity} object containing either:
 	 * <ul>
-	 *     <li>A corresponding image that matches the id, returns status 200</li>
-	 *     <li>If no match is found, return status 404</li>
+	 *    <li>A corresponding image that matches the id, returns status 200</li>
+	 *    <li>If no match is found, return status 404</li>
 	 * </ul>
-
 	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<Image> getImage(@PathVariable Integer id) {
@@ -83,7 +76,6 @@ public class ImageController {
 
 	/**
 	 * Adds an image to the collection.
-	 *
 	 *
 	 * @param image The image added
 	 * @return 201 CREATED status on success, 400 Bad request on error
@@ -116,13 +108,13 @@ public class ImageController {
 		} else {
 			response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return  response;
+		return response;
 	}
 
 	/**
 	 * Update image in the repository.
 	 *
-	 * @param id The id of the image to update.
+	 * @param id    The id of the image to update.
 	 * @param image New image data to store.
 	 * @return 200 OK status on success, 400 Bad request on error
 	 */

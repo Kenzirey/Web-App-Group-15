@@ -2,12 +2,14 @@ package no.ntnu.database.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import java.util.Date;
@@ -35,7 +37,6 @@ public final class Course {
 	private String difficultyLevel;
 	//Note, data starts YYYY-MM-DD.
 	@Schema(description = "Start date of the course", example = "2021-09-25")
-	@Column(name = "start_date")
 	private Date startDate;
 	@Schema(description = "End date of the course", example = "2021-12-31")
 	private Date endDate;
@@ -50,15 +51,28 @@ public final class Course {
 	private String courseDescription;
 
 
-	@OneToMany(mappedBy = "course")
-	private Set<CourseProviderLink> courseProviderLink = new HashSet<>();
+	@ManyToMany
+	@JoinTable(
+			name = "provider_course",
+			joinColumns = @JoinColumn(name = "course_Id"),
+			inverseJoinColumns = @JoinColumn(name = "course_provider_id")
+	)
+	private Set<CourseProvider> courseProviders = new HashSet<>();
 
-	@ManyToMany(mappedBy = "courses")
+
+
+	@ManyToMany
+	@JoinTable(
+			name = "category_course",
+			joinColumns = @JoinColumn(name = "course_Id"),
+			inverseJoinColumns = @JoinColumn(name = "category_Id")
+
+	)
 	private Set<Category> categories = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL,
+			orphanRemoval = true)
 	private Set<Image> images = new HashSet<>();
-
 
 
 
@@ -66,7 +80,6 @@ public final class Course {
 	 * Empty constructor for JPA requirement.
 	 */
 	public Course() {
-		// Empty constructor for JPA. checkstyle complains.
 	}
 
 	/**
@@ -76,11 +89,7 @@ public final class Course {
 	 */
 	@JsonIgnore
 	public boolean isValid() {
-		boolean valid = false;
-		if (courseId > 0 && courseName != null && !courseName.isBlank()) {
-			valid = true;
-		}
-		return valid;
+		return courseName != null && !courseName.isBlank();
 	}
 
 	/**
@@ -253,7 +262,21 @@ public final class Course {
 		this.categories = categories;
 	}
 
+	public Set<CourseProvider> getCourseProvider() {
+		return courseProviders;
+	}
 
+	public void setCourseProviderLink(Set<CourseProvider> courseProvider) {
+		this.courseProviders = courseProvider;
+	}
+
+	public Set<Image> getImages() {
+		return images;
+	}
+
+	public void setImages(Set<Image> images) {
+		this.images = images;
+	}
 
 
 

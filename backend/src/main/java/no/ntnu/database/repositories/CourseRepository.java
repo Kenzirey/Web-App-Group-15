@@ -20,4 +20,5 @@ public interface CourseRepository extends CrudRepository<Course, Integer> {
 	Iterable<Course> searchCourse(@Param("query") String query);
 
 
+
 }

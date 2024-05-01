@@ -1,15 +1,13 @@
 package no.ntnu.database.services;
 
+import java.util.Optional;
 import no.ntnu.database.entities.Category;
-import no.ntnu.database.entities.Favorite;
 import no.ntnu.database.repositories.CategoryRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 
 /**
@@ -40,7 +38,7 @@ public class CategoryService {
 	 */
 	public int add(Category category) {
 		if (!category.isValid()) {
-			LOGGER.warn("Favorite is invalid");
+			LOGGER.warn("Category is invalid");
 		}
 
 		repository.save(category);
@@ -65,7 +63,7 @@ public class CategoryService {
 		Optional<Category> existingCategory = repository.findById(id);
 
 		if (existingCategory.isEmpty()) {
-			throw new IllegalStateException(String.format("No favorite: ", id));
+			throw new IllegalStateException(String.format("No favorite: %s", id));
 		} else {
 			category.setCategoryId(id);
 			repository.save(category);

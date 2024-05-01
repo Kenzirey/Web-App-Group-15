@@ -1,14 +1,13 @@
 package no.ntnu.database.services;
 
+import java.util.Optional;
 import no.ntnu.database.entities.Image;
 import no.ntnu.database.repositories.ImageRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 /**
  * Service class for handling business logic for images
@@ -19,8 +18,19 @@ public class ImageService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ImageService.class);
 
+
+	private final ImageRepository imageRepository;
+
+
+	/**
+	 * Makes the image service.
+	 *
+	 * @param imageRepository The repository class for communication.
+	 */
 	@Autowired
-	private ImageRepository imageRepository;
+	public ImageService(ImageRepository imageRepository) {
+		this.imageRepository = imageRepository;
+	}
 
 
 	/**
@@ -55,7 +65,7 @@ public class ImageService {
 	public void update(int id, Image image) {
 		Optional<Image> existingImage = imageRepository.findById(id);
 		if (existingImage.isEmpty()) {
-			throw new IllegalStateException(String.format("No favorite: ", id));
+			throw new IllegalStateException(String.format("No favorite: %s", id));
 		} else {
 			image.setImageId(id);
 			imageRepository.save(image);
@@ -64,9 +74,8 @@ public class ImageService {
 	}
 
 
-
 	/**
-	 *	Deletes an image from the database.
+	 * Deletes an image from the database.
 	 *
 	 * @return Returns true if deleted. False if the image doesn't exist in the database
 	 */

@@ -1,12 +1,8 @@
 package no.ntnu.database.services;
 
 import java.util.Optional;
-import java.util.Set;
-
-import no.ntnu.database.entities.Course;
 import no.ntnu.database.entities.CourseProvider;
 import no.ntnu.database.repositories.CourseProviderRepository;
-import no.ntnu.database.repositories.CourseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +18,6 @@ public class CourseProviderService {
 
 	private final CourseProviderRepository repository;
 
-	private final CourseRepository courseRepository;
 
 	/**
 	 * Creates the course service via autowired.
@@ -30,9 +25,8 @@ public class CourseProviderService {
 	 * @param repository the repository class for communication.
 	 */
 	@Autowired
-	public CourseProviderService(CourseProviderRepository repository, CourseRepository courseRepository) {
+	public CourseProviderService(CourseProviderRepository repository) {
 		this.repository = repository;
-		this.courseRepository = courseRepository;
 	}
 
 	/**

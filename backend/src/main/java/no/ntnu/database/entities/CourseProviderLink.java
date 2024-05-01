@@ -12,25 +12,32 @@ import jakarta.persistence.ManyToOne;
 /**
  * Represents a link between a course and its provider.
  * This class defines the relationship between a specific course and the provider offering it.
+ * Note: This entity serves as a bridge table in a many-to-many relationship between Course and CourseProvider.
+ * This entity is no longer used
  */
 @Entity
 public final class CourseProviderLink {
+
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	@ManyToOne
+	@JoinColumn(name = "provider_id")
+	private CourseProvider courseProvider;
+
+	@ManyToOne
 	@JoinColumn(name = "course_id")
 	@JsonIgnore
 	private Course course;
 
-	@ManyToOne
-	@JoinColumn(name = "provider_id")
-	private CourseProvider courseProvider;
-
 	@Schema(description = "URL to the course provider's website", example = "https://www.ntnu.no")
 	private String url;
+
+
+
 
 	/**
 	 * An empty constructor for JPA requirement.
@@ -104,5 +111,14 @@ public final class CourseProviderLink {
 	 */
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

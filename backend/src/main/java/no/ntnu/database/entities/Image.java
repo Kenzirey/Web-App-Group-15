@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -19,6 +21,7 @@ import jakarta.persistence.ManyToOne;
 public final class Image {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Schema(description = "An Unique ID for the image", example = "1")
 	@Column(name = "image_id")
 	private int imageId;
@@ -27,7 +30,7 @@ public final class Image {
 	private String imageUrl;
 
 	@ManyToOne
-	@JoinColumn(name = "course_id", referencedColumnName = "course_id")
+	@JoinColumn(name = "course_id")
 	private Course course;
 
 
@@ -102,12 +105,7 @@ public final class Image {
 	 */
 	@JsonIgnore
 	public boolean isValid() {
-		boolean  valid = false;
-		if (imageId > 0 && course != null) {
-			valid = true;
-		}
-		return valid;
+		return imageUrl != null && !imageUrl.isBlank();
 	}
-
 
 }
