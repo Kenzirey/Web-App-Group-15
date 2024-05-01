@@ -6,8 +6,10 @@
 			:slides-per-view="slidesPerView" :loop="loopMode" css-mode="true" navigation="true" pagination="true">
 			<swiper-slide v-for="course in filteredCourses">
 				<div class="bullet-positioning-box">
-					<v-img :src="course.image" :aspect-ratio="aspectRatio" cover></v-img>
-					<div class="course-name">{{ course.name }}</div>
+					<router-link :to="'/course/' + course.id">
+						<v-img :src="course.image" :aspect-ratio="aspectRatio" cover></v-img>
+						{{ course.name }}
+					</router-link>
 				</div>
 			</swiper-slide>
 		</swiper-container>

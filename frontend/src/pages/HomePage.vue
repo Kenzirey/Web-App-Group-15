@@ -39,19 +39,22 @@ export default {
           difficulty: 'Beginner',
           category: 'SQL',
           onSale: false,
-          image: '/images/AWS.png' // Directly reference images from the public/images folder for testing!
+          image: '/images/AWS.png', // Directly reference images from the public/images folder for testing!
+          id: 1
         },
         {
           name: 'Advanced SQL',
           difficulty: 'Advanced',
           category: 'SQL',
-          image: '/images/machine-learning.jpg'
+          image: '/images/machine-learning.jpg',
+          id: 2
         },
         {
           name: 'SQL Basics',
           difficulty: 'Beginner',
           category: 'SQL',
-          image: '/images/SQL-image.jpg'
+          image: '/images/SQL-image.jpg',
+          id: 3
         }
       ]
     }
