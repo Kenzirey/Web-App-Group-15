@@ -2,11 +2,20 @@ package no.ntnu.database.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
 
 /**
  * The Course class represents a course entity within the application,
@@ -19,7 +28,9 @@ public final class Course {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Schema(description = "Unique ID for the course", example = "1")
+	@Column(name = "course_id")
 	private int courseId;
+
 	@Schema(description = "Name of the course", example = "SQL for Beginners")
 	private String courseName;
 	@Schema(description = "Difficulty level of the course", example = "Beginner")
@@ -39,15 +50,37 @@ public final class Course {
 			"This course teaches the basics of SQL.")
 	private String courseDescription;
 
-	//TODO: Add many-to-many relationship with course provider?
+
+	@ManyToMany
+	@JoinTable(
+			name = "provider_course",
+			joinColumns = @JoinColumn(name = "course_Id"),
+			inverseJoinColumns = @JoinColumn(name = "course_provider_id")
+	)
+	private Set<CourseProvider> courseProviders = new HashSet<>();
+
+
+
+	@ManyToMany
+	@JoinTable(
+			name = "category_course",
+			joinColumns = @JoinColumn(name = "course_Id"),
+			inverseJoinColumns = @JoinColumn(name = "category_Id")
+
+	)
+	private Set<Category> categories = new HashSet<>();
+
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL,
+			orphanRemoval = true)
+	private Set<Image> images = new HashSet<>();
+
+
 
 	/**
 	 * Empty constructor for JPA requirement.
 	 */
 	public Course() {
-		// Empty constructor for JPA. checkstyle complains.
 	}
-
 
 	/**
 	 * Checks if the object is a valid course.
@@ -56,11 +89,7 @@ public final class Course {
 	 */
 	@JsonIgnore
 	public boolean isValid() {
-		boolean valid = false;
-		if (courseId > 0 && courseName != null && !courseName.isBlank()) {
-			valid = true;
-		}
-		return valid;
+		return courseName != null && !courseName.isBlank();
 	}
 
 	/**
@@ -224,4 +253,31 @@ public final class Course {
 	public int getCourseId() {
 		return courseId;
 	}
+
+	public Set<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(Set<Category> categories) {
+		this.categories = categories;
+	}
+
+	public Set<CourseProvider> getCourseProvider() {
+		return courseProviders;
+	}
+
+	public void setCourseProviderLink(Set<CourseProvider> courseProvider) {
+		this.courseProviders = courseProvider;
+	}
+
+	public Set<Image> getImages() {
+		return images;
+	}
+
+	public void setImages(Set<Image> images) {
+		this.images = images;
+	}
+
+
+
 }

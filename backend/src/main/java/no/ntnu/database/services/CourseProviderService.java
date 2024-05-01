@@ -18,6 +18,7 @@ public class CourseProviderService {
 
 	private final CourseProviderRepository repository;
 
+
 	/**
 	 * Creates the course service via autowired.
 	 *
@@ -106,5 +107,6 @@ public class CourseProviderService {
 	public Iterable<CourseProvider> searchProvider(String query) {
 		return repository.searchProvider(query);
 	}
+
 
 }

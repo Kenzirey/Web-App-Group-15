@@ -1,15 +1,13 @@
 package no.ntnu.database.services;
 
 import java.util.Optional;
-
 import no.ntnu.database.entities.Favorite;
 import no.ntnu.database.repositories.FavoriteRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
+
 
 
 
@@ -83,7 +81,7 @@ public class FavoriteService {
 		Optional<Favorite> existingFavorite = repository.findById(id);
 
 		if (existingFavorite.isEmpty()) {
-			throw new IllegalStateException(String.format("No favorite: ", id));
+			throw new IllegalStateException(String.format("No favorite: %s", id));
 		} else {
 			favorite.setProductId(id);
 			repository.save(favorite);
