@@ -57,7 +57,7 @@ export default {
 
 #topbar-left {
   justify-content: flex-start;
-  gap: 14px 26px;
+  gap: 10px 20px;
 }
 
 #topbar-right {

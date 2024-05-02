@@ -1,16 +1,17 @@
 <template>
-    <v-app @click="lastClick = $event" id="courseApp">
-      <!--The header is the v-app-bar from the toolbar-->
-      <TopToolbar class="toolbar" :lastGlobalClick="lastClick"/>
-      <body class="body-content">
-        <main class="course-content">
-          <!-- The main content of the page, replaced based on the current route -->
-          <router-view id="content"></router-view>
-        </main>
-      </body>
-      <!--Footer component-->
-      <Footer></Footer>
-    </v-app>
+  <v-app @click="lastClick = $event" id="courseApp">
+    <!--The header is the v-app-bar from the toolbar-->
+    <TopToolbar class="toolbar" :lastGlobalClick="lastClick" />
+
+    <body class="body-content">
+      <main class="course-content">
+        <!-- The main content of the page, replaced based on the current route -->
+        <router-view id="content"></router-view>
+      </main>
+    </body>
+    <!--Footer component-->
+    <Footer></Footer>
+  </v-app>
 </template>
 
 <script>
@@ -30,32 +31,51 @@ export default {
     Footer
   },
   data() {
-    return {lastClick: null}
+    return { lastClick: null }
   }
 };
 </script>
 
 <style lang="scss">
-
-
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
+  --swiper-navigation-color: rgb(var(--v-theme-gradiantOne));
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Inspector complained about duplicate ID of "app" due to v-app inherently having an id named app
+@media (max-width: 350px) {
+  .body-content {
+    margin: 59px auto 0 auto;
+  }
+
+  body {
+    font-size: 16px;
+    line-height: 1.4;
+    max-width: none !important;
+  }
+
+  /*To override the max-width bug with vue for mobile. At small width*/
+  #courseApp .v-application__wrap {
+    max-width: none;
+  }
+
+}
+
+@media (min-width: 351px) {
+
+  /* Inspector complained about duplicate ID of "app" due to v-app inherently having an id named app
   But noticed a bug on favorites and account page if I didn't target both
   That is where app + courseApp comes from. */
-.body-content {
-  /* top right bottom left */
-  margin: 80px auto 0 auto;
-  text-align: center;
+  .body-content {
+    /* top right bottom left */
+    margin: 80px auto 0 auto;
+    text-align: center;
+  }
 }
 
 
@@ -71,7 +91,8 @@ export default {
 
 /* Course content, i.e. everything except the toolbar(topbar) */
 .course-content {
-  min-height: 95vh; /* Ensure minimum height */
+  min-height: 95vh;
+  /* Ensure minimum height */
   display: flex;
   flex-direction: column;
 }
@@ -96,7 +117,9 @@ button {
   &:hover {
     background-color: rgb(var(--v-theme-buttonHover))
   }
-  &:focus,button:focus-visible {
+
+  &:focus,
+  button:focus-visible {
     outline: 4px auto rgb(var(--v-theme-buttonHover));
   }
 }
@@ -106,6 +129,4 @@ h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
-
-
 </style>

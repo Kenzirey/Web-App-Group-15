@@ -68,7 +68,7 @@ export default {
         level: 'Beginner',
         credits: '4 ECT Credits',
         hours: 4,
-        certification: 'SQL Wizard',
+        certification: 'SQL Wizard Long Wizard This is the Longest',
         description: 'This is a detailed description of the course. Trust me bro',
         providers: [
           { name: 'NTNU', cost: 500 },
@@ -116,6 +116,46 @@ export default {
 <style lang="scss" scoped>
 /* The items, have 2 columns to break up the information
  */
+ @media screen and (max-width: 479px) {
+  .info-item {
+    /* Margin for the key+value pairs */
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+
+  .info-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .info-button v-btn {
+    margin-bottom: 5px; /* Add some bottom margin for spacing between buttons */
+  }
+
+  /* To ensure space for each key+value pair */
+  .key {
+    display: block;
+  }
+
+  .value {
+    display: block;
+  }
+
+  /* Center the image */
+  .course-image {
+    text-align: center;
+}
+
+}
+
+ .v-btn {
+  background-image: linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo)));
+  color: rgb(var(--v-theme-background));
+
+}
+
 .session-date {
   text-align: center;
   font-size: 1.2em;
