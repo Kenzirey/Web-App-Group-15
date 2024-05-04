@@ -72,4 +72,25 @@ export default {
     display: flex;
     flex-direction: column;
   }
+
+
+/* start of medium tablet styles, if we want it */
+@media screen and (max-width: 767px) {
+  #introduction {
+   margin: auto 4px auto 4px;
+  }
+
+}
+
+/* start of phone styles */
+@media screen and (max-width: 479px) {
+  #introduction {
+   margin: auto 4px auto 4px;
+  }
+  p {
+    margin-top: 5px;
+  }
+
+}
+
 </style>

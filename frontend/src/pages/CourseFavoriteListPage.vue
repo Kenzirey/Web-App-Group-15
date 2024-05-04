@@ -4,15 +4,15 @@
     <p>I pulled Tony's fire alarm again, this time on purpose</p>
     <section class="favorite-items">
       <div class="favorite-course-card" v-for="course in favoriteCourses" :key="course.id">
-        <v-card class="card-container">
+        <v-card class="favorite-card-container">
           <v-card-title class="card-title-container">
-            <span class="course-title">{{ course.name }}</span>
+            <span class="course-title">{{ course.title }}</span>
             <v-btn class="remove-favorite-button" icon="mdi-heart-off-outline" variant="plain" density="comfortable"
               text @click="removeFromFavorites(course.id)">
             </v-btn>
           </v-card-title>
-          <v-card-text>
-            {{ course.description }}
+          <v-card-text class="course-description">
+            {{ course.shortDescription || course.description }}
           </v-card-text>
         </v-card>
       </div>
@@ -22,24 +22,35 @@
 
 
 <script>
+//ChatGPT helped with the json.stringify and filters.
 export default {
   name: 'CourseFavoriteListPage',
   data() {
     return {
-      favoriteCourses: [
-        //Add database integration with variables here?
-        { id: 1, name: "Vue.js Basics", description: "Learn the basics of Vue.js for building interactive web interfaces." },
-        { id: 2, name: "Advanced Vue Techniques", description: "Dive deeper into Vue.js and explore advanced concepts and techniques." },
-        { id: 3, name: "Vuetify Essentials", description: "Learn how to build beautiful and functional UIs with Vuetify." }
-      ],
+      favoriteCourses: []
     };
   },
+  created() {
+    this.loadFavorites();
+  },
   methods: {
+    loadFavorites() {
+      this.favoriteCourses = JSON.parse(localStorage.getItem('favoriteCourses')) || [];
+    },
     removeFromFavorites(courseId) {
       this.favoriteCourses = this.favoriteCourses.filter(course => course.id !== courseId);
-    },
+      localStorage.setItem('favoriteCourses', JSON.stringify(this.favoriteCourses));
+    }
   },
+  watch: {
+    favoriteCourses(newVal, oldVal) {
+      // This ensures any change in favorites updates local storage and keeps UI in sync.
+      // Temporary, until we set up a database connection.
+      localStorage.setItem('favoriteCourses', JSON.stringify(newVal));
+    }
+  }
 };
+
 </script>
 
 <style scoped lang="scss">
