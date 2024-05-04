@@ -14,13 +14,6 @@
             <span class="key">Course Size:</span>
             <span class="value">{{ course.credits }}</span>
           </div>
-          <!-- Provider and Cost -->
-          <div v-for="(provider, index) in course.providers" :key="index" class="info-item">
-            <span class="key">Provider:</span>
-            <span class="value">{{ provider.name }}</span>
-            <span class="key">Cost:</span>
-            <span class="value">${{ provider.cost }}</span>
-          </div>
           <div class="info-item">
             <span class="key">Hours per week:</span>
             <span class="value">{{ course.hours }}</span>
@@ -28,6 +21,13 @@
           <div class="info-item">
             <span class="key">Related Certifications:</span>
             <span class="value">{{ course.certification }}</span>
+          </div>
+          <!-- Provider and Cost -->
+          <div v-for="(provider, index) in course.providers" :key="index" class="info-item">
+            <span class="key">Provider:</span>
+            <span class="value">{{ provider.name }}</span>
+            <span class="key">Cost:</span>
+            <span class="value">${{ provider.cost }}</span>
           </div>
         </section>
         <div class="info-buttons">
