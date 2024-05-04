@@ -1,13 +1,11 @@
 <template>
+  <!--Content wrapper-->
   <main class="course-container">
-    <h3 class="course-title">{{ course.title }}</h3>
+    <h2 class="course-title">{{ course.title }}</h2>
     <div class="session-date"><span class="key">Course Session:</span> <span class="value">{{ course.sessionDate
         }}</span></div>
-
-    <div class="content-container">
-      <div class="course-info">
         <!-- Info Container for all course details -->
-        <div class="info-container">
+        <section class="info-container">
           <div class="info-item">
             <span class="key">Difficulty Level:</span>
             <span class="value">{{ course.level }}</span>
@@ -31,21 +29,24 @@
             <span class="key">Related Certifications:</span>
             <span class="value">{{ course.certification }}</span>
           </div>
-        </div>
-        <div class="info-button">
-          <v-btn prepend-icon="mdi-cart-check" text="Order Course" type="apply" href="/forms"
+        </section>
+        <div class="info-buttons">
+          <nav>
+          <v-btn aria-label="Order Course" prepend-icon="mdi-cart-check" text="Order Course" type="apply" href="/forms"
             variant="outlined"></v-btn>
-          <v-btn @click="toggleFavorite" :disabled="isFavorite"
+          </nav>
+          <v-btn aria-label="Add to Favorites" @click="toggleFavorite" :disabled="isFavorite"
             :prepend-icon="isFavorite ? 'mdi-heart-off-outline' : 'mdi-heart'">
             {{ isFavorite ? 'Remove Favorite' : 'Add to Favorites' }}
           </v-btn>
         </div>
         <figure class="course-image">
-          <img src="/images/AWS.png" alt="AWS Course Image">
+          <img :src=course.image alt={{course.imageText}}>
         </figure>
-      </div>
-    </div>
-  </main>
+        <section class="course-description">
+          Course description goes here
+        </section>
+    </main>
 </template>
 
 
@@ -64,6 +65,8 @@ export default {
         hours: 4,
         certification: 'SQL Wizard Long Wizard This is the Longest',
         description: 'This is a detailed description of the course. Trust me bro',
+        image: "/images/AWS.png",
+        imageText: "AWS Course Image",
         providers: [
           { name: 'NTNU', cost: 500 },
           { name: 'UiO', cost: 501 }
@@ -113,35 +116,43 @@ export default {
   max-width: 60%;
   height: auto;
   display: block;
-  margin: 10px auto;
+  margin: 8px auto;
 }
 
+/* Adjustments specifically for mobile devices */
 @media screen and (max-width: 479px) {
+  .course-title {
+    font-size: 1.5em;
+  }
+
   .info-item {
-    /* Margin for the key+value pairs */
-    margin-right: 10px;
-    margin-bottom: 10px;
+    flex-direction: row; // Ensure key and value are stacked for clarity
   }
 
-  .info-button {
+  .course-image img {
+    max-width: 80%;
+  }
+}
+
+.info-buttons {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    max-width: 80%;
+    margin: 0 auto;
+    flex-wrap: wrap;
   }
 
-
-  .course-image {
-    text-align: center;
+.info-buttons {
+    display: flex;
+    align-items: center;
+    max-width: 80%;
+    flex-wrap: wrap;
   }
-}
-.course-image{
-  
-}
 
 .course-title {
   text-align: center;
-  font-size: 1.5em;
+  font-size: 1.7em;
 }
 
 .info-container {
@@ -168,6 +179,5 @@ export default {
 .v-btn {
   background-image: linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo)));
   color: rgb(var(--v-theme-background));
-
 }
 </style>
