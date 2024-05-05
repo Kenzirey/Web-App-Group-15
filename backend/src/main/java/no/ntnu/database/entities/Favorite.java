@@ -3,10 +3,10 @@ package no.ntnu.database.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 
 /**
@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
  *
  */
 @Entity
+@IdClass(Favorite.FavoriteId.class)
 public final class Favorite {
 
 	@Id
@@ -22,8 +23,7 @@ public final class Favorite {
 			example = "1111")
 	private int productId;
 
-
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
 	@Schema(description = "An Unique ID for the user", example = "0")
 	private int userId;
 
@@ -95,5 +95,30 @@ public final class Favorite {
 		return valid;
 	}
 
+	public static class FavoriteId implements Serializable {
+		private int productId;
+		private int userId;
 
+		public FavoriteId() {
+			// Default constructor
+		}
+
+		public FavoriteId(int productId, int userId) {
+			this.productId = productId;
+			this.userId = userId;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			FavoriteId that = (FavoriteId) o;
+			return productId == that.productId && userId == that.userId;
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(productId, userId);
+		}
+	}
 }
