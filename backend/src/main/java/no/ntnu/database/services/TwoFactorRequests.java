@@ -1,4 +1,4 @@
-package no.ntnu.database.controllers;
+package no.ntnu.database.services;
 
 import java.util.Optional;
 import no.ntnu.database.entities.User;

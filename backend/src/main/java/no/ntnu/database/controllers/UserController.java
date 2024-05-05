@@ -16,11 +16,11 @@ import no.ntnu.dto.UserRegistrationDto;
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
-    
-@PostMapping("/register")
-public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDto userDto) {
-    return userService.registerNewUser(userDto);
-    }
+	@Autowired
+	private UserService userService;
+	
+	@PostMapping("/register")
+	public ResponseEntity<String> registerUser(@RequestBody UserRegistrationDto userDto) {
+		return userService.registerNewUser(userDto);
+	}
 }
