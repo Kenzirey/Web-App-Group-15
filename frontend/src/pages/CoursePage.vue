@@ -1,100 +1,183 @@
 <template>
-  <v-container class="course-page">
-      <div class="grid-course-container">
-          <h3 class="course-title">{{ course.title }}</h3>
-          <div class="session-date"><span class="key">Course Session:</span> <span class="value">{{ course.sessionDate }}</span></div>
-          <div class="content-container">
-              <div class="course-info">
-                  <div class="info-item"><span class="key">Course Providers:</span> <span class="value">NTNU</span></div>
-                  <div class="info-item"><span class="key">Difficulty Level:</span> <span class="value">Beginner</span></div>
-                  <div class="info-item"><span class="key">Course Size:</span> <span class="value">ECTs Credits</span></div>
-                  <div class="info-item"><span class="key">Hours per week:</span> <span class="value">4</span></div>
-                  <div class="info-item"><span class="key">Related Certifications:</span> <span class="value">SQL Wizard</span></div>
-                  <div class="info-item"><span class="key">Course Cost:</span> <span class="value">$500</span></div>
-              </div>
-              <div class="course-image">
-                  <img src="/images/AWS.png" alt="AWS Course Image">
-              </div>
+  <!--Content wrapper-->
+  <main class="course-container">
+    <h2 class="course-title">{{ course.title }}</h2>
+    <div class="session-date"><span class="key">Course Session:</span> <span class="value">{{ course.sessionDate
+        }}</span></div>
+        <!-- Info Container for all course details -->
+        <section class="info-container">
+          <div class="info-item">
+            <span class="key">Difficulty Level:</span>
+            <span class="value">{{ course.level }}</span>
           </div>
-          <div class="course-description">{{ course.description }}</div>
-      </div>
-  </v-container>
+          <div class="info-item">
+            <span class="key">Course Size:</span>
+            <span class="value">{{ course.credits }}</span>
+          </div>
+          <div class="info-item">
+            <span class="key">Hours per week:</span>
+            <span class="value">{{ course.hours }}</span>
+          </div>
+          <div class="info-item">
+            <span class="key">Related Certifications:</span>
+            <span class="value">{{ course.certification }}</span>
+          </div>
+          <!-- Provider and Cost -->
+          <div v-for="(provider, index) in course.providers" :key="index" class="info-item">
+            <span class="key">Provider:</span>
+            <span class="value">{{ provider.name }}</span>
+            <span class="key">Cost:</span>
+            <span class="value">${{ provider.cost }}</span>
+          </div>
+        </section>
+        <div class="info-buttons">
+          <nav>
+          <v-btn aria-label="Order Course" prepend-icon="mdi-cart-check" text="Order Course" type="apply" href="/forms"
+            variant="outlined"></v-btn>
+          </nav>
+          <v-btn aria-label="Add to Favorites" @click="toggleFavorite" :disabled="isFavorite"
+            :prepend-icon="isFavorite ? 'mdi-heart-off-outline' : 'mdi-heart'">
+            {{ isFavorite ? 'Remove Favorite' : 'Add to Favorites' }}
+          </v-btn>
+        </div>
+        <figure class="course-image">
+          <img :src=course.image alt={{course.imageText}}>
+        </figure>
+        <section class="course-description">
+          Course description goes here
+        </section>
+    </main>
 </template>
 
+
 <script>
+//TODO: remove the console debugging lines before deploying our project.
 export default {
   name: 'CoursePage',
   data() {
     return {
       course: {
-          title: 'SQL for Beginners',
-          sessionDate: '2024-04-25', // Example date
-          description: 'This is a detailed description of the course. :3 in theory, if we actually had content to put here',
+        id: 1, //the id should be fetched via database?
+        title: 'SQL for Beginners',
+        sessionDate: '2024-04-25',
+        level: 'Beginner',
+        credits: '4 ECT Credits',
+        hours: 4,
+        certification: 'SQL Wizard Long Wizard This is the Longest',
+        description: 'This is a detailed description of the course. Trust me bro',
+        image: "/images/AWS.png",
+        imageText: "AWS Course Image",
+        providers: [
+          { name: 'NTNU', cost: 500 },
+          { name: 'UiO', cost: 501 }
+        ]
       },
+      favoriteCourses: this.loadFavorites()  // Load favorites right into the data property.
     };
+  },
+  computed: {
+    isFavorite() {
+      const favorite = this.favoriteCourses.some(course => course.id === this.course.id);
+      console.log("Is Favorite Check: ", favorite);  // Debugging step, remove before deploying.
+      return favorite;
+    }
+  },
+  methods: {
+    toggleFavorite() {
+      console.log("Before Toggle: ", this.favoriteCourses);  // Debug before the operation, remove before deploying.
+      if (this.isFavorite) {
+        this.favoriteCourses = this.favoriteCourses.filter(course => course.id !== this.course.id);
+      } else {
+        this.favoriteCourses.push({ ...this.course }); // Spread operator ensures reactivity and a fresh object
+      }
+      this.saveFavorites();
+      console.log("After Toggle: ", this.favoriteCourses);  // Debug after the operation, remove before deploying.
+    },
+    saveFavorites() {
+      localStorage.setItem('favoriteCourses', JSON.stringify(this.favoriteCourses));
+      console.log("Favorites Saved: ", localStorage.getItem('favoriteCourses'));  // Confirm what is saved, remove before deploying
+    },
+    loadFavorites() {
+      const favorites = JSON.parse(localStorage.getItem('favoriteCourses')) || [];
+      console.log("Loaded Favorites: ", favorites);  // Debugging output on load, remove before deploying
+      return favorites;
+    }
+  },
+  created() {
+    console.log("Component Created, Favorites Loaded: ", this.favoriteCourses);  // Initial load check
   }
 }
-</script>
-  
-  <style lang="scss" scoped>
 
-.session-date {
-  text-align: center;
-  font-size: 1.2em;
-  margin-bottom: 15px;
+</script>
+
+<style lang="scss" scoped>
+.course-image img {
+  /* To reduce the size of the image */
+  max-width: 60%;
+  height: auto;
+  display: block;
+  margin: 8px auto;
 }
-.grid-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+
+/* Adjustments specifically for mobile devices */
+@media screen and (max-width: 479px) {
+  .course-title {
+    font-size: 1.5em;
+  }
+
+  .info-item {
+    flex-direction: row; // Ensure key and value are stacked for clarity
+  }
+
+  .course-image img {
+    max-width: 80%;
+  }
 }
+
+.info-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 80%;
+    margin: 0 auto;
+    flex-wrap: wrap;
+  }
+
+.info-buttons {
+    display: flex;
+    align-items: center;
+    max-width: 80%;
+    flex-wrap: wrap;
+  }
 
 .course-title {
   text-align: center;
-  font-size: 1.5em; 
-  color: rgb(var(--v-theme-primary));
+  font-size: 1.7em;
 }
 
-.content-container {
-  display: grid;
-  /** fr = fractions, give fractions to grids.
-  Use min content
-   */
-  grid-template-columns: max-content auto;
-  width: 100%;
-  
-  gap: 20px;
-}
-
-.course-info {
+.info-container {
   display: flex;
   flex-direction: column;
-  align-items: start;
-  gap: 10px;
 }
 
 .info-item {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
+  justify-content: center;
+  margin: 5px 5px 5px 5px;
+}
+
+.key,
+.value {
+  margin-right: 8px;
 }
 
 .key {
   font-weight: bold;
-  margin-right: 8px; /* Adjust the space between key and value */
 }
 
-.course-title, .course-description {
-    margin-top: 5px;
-    width: 100%;
-    text-align: center;
+.v-btn {
+  background-image: linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo)));
+  color: rgb(var(--v-theme-background));
 }
-
-.course-image img {
-  width: 80%; /* Ensure the image fills the container */
-  min-width: 30%;
-  height: auto;
-}
-  </style>
-  
+</style>

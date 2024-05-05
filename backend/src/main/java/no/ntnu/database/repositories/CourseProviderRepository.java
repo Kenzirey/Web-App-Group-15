@@ -20,4 +20,6 @@ public interface CourseProviderRepository extends CrudRepository<CourseProvider,
 			"""
 	)
 	Iterable<CourseProvider> searchProvider(@Param("query") String query);
+
+	Iterable<CourseProvider> findByCourseProviderId(int id);
 }

@@ -1,16 +1,13 @@
 import { createApp } from 'vue'
-import './assets/global.css';
 import { registerPlugins } from '@/plugins'
 import App from './App.vue'
 import router from './router';
-import vuetify from './plugins/vuetify'
 
-const app = createApp(App)
+const courseApp = createApp(App)
 
-registerPlugins(app)
-
+registerPlugins(courseApp)
 
 
-app.use(router)
-.use(vuetify)
+
+courseApp.use(router)
 .mount('#app');

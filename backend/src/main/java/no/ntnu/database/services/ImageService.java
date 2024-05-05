@@ -1,15 +1,13 @@
 package no.ntnu.database.services;
 
-
+import java.util.Optional;
 import no.ntnu.database.entities.Image;
 import no.ntnu.database.repositories.ImageRepository;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 /**
  * Service class for handling business logic for images
@@ -20,8 +18,19 @@ public class ImageService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ImageService.class);
 
+
+	private final ImageRepository imageRepository;
+
+
+	/**
+	 * Makes the image service.
+	 *
+	 * @param imageRepository The repository class for communication.
+	 */
 	@Autowired
-	private ImageRepository imageRepository;
+	public ImageService(ImageRepository imageRepository) {
+		this.imageRepository = imageRepository;
+	}
 
 
 	/**
@@ -30,17 +39,13 @@ public class ImageService {
 	 * @param image the image added in the database.
 	 * @return the image ID if the image has been inserted, if not return invalid
 	 */
-	public String addImage(Image image) {
-		try {
-			if (!imageRepository.existsById(image.getImageId())) {
-				imageRepository.save(image);
-				return "Image inserted:" + image.getImageId();
-			} else {
-				return "Image is invalid";
-			}
-		} catch (Exception e) {
-			throw e;
+	public int add(Image image) {
+		if (!image.isValid()) {
+			LOGGER.warn("Favorite is invalid");
 		}
+
+		imageRepository.save(image);
+		return image.getImageId();
 	}
 
 	/**
@@ -57,24 +62,20 @@ public class ImageService {
 	 *
 	 * @param image The new image with a new url
 	 */
-	public String updateImage(Image image) {
-		if (imageRepository.existsById(image.getImageId())) {
-			try {
-			Image existingImage = imageRepository.findById(image.getImageId()).get();
-			existingImage.setImageUrl(image.getImageUrl());
-			imageRepository.save(existingImage);
-			return "Image updated";
-		} catch (Exception e) {
-				throw e;
-			}
+	public void update(int id, Image image) {
+		Optional<Image> existingImage = imageRepository.findById(id);
+		if (existingImage.isEmpty()) {
+			throw new IllegalStateException(String.format("No favorite: %s", id));
 		} else {
-			return "Image does not exists in the DB";
+			image.setImageId(id);
+			imageRepository.save(image);
 		}
+
 	}
 
 
 	/**
-	 *	Deletes an image from the database.
+	 * Deletes an image from the database.
 	 *
 	 * @return Returns true if deleted. False if the image doesn't exist in the database
 	 */

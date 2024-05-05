@@ -1,9 +1,16 @@
 package no.ntnu.database.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+
 
 /**
  * The class represents an Image, with an id and link to the url
@@ -14,14 +21,17 @@ import jakarta.persistence.Id;
 public final class Image {
 
 	@Id
-	@Schema(description = "An Unique ID for the image", example = "1111")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Schema(description = "An Unique ID for the image", example = "1")
+	@Column(name = "image_id")
 	private int imageId;
-
-	@Schema(description = "The unique id for the course the image is used for", example = "1")
-	private int courseId;
-
 	@Schema(description = "An URL pointing to the image associated with this entity", example = "https://www.ntnu.no/")
+	@Column(name = "image_url")
 	private String imageUrl;
+
+	@ManyToOne
+	@JoinColumn(name = "course_id")
+	private Course course;
 
 
 	/**
@@ -30,6 +40,16 @@ public final class Image {
 	public Image() {
 		// Empty constructor for JPA.
 	}
+
+	public Course getCourse() {
+		return course;
+	}
+
+	public void setCourse(Course course) {
+		this.course = course;
+	}
+
+
 
 	/**
 	 * Sets the imageId of the image.
@@ -43,17 +63,7 @@ public final class Image {
 		this.imageId = imageId;
 	}
 
-	/**
-	 * Stes the courseId for the image.
-	 *
-	 * @param courseId The new course id.
-	 */
-	public void setCourseId(int courseId) {
-		if (imageId < 0) {
-			throw new IllegalArgumentException("The course ID cannot be less than 0");
-		}
-		this.courseId = courseId;
-	}
+
 
 
 	/**
@@ -77,14 +87,6 @@ public final class Image {
 		return imageId;
 	}
 
-	/**
-	 * Returns the course id.
-	 *
-	 * @return the course id.
-	 */
-	public int getCourseId() {
-		return courseId;
-	}
 
 	/**
 	 * Returns the imageUrl.
@@ -96,5 +98,14 @@ public final class Image {
 	}
 
 
+	/**
+	 * Checks if the object is valid.
+	 *
+	 * @return True when valid, false when invalid
+	 */
+	@JsonIgnore
+	public boolean isValid() {
+		return imageUrl != null && !imageUrl.isBlank();
+	}
 
 }

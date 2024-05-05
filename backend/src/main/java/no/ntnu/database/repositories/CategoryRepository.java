@@ -1,12 +1,14 @@
 package no.ntnu.database.repositories;
 
+import no.ntnu.database.entities.Category;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import no.ntnu.database.entities.Category;
-
+/**
+ * An interface for SQL access to our database category table.
+ */
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
 	@Query(value = """
@@ -16,4 +18,6 @@ public interface CategoryRepository extends CrudRepository<Category, Integer> {
 			"""
 	)
 	Iterable<Category> searchCategory(@Param("query") String query);
+
+
 }

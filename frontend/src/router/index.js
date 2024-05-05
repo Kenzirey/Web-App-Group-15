@@ -12,8 +12,10 @@ import AdminDashboard from '../pages/AdminDashboard.vue';
 import AdminCourses from '../pages/AdminCourses.vue';
 import AdminUsers from '../pages/AdminUsers.vue';
 import FormsPage from '../pages/FormsPage.vue';
+import SubmitPage from '../pages/SubmitPage';
 import SearchResults from '@/pages/SearchResults.vue';
 import LoginForm from '@/components/LoginForm.vue';
+
 
 
 
@@ -30,8 +32,8 @@ const routes = [
   { path: '/admin/users', component: AdminUsers, name: 'AdminUsers', meta: { requiresAuth: true, roles: ['admin'] } },
   { path: '/forms', component: FormsPage, name: 'Forms' },
   { path: '/search', component: SearchResults, name: 'SearchResults'},
-  { path: '/login', component: LoginForm, name: 'Login', meta: { requiresAuth: false } }
- 
+  { path: '/login', component: LoginForm, name: 'Login', meta: { requiresAuth: false } },
+  { path: '/submit', component: SubmitPage, name: 'Submit' }
 
   // Define routes for other pages
 ];

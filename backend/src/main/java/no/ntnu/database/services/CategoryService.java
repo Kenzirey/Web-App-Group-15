@@ -1,10 +1,13 @@
 package no.ntnu.database.services;
 
+import java.util.Optional;
 import no.ntnu.database.entities.Category;
 import no.ntnu.database.repositories.CategoryRepository;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 
 
 /**
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CategoryService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(CategoryService.class);
 
 	private final CategoryRepository repository;
 
@@ -32,17 +36,13 @@ public class CategoryService {
 	 * @param category the category added in the database.
 	 * @return the category id if the image has been inserted, if not return invalid
 	 */
-	public String addCategory(Category category) {
-		try {
-			if (!repository.existsById(category.getCategoryId())) {
-				repository.save(category);
-				return "Category inserted:" + category.getCategoryName();
-			} else {
-				return "Category is invalid";
-			}
-		} catch (Exception e) {
-			throw e;
+	public int add(Category category) {
+		if (!category.isValid()) {
+			LOGGER.warn("Category is invalid");
 		}
+
+		repository.save(category);
+		return category.getCategoryId();
 	}
 
 	/**
@@ -59,20 +59,16 @@ public class CategoryService {
 	 *
 	 * @param category The new category
 	 */
-	public String updateCategory(Category category) {
-		if (repository.existsById(category.getCategoryId())) {
-			try {
-				Category existingCategory = repository.findById(category.getCategoryId()).get();
-				existingCategory.setCategoryId(category.getCategoryId());
-				existingCategory.setCategoryName(category.getCategoryName());
-				repository.save(existingCategory); // save the updated category
-				return "Category updated";
-			} catch (Exception e) {
-				throw e;
-			}
+	public void update(int id, Category category) {
+		Optional<Category> existingCategory = repository.findById(id);
+
+		if (existingCategory.isEmpty()) {
+			throw new IllegalStateException(String.format("No favorite: %s", id));
 		} else {
-			return "Category does not exists in the DB";
+			category.setCategoryId(id);
+			repository.save(category);
 		}
+
 	}
 
 	/**
@@ -80,17 +76,15 @@ public class CategoryService {
 	 *
 	 * @return Returns true if deleted. False if the doesn't exist int the database
 	 */
-	public boolean deleteCategory(Category category) {
-		if (repository.existsById(category.getCategoryId())) {
-			try {
-				repository.delete(category);
-				return true;
-			} catch (Exception e) {
-
-				return false;
-			}
+	public boolean delete(int id) {
+		Optional<Category> category = repository.findById(id);
+		if (id < 0) {
+			LOGGER.warn("Invalid ID");
 		}
-		return false;
+		if (category.isPresent()) {
+			repository.deleteById(id);
+		}
+		return category.isPresent();
 	}
 
 	/**

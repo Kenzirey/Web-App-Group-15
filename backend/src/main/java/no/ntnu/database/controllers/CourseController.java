@@ -3,6 +3,8 @@ package no.ntnu.database.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.Optional;
+import java.util.Set;
+import no.ntnu.database.entities.Category;
 import no.ntnu.database.entities.Course;
 import no.ntnu.database.services.CourseService;
 import org.slf4j.Logger;
@@ -184,5 +186,6 @@ public class CourseController {
 				? courseService.getAllCourses()
 				: courseService.searchCourse(query);
 	}
+
 
 }

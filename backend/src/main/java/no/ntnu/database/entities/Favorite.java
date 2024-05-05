@@ -1,9 +1,13 @@
 package no.ntnu.database.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 
 /**
  * This class represents the users favorite,
@@ -13,14 +17,17 @@ import jakarta.persistence.Id;
 @Entity
 public final class Favorite {
 
-
 	@Id
-	@Schema(description = "An Unique ID for the user", example = "1111")
+	@Schema(description = "An Unique ID for the product whom the user has marked favorite",
+			example = "1111")
+	private int productId;
+
+
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Schema(description = "An Unique ID for the user", example = "0")
 	private int userId;
 
 
-	@Schema(description = "An Unique ID for the product whom the user has marked favorite", example = "1111")
-	private int productId;
 
 	/**
 	 * An empty constructor for JPA requirement.
@@ -72,5 +79,21 @@ public final class Favorite {
 	public int getProductId() {
 		return productId;
 	}
+
+
+	/**
+	 * Checks if the object is valid.
+	 *
+	 * @return True when valid, false when invalid
+	 */
+	@JsonIgnore
+	public boolean isValid() {
+		boolean  valid = false;
+		if (userId > 0 && productId > 0) {
+			valid = true;
+		}
+		return valid;
+	}
+
 
 }
