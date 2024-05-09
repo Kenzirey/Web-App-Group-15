@@ -22,19 +22,15 @@
 </template>
 
 <script>
-import { ref, computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { computed } from "vue";
 import { store } from '../utility/store';
 import SearchBar from '@/components/SearchBar.vue';
 
 export default {
   name: 'TopToolbar',
   setup() {
-    const router = useRouter();
-    let search = ref("");
     const isLoggedIn = computed(() => store.user.isLoggedIn);
     return {
-      search,
       user: store.user,
       isLoggedIn
     };
