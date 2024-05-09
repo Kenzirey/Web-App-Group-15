@@ -1,17 +1,14 @@
 <template>
-	<v-form ref="searchBar" @submit.prevent="submitSearch">
+	<v-form ref="searchBar" @submit.prevent="() => submitSearch(getQuery())">
 		<!-- Prevents other buttons from being invoked as the submit when clicking enter -->
 		<v-text-field @keydown.tab="showSuggestions = false" id="search-bar" @click="searchBarFocused"
 			@focus="searchBarFocused" v-model="search" append-icon="mdi-magnify"
-			@click:append="submitSearch" placeholder="Search..." required autocomplete="off"
+			@click:append="() => {appendIconJustClicked = true; submitSearch(getQuery())}" placeholder="Search..." required autocomplete="off"
 			hide-details />
 		<div id="search-suggestions-center-align">
 			<div v-if="showSuggestions" id="search-suggestions">
-				<v-chip-group id="difficulties" class="suggestion-box">
-					<v-chip>Featured</v-chip>
-					<v-chip>Beginner</v-chip>
-					<v-chip>Advanced</v-chip>
-					<v-chip>Expert</v-chip>
+				<v-chip-group v-model="difficultyIndex" id="difficulties" class="suggestion-box">
+					<v-chip v-for="difficulty in difficulties" :key="difficulty">{{ difficulty }}</v-chip>
 				</v-chip-group>
 				<div id="courses-suggestions" class="suggestion-box">
 					<h2>Courses:</h2>
@@ -20,13 +17,13 @@
 							<router-link @click="showSuggestions = false" :to="'/course/' + course.id">{{ course.name }}</router-link>
 						</li>
 					</ul>
-					<router-link @click="showSuggestions = false" :to="{path: '/search', query: {type: 'courses', q: this.search}}">More courses...</router-link>
+					<router-link @click="showSuggestions = false" :to="{path: '/search', query: getQuery('course')}">More courses...</router-link>
 				</div>
 				<div id="categories-suggestions" class="suggestion-box">
 					<h2>Categories:</h2>
 					<ul>
 						<li v-for="category in filteredCategories" :key="category.name">
-							<router-link @click="showSuggestions = false" :to="{path: '/search', query: {category: category.id}}">{{ category.name }}</router-link>
+							<router-link @click="showSuggestions = false" :to="{path: '/search', query: getQuery('course', category.id, false)}">{{ category.name }}</router-link>
 						</li>
 					</ul>
 				</div>
@@ -39,13 +36,13 @@
 							</a>
 							<router-link @click="showSuggestions = false"
 								v-if="suggestion.type != 'provider'"
-								:to="suggestion.type == 'course' ? '/course/' + suggestion.id : suggestion.type == 'category' ? {path: '/search', query: {category: suggestion.id}} : null"
+								:to="suggestion.type == 'course' ? '/course/' + suggestion.id : suggestion.type == 'category' ? {path: '/search', query: getQuery('course', suggestion.id, false)} : null"
 							>
 								{{ suggestion.name }} [{{ suggestion.type }}]
 							</router-link>
 						</li>
 					</ul>
-					<router-link @click="showSuggestions = false" :to="{path: '/search', query: {q: this.search}}">More results...</router-link>
+					<router-link @click="showSuggestions = false" :to="{path: '/search', query: getQuery()}">More results...</router-link>
 				</div>
 			</div>
 		</div>
@@ -68,23 +65,45 @@ export default {
 		searchify(str) {
 			return str != null ? str.toLowerCase().replace(/\s/g, "") : "";
 		},
-		filterResults(results, query) {
-			return results.filter(result => this.searchify(result.name).includes(this.searchify(query)));
+		filterResults(results, query, difficulty) {
+			return results.filter(result =>
+			this.searchify(result.name).includes(this.searchify(query))
+			&& (!difficulty || result.type.toLowerCase() != "course" || result.difficulty.toLowerCase() == difficulty.toLowerCase()));
 		},
-		submitSearch() {
-			const query = this.searchify(this.search);
-			if (query) {
-				this.$router.push({ path: "/search", query: { q: query } })
+		getQuery(type, category, includeSearchQuery=true) {
+			const query = {};
+			if (type) {
+				query.type = type.toLowerCase();
+			}
+			if (category && (!query.type || query.type == "course")) {
+				query.category = category;
+			}
+			if (this.selectedDifficulty && (!query.type || query.type == "course")) {
+				query.difficulty = this.selectedDifficulty.toLowerCase();
+			}
+			const searchQuery = this.searchify(this.search);
+			if (includeSearchQuery && searchQuery) {
+				query.q = searchQuery;
+			}
+			return query;
+		},
+		submitSearch(query) {
+			if (query.q) {
+				this.$router.push({ path: "/search", query: query })
 				this.showSuggestions = false;
 			}
 		},
 		searchBarFocused() {
-			this.showSuggestions = true;
-			if (!suggestions_loaded) {
-				suggestions_loaded = true;
-				this.fetchCourses();
-				this.fetchProviders();
-				this.fetchCategories();
+			if (this.appendIconJustClicked) {
+				this.appendIconJustClicked = false;
+			} else {
+				this.showSuggestions = true;
+				if (!suggestions_loaded) {
+					suggestions_loaded = true;
+					this.fetchCourses();
+					this.fetchProviders();
+					this.fetchCategories();
+				}
 			}
 		},
 		standardizeCourses(courses) {
@@ -125,13 +144,22 @@ export default {
 			const response = await fetch(this.backendBaseUrl + "categories");
 			this.categories = this.standardizeCategories(await response.json())
 			this.filteredCategories = this.filterResults(this.categories, this.search);
+		},
+		updateFilteredResults(query, difficulty) {
+			this.filteredCourses = this.filterResults(this.courses, query, difficulty);
+			this.filteredProviders = this.filterResults(this.providers, query, difficulty);
+			this.filteredCategories = this.filterResults(this.categories, query, difficulty);
 		}
 	},
 	watch: {
 		search(query) {
-			this.filteredCourses = this.filterResults(this.courses, query);
-			this.filteredProviders = this.filterResults(this.providers, query);
-			this.filteredCategories = this.filterResults(this.categories, query);
+			this.updateFilteredResults(query, this.selectedDifficulty);
+		},
+		difficultyIndex(index) {
+			this.selectedDifficulty = this.difficulties[index];
+		},
+		selectedDifficulty(difficulty) {
+			this.updateFilteredResults(this.search, difficulty);
 		},
 		lastGlobalClick(event) {
 			if (!this.$refs.searchBar.contains(event.target)) {
@@ -141,12 +169,16 @@ export default {
 	},
 	setup() {
 		let search = ref("");
-		return { search };
+		let difficultyIndex = ref(null);
+		return { search, difficultyIndex };
 	},
 	data() {
 		return {
 			backendBaseUrl: "http://localhost:8080/",
+			appendIconJustClicked: false,
 			showSuggestions: false,
+			difficulties: ["Beginner", "Advanced", "Expert"],
+			selectedDifficulty: null,
 			courses: [],
 			providers: [],
 			categories: [],

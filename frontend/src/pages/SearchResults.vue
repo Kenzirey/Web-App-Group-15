@@ -68,12 +68,12 @@ export default {
 			const coursesPromise = fetch(backend_base_url + "courses")
 				.then(response => response.json())
 				.then(data => SearchBar.methods.standardizeCourses(data))
-				.then(courses => SearchBar.methods.filterResults(courses, this.$route.query.q));
+				.then(courses => SearchBar.methods.filterResults(courses, this.$route.query.q, this.$route.query.difficulty ? this.$route.query.difficulty.toLowerCase() : null));
 			
 			const providersPromise = fetch(backend_base_url + "providers")
 				.then(response => response.json())
 				.then(data => SearchBar.methods.standardizeProviders(data))
-				.then(providers => SearchBar.methods.filterResults(providers, this.$route.query.q));
+				.then(providers => SearchBar.methods.filterResults(providers, this.$route.query.q, this.$route.query.difficulty ? this.$route.query.difficulty.toLowerCase() : null));
 
 			Promise.all([coursesPromise, providersPromise]).then(responses => {
 				const courses = responses[0];
@@ -81,10 +81,10 @@ export default {
 
 				const type = this.$route.query.type ? this.$route.query.type.toLowerCase() : null;
 				const category = this.$route.query.category;
-				const difficulty = this.$route.query.difficulty ? this.$route.query.difficulty.toLowerCase() : null;
 				console.log(courses);
 				console.log(providers);
 				this.results = [...courses, ...providers];
+				console.log(this.results);
 				if (type) {
 					this.results = this.results.filter(result => result.type.toLowerCase() == type);
 				}
@@ -93,9 +93,6 @@ export default {
 					all = all.filter(result => result.type.toLowerCase() != "course" || result.category == category);
 				}
 				*/
-				if (difficulty) {
-					this.results = this.results.filter(result => result.type.toLowerCase() != "course" || result.difficulty.toLowerCase() == difficulty)
-				}
 			})
 		},
 		loadResultsOld() {

@@ -1,7 +1,7 @@
 <template>
 	<v-card>
 		<v-card-title>
-			<router-link :to="{path: 'search', query: {difficulty: difficulty.toLowerCase() == 'sale' ? 'featured' : difficulty.toLowerCase()}}">
+			<router-link :to="{path: 'search', query: {type: 'course', difficulty: difficulty.toLowerCase() == 'sale' ? 'featured' : difficulty.toLowerCase()}}">
 				{{ difficulty.toLowerCase() == "sale" ? "Featured" : difficulty }} courses
 			</router-link>
 		</v-card-title>
