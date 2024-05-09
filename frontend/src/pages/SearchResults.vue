@@ -63,14 +63,13 @@ export default {
 			array.sort((a, b) => (this.getName(b) == query) - (this.getName(a) == query));
 		},
 		loadResults() {
-			const backend_base_url = "http://localhost:8080/";
 
-			const coursesPromise = fetch(backend_base_url + "courses")
+			const coursesPromise = fetch(this.$backendUrl + "courses")
 				.then(response => response.json())
 				.then(data => SearchBar.methods.standardizeCourses(data))
 				.then(courses => SearchBar.methods.filterResults(courses, this.$route.query.q, this.$route.query.difficulty ? this.$route.query.difficulty.toLowerCase() : null));
 			
-			const providersPromise = fetch(backend_base_url + "providers")
+			const providersPromise = fetch(this.$backendUrl + "providers")
 				.then(response => response.json())
 				.then(data => SearchBar.methods.standardizeProviders(data))
 				.then(providers => SearchBar.methods.filterResults(providers, this.$route.query.q, this.$route.query.difficulty ? this.$route.query.difficulty.toLowerCase() : null));
@@ -94,48 +93,6 @@ export default {
 				}
 				*/
 			})
-		},
-		loadResultsOld() {
-			const backend_base_url = "http://localhost:8080/";
-			let coursesPromise;
-			let providersPromise;
-
-			const courses = [];
-			const providers = [];
-			if (this.$route.query.type != "providers") {
-				coursesPromise = fetch(backend_base_url + (this.$route.query.q ? `courses/search/${this.$route.query.q}` : "courses"))
-					.then(response => response.json())
-					.then(data => data.map(course => {
-						course.type = "course";
-						return course;
-					}))
-					.then(courseArray => courses.push(...courseArray));
-			}
-			if (this.$route.query.type != "courses") {
-				providersPromise = fetch(backend_base_url + (this.$route.query.q ? `providers/search/${this.$route.query.q}` : "providers"))
-					.then(response => response.json())
-					.then(data => data.map(provider => {
-						provider.type = "provider";
-						return provider;
-					}))
-					.then(providerArray => providers.push(...providerArray));
-			}
-			
-			let combinedPromise;
-			if (providersPromise == null) {
-				combinedPromise = coursesPromise;
-			} else if (coursesPromise == null) {
-				combinedPromise = providersPromise;
-			} else {
-				combinedPromise = Promise.all([coursesPromise, providersPromise]);
-			}
-
-			combinedPromise.then(() => [...courses, ...providers]).then(all => {
-				if (this.$route.query.q) {
-					this.sortExactMatches(all, this.$route.query.q)
-				}
-				this.results = all;
-			});
 		}
 	},
 	data() {

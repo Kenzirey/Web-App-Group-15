@@ -116,9 +116,9 @@ export default {
 
   try {
     const responses = await Promise.all([
-      axios.get('http://localhost:8082/admin/courses/count', authConfig),
-      axios.get('http://localhost:8082/admin/users/count', authConfig),
-      axios.get('http://localhost:8082/admin/users/count/2fa', authConfig)
+      axios.get(this.$backendUrl + 'admin/courses/count', authConfig),
+      axios.get(this.$backendUrl + 'admin/users/count', authConfig),
+      axios.get(this.$backendUrl + 'admin/users/count/2fa', authConfig)
     ]);
 
     this.totalCourses = responses[0].data;

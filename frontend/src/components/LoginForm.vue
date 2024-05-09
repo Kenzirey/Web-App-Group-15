@@ -32,8 +32,8 @@
 
 <script>
 import axios from 'axios';
-import VueJwtDecode from 'vue-jwt-decode';
-import { store} from '../utility/store';
+import { jwtDecode } from 'jwt-decode';
+import { store } from '../utility/store';
 
 export default {
   data() {
@@ -50,12 +50,12 @@ export default {
       this.clearErrors();
       console.log("Logging in with:", this.email, this.password);
       try {
-        const response = await axios.post('http://localhost:8082/authenticate', {
+        const response = await axios.post(this.$backendUrl + 'authenticate', {
           username: this.email,
           password: this.password
         });
 
-        const decoded = VueJwtDecode.decode(response.data.jwt);
+        const decoded = jwtDecode(response.data.jwt);
         store.login(response.data.jwt, decoded.roles);
         console.log('Decoded JWT:', decoded);
         this.$emit('login-success', { user: decoded.sub, roles: decoded.roles });

@@ -9,7 +9,7 @@
       <v-col cols="12">
         <user-form 
           :initial-user="currentUser"
-          :api-endpoint="'http://localhost:8082/admin/users'"
+          :api-endpoint="this.$backendUrl + 'admin/users'"
           @user-submitted="fetchUsers" />
       </v-col>
     </v-row>
@@ -57,7 +57,7 @@ export default {
     async fetchUsers() {
       const authToken = getCookie('authToken');
       try {
-        const response = await axios.get('http://localhost:8082/admin/users', {
+        const response = await axios.get(this.$backendUrl + 'admin/users', {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         this.users = response.data;
@@ -85,7 +85,7 @@ export default {
     async deleteUser(userId) {
       const authToken = getCookie('authToken');
       try {
-        await axios.delete(`http://localhost:8082/admin/users/${userId}`, {
+        await axios.delete( `${this.$backendUrl}admin/users/${userId}`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         this.users = this.users.filter(user => user.id !== userId);

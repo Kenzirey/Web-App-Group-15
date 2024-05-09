@@ -131,17 +131,17 @@ export default {
 			}; });
 		},
 		async fetchCourses() {
-			const response = await fetch(this.backendBaseUrl + "courses");
+			const response = await fetch(this.$backendUrl + "courses");
 			this.courses = this.standardizeCourses(await response.json());
 			this.filteredCourses = this.filterResults(this.courses, this.search);
 		},
 		async fetchProviders() {
-			const response = await fetch(this.backendBaseUrl + "providers")
+			const response = await fetch(this.$backendUrl + "providers")
 			this.providers = this.standardizeProviders(await response.json());
 			this.filteredProviders = this.filterResults(this.providers, this.search);
 		},
 		async fetchCategories() {
-			const response = await fetch(this.backendBaseUrl + "categories");
+			const response = await fetch(this.$backendUrl + "categories");
 			this.categories = this.standardizeCategories(await response.json())
 			this.filteredCategories = this.filterResults(this.categories, this.search);
 		},
@@ -174,7 +174,6 @@ export default {
 	},
 	data() {
 		return {
-			backendBaseUrl: "http://localhost:8080/",
 			appendIconJustClicked: false,
 			showSuggestions: false,
 			difficulties: ["Beginner", "Advanced", "Expert"],

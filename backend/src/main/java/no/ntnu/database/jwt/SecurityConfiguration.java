@@ -1,10 +1,12 @@
 package no.ntnu.database.jwt;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -54,24 +56,29 @@ public class SecurityConfiguration {
     public SecurityFilterChain configureAuthorizationFilterChain(HttpSecurity http) throws Exception {
         // Set up the authorization requests, starting from most restrictive at the top,
         // to least restrictive on the bottom
-        http
-            // Disable CSRF and CORS checks. Without this it will be hard to make automated tests.
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            // Configure authorization requests
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/authenticate", "/h2-console/**", "/users/register").permitAll()  // Permit all for authenticate and H2 console
-                .requestMatchers("/admin/users/count/2fa").hasAuthority("ROLE_ADMIN")
-                .requestMatchers("/").permitAll()  // The default URL / is accessible to everyone
-                .anyRequest().authenticated()  // All other requests require authentication
-            )
-            // Enable stateless session policy
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            // Add our JWT authentication filter before the Spring Security filter
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-            // Enable frames for H2 console
-            .headers(headers -> headers.frameOptions().sameOrigin());
+
+		// Disable CSRF and CORS checks. Without this it will be hard to make automated tests.
+        http.csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // Configure authorization requests
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/authenticate", "/h2-console/**", "/users/register").permitAll() // Permit all for authenticate and H2 console
+						.requestMatchers(HttpMethod.GET,
+								"/categories", "/categories/{query}",
+								"/courses", "/courses/{id}", "/courses/search/{query}",
+								"/providers", "/providers/{id}", "/providers/search/{query}"
+						).permitAll()
+                        .requestMatchers("/admin/users/count/2fa").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/").permitAll()  // The default URL / is accessible to everyone
+                        .anyRequest().authenticated()  // All other requests require authentication
+                )
+                // Enable stateless session policy
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Add our JWT authentication filter before the Spring Security filter
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
+                // Enable frames for H2 console
+                .headers(headers -> headers.frameOptions().sameOrigin());
 
         return http.build();
     }
@@ -96,7 +103,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         configuration.setAllowCredentials(true);
