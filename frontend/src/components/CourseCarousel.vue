@@ -1,13 +1,19 @@
 <template>
 	<v-card>
-		<v-card-title>{{ title }}</v-card-title>
+		<v-card-title>
+			<router-link :to="{path: 'search', query: {type: 'course', difficulty: difficulty.toLowerCase() == 'sale' ? 'featured' : difficulty.toLowerCase()}}">
+				{{ difficulty.toLowerCase() == "sale" ? "Featured" : difficulty }} courses
+			</router-link>
+		</v-card-title>
 
 		<swiper-container @swipernavigationprev="resetSlideTimer" @swipernavigationnext="resetSlideTimer" ref="carousel"
 			:slides-per-view="slidesPerView" :loop="loopMode" css-mode="true" navigation="true" pagination="true">
 			<swiper-slide v-for="course in filteredCourses">
 				<div class="bullet-positioning-box">
-					<v-img :src="course.image" :aspect-ratio="aspectRatio" cover></v-img>
-					<div class="course-name">{{ course.name }}</div>
+					<router-link :to="'/course/' + course.id">
+						<v-img :src="course.image" :aspect-ratio="aspectRatio" cover></v-img>
+						{{ course.name }}
+					</router-link>
 				</div>
 			</swiper-slide>
 		</swiper-container>
@@ -26,24 +32,20 @@ export default {
 	 * These become basically "props" for our filter criteria.
 	 */
 	props: {
-		title: String,
 		courses: Array,
-		difficulty: String,
-		category: String,
-		onSale: Boolean,
+		difficulty: String
 	},
 	computed: {
 		filteredCourses() {
-			/**
-			 * Filters the courses, can filter based on only difficulty, category OR both.
-			 * Easily expandable by just creating a new const and following the pattern.
-			 */
-			const filtered = this.courses.filter(course => {
-				const matchesDifficulty = this.difficulty ? course.difficulty === this.difficulty : true;
-				const matchesCategory = this.category ? course.category === this.category : true;
-				const matchesSale = this.onSale ? course.onSale === this.onSale : true;
-				return matchesDifficulty && matchesCategory && matchesSale;
-			});
+			let filtered;
+			if (this.difficulty && this.difficulty.toLowerCase() == "sale") {
+				filtered = this.courses.filter(course => course.sale);
+				filtered.sort((a, b) => b.sale - a.sale);
+			} else if (["beginner", "advanced", "expert"].includes(this.difficulty.toLowerCase())) {
+				filtered = this.courses.filter(course => course.difficulty == this.difficulty); 
+			} else {
+				filtered = this.courses;
+			}
 			return [...filtered, ...filtered];
 		},
 		loopMode() {
