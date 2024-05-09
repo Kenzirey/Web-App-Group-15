@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/image")
+@RequestMapping("/images")
 public class ImageController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);

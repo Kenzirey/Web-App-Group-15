@@ -52,6 +52,15 @@ public class CourseService {
 		return repository.findAll();
 	}
 
+    /**
+     * Returns the count of all courses in the database.
+     *
+     * @return the count of courses.
+     */
+    public long countAllCourses() {
+        return repository.count();
+    }
+
 	/**
 	 * Updates a course in the database corresponding to its ID.
 	 *

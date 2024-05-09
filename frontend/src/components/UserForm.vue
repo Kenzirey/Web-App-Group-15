@@ -1,28 +1,45 @@
 <template>
-  <div class="form-container">
-    <form @submit.prevent="handleSubmit">
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input id="name" type="text" v-model="user.name" required>
-      </div>
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input id="email" type="email" v-model="user.email" required>
-      </div>
-      <div class="form-group">
-        <label for="role">Role:</label>
-        <select id="role" v-model="user.role">
-          <option value="admin">Admin</option>
-          <option value="user">User</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="twoFactorEnabled">2FA Enabled:</label>
-        <input type="checkbox" id="twoFactorEnabled" v-model="user.twoFactorEnabled">
-      </div>
-      <button type="submit">Submit</button>
-    </form>
-  </div>
+  <v-container>
+    <div class="user-form-container">
+      <v-form ref="form" @submit.prevent="handleSubmit">
+        <v-text-field
+          label="Name"
+          v-model="user.name"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          label="Email"
+          type="email"
+          v-model="user.email"
+          required
+        ></v-text-field>
+
+        <v-text-field
+          label="Password"
+          :type="showPassword ? 'text' : 'password'"
+          v-model="user.password"
+          required
+          :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
+          @click:append="togglePasswordVisibility"
+        ></v-text-field>
+
+        <v-select
+          label="Role"
+          :items="['admin', 'user']"
+          v-model="user.role"
+          required
+        ></v-select>
+
+        <v-checkbox
+          label="2FA Enabled"
+          v-model="user.twoFactorEnabled"
+        ></v-checkbox>
+
+        <v-btn color="success" type="submit" class="mt-3">Submit</v-btn>
+      </v-form>
+    </div> 
+  </v-container>
 </template>
 
 <style scoped>
@@ -87,19 +104,47 @@ export default {
   props: {
     initialUser: {
       type: Object,
-      default: () => ({ name: '', email: '', role: '', twoFactorEnabled: false })
+      default: () => ({ name: '', email: '', role: '', twoFactorEnabled: false, password: '' })
     }
   },
   data() {
     return {
       user: { ...this.initialUser },
+      showPassword: false,
     };
   },
   methods: {
-    handleSubmit() {
-      this.$emit('user-submitted', this.user);
+    async handleSubmit() {
+      try {
+        const method = this.user.id ? 'put' : 'post';
+        const url = this.user.id ? `${this.apiEndpoint}/${this.user.id}` : this.apiEndpoint;
+        
+        const response = await axios[method](url, this.user);
+        console.log(response.data);
+        
+        this.$emit('user-submitted', response.data); 
+        
+        this.resetForm();
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      }
+    },
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+    },
+    resetForm() {
       this.user = { ...this.initialUser };
+      this.showPassword = false;
+      if (this.$refs.form) {
+        this.$refs.form.resetValidation();
+      }
     }
   },
 };
 </script>
+<style scoped>
+.user-form-container {
+  max-width: 600px;
+  margin: 20px auto;
+}
+</style>

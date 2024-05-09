@@ -1,245 +1,206 @@
 package no.ntnu.database.controllers;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import no.ntnu.dto.Course;
-import no.ntnu.service.AdminRequests;
+import java.util.List;
+import java.util.Optional;
+import no.ntnu.database.entities.Course;
+import no.ntnu.database.entities.User;
+import no.ntnu.database.repositories.UserRepository;
+import no.ntnu.database.services.CourseService;
+import no.ntnu.database.services.UserService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
- * Controller class for handling administrative actions related to course management.
+ * REST controller for administrative operations related to courses and users.
+ * Provides endpoints for creating, updating, deleting, and retrieving course and user information.
  */
-//@RestController TODO: Un-comment this when it workie
+@CrossOrigin
+@RestController
 @RequestMapping("/admin")
-@Tag(
-		name = "AdminController",
-		description = "API for course management administrative tasks"
-)
 public class AdminController {
-	private static final Logger LOGGER = Logger.getLogger(AdminController.class.getName());
-	private static final String SQL_ERROR_MESSAGE = "SQLException occurred";
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
+    private final CourseService courseService;
+    private final UserService userService;
+    private final UserRepository userRepository;
 
-	private AdminRequests requests;
+    @Autowired
+    public AdminController(CourseService courseService, UserRepository userRepository, UserService userService) {
+        this.courseService = courseService;
+        this.userService = userService;
+        this.userRepository = userRepository;
+    }
 
-	// TODO: Jonas, do your thing :)
-	/**
-	 * Creates the controller.
+    /**
+	 * Adds a new course to the system.
 	 *
-	 * @param adminRequests Autowired object for sending requests to the database
+	 * @param course The course information to add.
+	 * @return A response entity indicating the outcome of the operation.
 	 */
-	/*
-	@Autowired
-	public AdminController(AdminRequests adminRequests) {
-		this.requests = adminRequests;
-	}
+    @PostMapping("/courses")
+    public ResponseEntity<String> addCourse(@RequestBody Course course) {
+        try {
+            courseService.add(course);
+            LOGGER.info("Course added successfully: {}", course.getCourseName());
+            return ResponseEntity.status(HttpStatus.CREATED).body("Course added successfully");
+        } catch (Exception e) {
+            LOGGER.error("Error adding course", e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error adding course");
+        }
+    }
 
-	 */
-
-	/**
-	 * Endpoint for adding a new course.
+    /**
+	 * Removes a course from the system by ID.
 	 *
-	 * @param course The course to add
-	 * @return A {@link ResponseEntity} representing an HTTP response
+	 * @param id The ID of the course to remove.
+	 * @return A response entity indicating the outcome of the operation.
 	 */
-	@Operation(
-			summary = "Add a new course",
-			description = "Adds a new course to the system."
-	)
-	@ApiResponse(
-			responseCode = "201",
-			description = "Course added successfully",
-			content = @Content(schema = @Schema(implementation = String.class))
-	)
-	@ApiResponse(
-			responseCode = "400",
-			description = "Course already exists",
-			content = @Content(schema = @Schema(implementation = String.class))
-	)
-	@ApiResponse(
-			responseCode = "500",
-			description = "Something went wrong when attempting to add the course",
-			content = @Content(schema = @Schema(implementation = String.class))
-	)
-	@PostMapping("/courses")
-	public ResponseEntity<String> addCourse(@RequestBody Course course) {
-		ResponseEntity<String> response;
-		try {
-			if (requests.insertCourse(course)) {
-				response = new ResponseEntity<>(
-						"Course added successfully",
-						HttpStatus.CREATED
-				);
-			} else {
-				response = new ResponseEntity<>(
-						"Course already exists",
-						HttpStatus.BAD_REQUEST
-				);
-			}
-		} catch (SQLException sqle) {
-			LOGGER.log(Level.WARNING, SQL_ERROR_MESSAGE, sqle);
-			response = new ResponseEntity<>(
-					"Something went wrong when attempting to add the course",
-					HttpStatus.INTERNAL_SERVER_ERROR
-			);
-		}
-		return response;
-	}
+    @DeleteMapping("/courses/{id}")
+    public ResponseEntity<String> removeCourse(@PathVariable int id) {
+        if (courseService.delete(id)) {
+            LOGGER.info("Course removed successfully: {}", id);
+            return ResponseEntity.ok("Course removed successfully");
+        } else {
+            LOGGER.warn("Course not found: {}", id);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course not found");
+        }
+    }
 
-	/**
-	 * Endpoint for removing an existing course.
+
+    /**
+	 * Updates the information of an existing course by ID.
 	 *
-	 * @param id The ID of the course to remove
-	 * @return A {@link ResponseEntity} representing an HTTP response
+	 * @param id     The ID of the course to update.
+	 * @param course The new information for the course.
+	 * @return A response entity indicating the outcome of the operation.
 	 */
-	@Operation(
-			summary = "Remove a course",
-			description = "Removes a course from the system by ID."
-	)
-	@ApiResponse(
-			responseCode = "200",
-			description = "Course removed successfully",
-			content = @Content(schema = @Schema(implementation = String.class))
-	)
-	@ApiResponse(
-			responseCode = "400",
-			description = "Failed does not exist / is already removed",
-			content = @Content(schema = @Schema(implementation = String.class))
-	)
-	@ApiResponse(
-			responseCode = "500",
-			description = "Something went wrong when attempting to remove the course",
-			content = @Content(schema = @Schema(implementation = String.class))
-	)
-	@DeleteMapping("/courses/{id}")
-	public ResponseEntity<String> removeCourse(@PathVariable int id) {
-		ResponseEntity<String> response;
-		try {
-			if (requests.removeCourse(id)) {
-				response = new ResponseEntity<>(
-						"Course removed successfully",
-						HttpStatus.OK
-				);
-			} else {
-				response = new ResponseEntity<>(
-						"Failed does not exist / is already removed",
-						HttpStatus.BAD_REQUEST
-				);
-			}
-		} catch (SQLException sqle) {
-			LOGGER.log(Level.WARNING, SQL_ERROR_MESSAGE, sqle);
-			response = new ResponseEntity<>(
-					"Something went wrong when attempting to remove the course",
-					HttpStatus.INTERNAL_SERVER_ERROR
-			);
-		}
-		return response;
-	}
+    @PutMapping("/courses/{id}")
+    public ResponseEntity<String> updateCourse(@PathVariable int id, @RequestBody Course course) {
+        try {
+            courseService.updateCourse(id, course);
+            LOGGER.info("Course updated successfully: {}", course.getCourseName());
+            return ResponseEntity.ok("Course updated successfully");
+        } catch (Exception e) {
+            LOGGER.error("Error updating course: {}", id, e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error updating course");
+        }
+    }
 
-	/**
-	 * Endpoint for updating an existing course.
+    @GetMapping("/courses/count")
+    public ResponseEntity<Long> getCoursesCount() {
+        long count = courseService.countAllCourses();
+        LOGGER.info("Total number of courses: {}", count);
+        return ResponseEntity.ok(count);
+    }
+
+
+    /**
+     * Retrieves a single course by its ID.
+     *
+     * @param id The ID of the course to retrieve.
+     * @return The requested course if found, or an error response otherwise.
+     */
+    @GetMapping("/courses/{id}")
+    public ResponseEntity<Course> getCourseById(@PathVariable int id) {
+        Optional<Course> course = courseService.findById(id);
+        return course.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+	 * Retrieves the count of users with two-factor authentication enabled.
 	 *
-	 * @param id The ID of the course to update
-	 * @param course The new & updated course
-	 * @return A {@link ResponseEntity} representing an HTTP response
+	 * @return A ResponseEntity containing the count of users with two-factor authentication enabled.
 	 */
-	@Operation(
-			summary = "Update a course",
-			description = "Updates the details of an existing course."
-	)
-	@ApiResponse(
-			responseCode = "200",
-			description = "Course updated successfully",
-			content = @Content(schema = @Schema(implementation = String.class))
-	)
-	@ApiResponse(
-			responseCode = "400",
-			description = "Course is already up-to-date with the provided info",
-			content = @Content(schema = @Schema(implementation = String.class))
-	)
-	@ApiResponse(
-			responseCode = "500",
-			description = "Something went wrong when attempting to update the course "
-					+ "(Does it exist?)",
-			content = @Content(schema = @Schema(implementation = String.class))
-	)
-	@PutMapping("/courses/{id}")
-	public ResponseEntity<String> updateCourse(
-			@PathVariable int id,
-			@RequestBody Course course
-	) {
-		ResponseEntity<String> response;
-		try {
-			if (requests.updateCourse(id, course)) {
-				response = new ResponseEntity<>(
-						"Course added successfully",
-						HttpStatus.OK
-				);
-			} else {
-				response = new ResponseEntity<>(
-						"Course already exists",
-						HttpStatus.BAD_REQUEST
-				);
-			}
-		} catch (SQLException sqle) {
-			LOGGER.log(Level.WARNING, SQL_ERROR_MESSAGE, sqle);
-			response = new ResponseEntity<>(
-					"Something went wrong when attempting to update the course (Does it exist?)",
-					HttpStatus.INTERNAL_SERVER_ERROR
-			);
-		}
-		return response;
-	}
+    @GetMapping("/users/count/2fa")
+    public ResponseEntity<Long> getCountOfUsersWith2FA() {
+        long count = userRepository.countByTwoFactorEnabledTrue();
+        return ResponseEntity.ok(count);
+    }
 
-	//TODO: Commented out because compilation error
-	/*
-	@Operation(summary = "Get summary of courses")
-	@ApiResponse(
-			responseCode = "200",
-			description = "Successfully retrieved course summary",
-			content = @Content(schema = @Schema(implementation = Integer.class))
-	)
-	@GetMapping("/courses/summary")
-	public ResponseEntity<Integer> getCoursesSummary() {
-		try {
-			int totalCourses = requests.getTotalCourses(); //yet to be implemented
-			return ResponseEntity.ok(totalCourses);
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, "Error getting courses summary", e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
-	}
+    /**
+	* Retrieves the total number of users.
+	*
+	* @return ResponseEntity<Long> containing the total number of users
+	*/
+    @GetMapping("/users/count")
+    public ResponseEntity<Long> getTotalUsersCount() {
+        long count = userRepository.count();
+        LOGGER.info("Total number of users: {}", count);
+        return ResponseEntity.ok(count);
+    }
 
-	@Operation(summary = "Get summary of users")
-	@ApiResponse(
-			responseCode = "200",
-			description = "Successfully retrieved user summary",
-			content = @Content(schema = @Schema(implementation = Integer.class))
-	)
-	@GetMapping("/users/summary")
-	public ResponseEntity<Integer> getUsersSummary() {
-		try {
-			int totalUsers = requests.getTotalUsers(); //yet to be implemented
-			return ResponseEntity.ok(totalUsers);
-		} catch (SQLException e) {
-			LOGGER.log(Level.SEVERE, "Error getting users summary", e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
-	}*/
+    /**
+	 * Retrieves a list of all users.
+	 *
+	 * @return A list of User objects representing all users.
+	 */
+    @GetMapping("/users")
+    public List<User> getAllUsers() {
+        return userService.findAllUsers();
+    }
 
+    /**
+	 * Adds a new user.
+	 *
+	 * @param user The user object to be added.
+	 * @return A ResponseEntity containing the saved user object and the HTTP status code 201 (Created).
+	 */
+    @PostMapping("/users")
+    public ResponseEntity<User> addUser(@RequestBody User user) {
+        User savedUser = userService.saveUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+    }
+
+    /**
+	* Updates a user with the specified ID.
+	*
+	* @param id   The ID of the user to update.
+	* @param user The updated user object.
+	* @return The ResponseEntity containing the updated user object.
+	*/
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+        User updatedUser = userService.updateUser(id, user);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    /**
+	 * Deletes a user with the specified ID.
+	 *
+	 * @param id the ID of the user to delete
+	 * @return a ResponseEntity with no content if the user was successfully deleted
+	 */
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+	 * Retrieves a user by their ID.
+	 *
+	 * @param id the ID of the user to retrieve
+	 * @return the ResponseEntity containing the user if found, or a not found response if the user does not exist
+	 */
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+	 * Toggles the active status of a user.
+	 *
+	 * @param id The ID of the user to toggle the active status for.
+	 * @param isActive The new active status for the user.
+	 * @return A ResponseEntity with a String indicating the result of the operation.
+	 */
+    @PostMapping("/users/{id}/toggle-active")
+    public ResponseEntity<String> toggleUserActive(@PathVariable Long id, @RequestBody boolean isActive) {
+        return userService.toggleUserActive(id, isActive);
+    }
 }

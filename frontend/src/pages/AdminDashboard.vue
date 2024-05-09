@@ -1,44 +1,48 @@
 <template>
-  <div class="admin-container">
-    <AdminNavigation />
-    <div class="admin-content">
-      <header class="admin-header">
-        <h1>Admin Dashboard</h1>
-      </header>
-      <div class="summary-cards">
-        <div class="card total-courses" @click="goToCourses">
-          <div class="card-icon"><i class="fas fa-book"></i></div>
-          <div class="card-details">
-            <p class="card-title">Total Courses</p>
-            <p class="card-value">{{ totalCourses }}</p>
-          </div>
-        </div>
-        <div class="card total-users" @click="goToUsers">
-          <div class="card-icon"><i class="fas fa-user"></i></div>
-          <div class="card-details">
-            <p class="card-title">Total Users</p>
-            <p class="card-value">{{ totalUsers }}</p>
-          </div>
-        </div>
-        <div class="card total-users-2fa" @click="goTo2FAUsers">
-          <div class="card-icon"><i class="fas fa-shield-alt"></i></div>
-          <div class="card-details">
-            <p class="card-title">Users with 2FA</p>
-            <p class="card-value">{{ totalUsersWith2FA }}</p>
-          </div>
-        </div>
-      </div>
-      <div class="chart-container">
-        <canvas id="growthChart"></canvas>
-      </div>
-    </div>
-  </div>
+  <v-container fluid class="pa-0 fill-height">
+    <v-row class="fill-height" no-gutters>
+      <v-col cols="12" md="3" lg="2" class="pa-4">
+        <AdminNavigation />
+      </v-col>
+
+      <v-col cols="12" md="9" lg="10">
+        <v-container>
+          <v-row>
+            <v-col>
+              <h1 class="text-h4 my-4 text-center">Admin Dashboard</h1>
+            </v-col>
+          </v-row>
+
+          <v-row justify="center">
+            <v-col cols="12" sm="4" v-for="item in summaryCards" :key="item.title">
+              <v-card outlined class="pa-4 text-center" @click="item.action">
+                <v-icon large color="blue darken-2">{{ item.icon }}</v-icon>
+                <div class="my-2 subtitle-2">{{ item.title }}</div>
+                <div class="title">{{ item.value }}</div>
+              </v-card>
+            </v-col>
+          </v-row>
+
+          <v-row>
+            <v-col>
+              <v-card outlined>
+                <v-card-title class="text-h5 pa-4">Growth Chart</v-card-title>
+                <v-container>
+                  <canvas ref="growthChart"></canvas>
+                </v-container>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import axios from 'axios';
 import { Chart, registerables } from 'chart.js';
-
+import { getCookie } from '../utility/cookieHelper';
 Chart.register(...registerables);
 
 export default {
@@ -48,138 +52,131 @@ export default {
       totalCourses: 0,
       totalUsers: 0,
       totalUsersWith2FA: 0,
+      summaryCards: [
+        {
+          title: 'Total Courses',
+          value: this.totalCourses,
+          icon: 'mdi-book-open-page-variant',
+          action: this.goToCourses
+        },
+        {
+          title: 'Total Users',
+          value: this.totalUsers,
+          icon: 'mdi-account-circle',
+          action: this.goToUsers
+        },
+        {
+          title: 'Users with 2FA',
+          value: this.totalUsersWith2FA,
+          icon: 'mdi-shield-key',
+          action: this.goTo2FAUsers
+        }
+      ],
       chartData: {
-        labels: ['January', 'February', 'March', 'April'], // Placeholder labels
+        labels: [],
         datasets: [
           {
             label: 'Total Users',
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgba(255, 99, 132, 1)',
-            data: [50, 150, 100, 200], // Placeholder data
+            data: [],
           },
           {
             label: 'Users with 2FA',
             backgroundColor: 'rgba(54, 162, 235, 0.2)',
             borderColor: 'rgba(54, 162, 235, 1)',
-            data: [30, 90, 70, 150], // Placeholder data
+            data: [],
           },
           {
             label: 'Total Courses',
             backgroundColor: 'rgba(255, 206, 86, 0.2)',
             borderColor: 'rgba(255, 206, 86, 1)',
-            data: [4, 6, 8, 10], // Placeholder data
+            data: [],
           },
         ],
       },
     };
   },
-  created() {
-    this.fetchSummaryData();
-  },
+  async created() {
+  try {
+    await this.fetchSummaryData();
+  } catch (error) {
+    console.error('Failed to fetch summary data:', error);
+  }
+},
   mounted() {
-    this.initChart();
+    this.$nextTick(this.initChart);
   },
   methods: {
     async fetchSummaryData() {
+  const authToken = getCookie('authToken');
+  const authConfig = {
+    headers: { 'Authorization': `Bearer ${authToken}` }
+  };
 
-      this.initChart();
-    },
-    initChart() {
-      const ctx = document.getElementById('growthChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'line',
-        data: this.chartData,
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-          maintainAspectRatio: false,
+  try {
+    const responses = await Promise.all([
+      axios.get(this.$backendUrl + 'admin/courses/count', authConfig),
+      axios.get(this.$backendUrl + 'admin/users/count', authConfig),
+      axios.get(this.$backendUrl + 'admin/users/count/2fa', authConfig)
+    ]);
+
+    this.totalCourses = responses[0].data;
+    this.totalUsers = responses[1].data;
+    this.totalUsersWith2FA = responses[2].data;
+
+    this.summaryCards[0].value = this.totalCourses;
+    this.summaryCards[1].value = this.totalUsers;
+    this.summaryCards[2].value = this.totalUsersWith2FA;
+
+    this.chartData.labels = ['New Label 1', 'New Label 2', 'New Label 3', 'New Label 4'];
+
+    this.chartData.datasets.forEach(dataset => {
+      switch (dataset.label) {
+        case 'Total Users':
+          dataset.data = [this.totalUsers,];
+          break;
+        case 'Users with 2FA':
+          dataset.data = [this.totalUsersWith2FA,];
+          break;
+        case 'Total Courses':
+          dataset.data = [this.totalCourses,];
+          break;
+      }
+    });
+
+    if (this.chartInstance) {
+      this.chartInstance.update();
+    }
+  } catch (error) {
+    console.error('Failed to fetch summary data:', error);
+  }
+},
+
+  initChart() {
+    const ctx = this.$refs.growthChart.getContext('2d');
+    this.chartInstance = new Chart(ctx, {
+      type: 'line',
+      data: this.chartData,
+      options: {
+        scales: {
+          y: {
+              beginAtZero: true
+          }
         },
-      });
-    },
+        maintainAspectRatio: false
+      }
+    });
+  },
     goToCourses() {
+      this.$router.push('/courses');
     },
     goToUsers() {
+      this.$router.push('/users');
     },
     goTo2FAUsers() {
+      this.$router.push('/users/2fa');
     },
   },
 };
 </script>
-
-<style scoped>
-.admin-container {
-  display: flex;
-}
-
-.admin-header {
-  text-align: center;
-  padding: 20px 0;
-  border-bottom: 2px solid #eee;
-  margin-bottom: 20px;
-}
-
-.admin-content {
-  flex-grow: 1;
-  padding: 20px;
-  background-color: #f9f9f9;
-}
-
-.summary-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-.card {
-  background: #fff;
-  border: 1px solid #d3d3d3;
-  border-radius: 10px;
-  padding: 15px;
-  cursor: pointer;
-  transition: box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card-icon {
-  color: #4a90e2;
-  font-size: 2rem;
-}
-
-.card-title {
-  margin: 10px 0 5px;
-  color: #333;
-  font-size: 1rem;
-}
-
-.card-value {
-  color: #333;
-  font-size: 2rem;
-  font-weight: bold;
-}
-
-.chart-container {
-  background: #fff;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  margin-top: 20px;
-}
-
-
-#growthChart {
-  width: 100% !important;
-  height: 40vh !important;
-}
-</style>

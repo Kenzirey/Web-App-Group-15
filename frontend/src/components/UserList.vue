@@ -1,26 +1,60 @@
 <template>
-  <div class="user-list-container">
-    <div class="search-container">
-      <input
-        type="text"
-        v-model="searchQuery"
-        @input="filterList"
-        placeholder="Search"
-        class="search-input"
-      />
-    </div>
-    <h2>Users</h2>
-    <ul class="user-list">
-      <li v-for="user in filteredUsers" :key="user.id" class="user-item">
-        <span>{{ user.name }} - 2FA: {{ user.twoFactorEnabled ? 'Enabled' : 'Disabled' }}</span>
-        <div class="user-actions">
-          <button @click="$emit('edit-user', user)" class="edit-user-btn">Edit</button>
-          <button @click="$emit('delete-user', user.id)" class="delete-user-btn">Delete</button>
-        </div>
-      </li>
-    </ul>
-  </div>
+  <v-container class="user-list-container">
+    <v-row>
+      <v-col cols="12">
+        <v-text-field
+          v-model="searchQuery"
+          @input="filterList"
+          label="Search"
+          single-line
+          hide-details
+          class="mb-4"
+        ></v-text-field>
+      </v-col>
+    </v-row>
+
+    <v-row>
+      <v-col cols="12">
+        <v-row align="center" justify="start" no-gutters>
+          <v-col class="text-h6 py-2">Users</v-col>
+        </v-row>
+        <v-list>
+          <v-list-item-group>
+            <v-list-item
+              v-for="user in filteredUsers"
+              :key="user.id"
+              class="user-list-item"
+            >
+              <v-row align="center" justify="space-between" no-gutters>
+                <v-col cols="8">
+                  <div class="user-info">
+                    <v-list-item-title>{{ user.username }}</v-list-item-title>
+                    <v-list-item-subtitle
+                      :class="{'text-green': user.twoFactorEnabled, 'text-red': !user.twoFactorEnabled}"
+                    >
+                      2FA: {{ user.twoFactorEnabled ? 'Enabled' : 'Disabled' }}
+                    </v-list-item-subtitle>
+                  </div>
+                </v-col>
+                <v-col cols="4" class="d-flex justify-end">
+                  <v-list-item-action class="user-actions">
+                    <v-btn icon @click="$emit('edit-user', user)" color="orange">
+                      <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                    <v-btn icon @click="$emit('prepare-delete-user', user.id)" color="red">
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </v-list-item-action>
+                </v-col>
+              </v-row>
+            </v-list-item>
+          </v-list-item-group>
+        </v-list>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
+
 
 <script>
 export default {
@@ -36,7 +70,7 @@ export default {
   computed: {
     filteredUsers() {
       return this.users.filter(user =>
-        user.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+        user.username.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
   },
@@ -53,63 +87,30 @@ export default {
   margin: 20px auto;
 }
 
-.search-container {
-  margin-bottom: 1rem;
-}
-
-.search-input {
-  width: 100%;
-  padding: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-}
-
-.user-list {
-  list-style-type: none;
-  padding: 0;
-}
-
-.user-item {
-  background: #fff;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.user-list-item .user-info {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.user-item:last-child {
-  margin-bottom: 0;
+.user-list-item .user-actions {
+  display: flex;
+  justify-content: flex-end;
 }
 
-.edit-user-btn,
-.delete-user-btn {
-  background-color: #f0ad4e;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  color: white;
-  transition: background-color 0.2s;
+.text-h6 {
+  font-size: 1.25rem;
+  font-weight: normal;
 }
 
-.edit-user-btn:hover,
-.delete-user-btn:hover {
-  background-color: #ec971f;
+.text-green {
+  color: #08f714;
+  font-weight: bold;
 }
 
-.delete-user-btn {
-  background-color: #d9534f;
-}
-
-.delete-user-btn:hover {
-  background-color: #c9302c;
-}
-
-.edit-user-btn:not(:last-child),
-.delete-user-btn:not(:last-child) {
-  margin-right: 0.5rem;
+.text-red {
+  color: #fb0101;
+  font-weight: bold;
 }
 </style>
+

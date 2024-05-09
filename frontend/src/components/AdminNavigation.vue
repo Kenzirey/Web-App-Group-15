@@ -1,12 +1,28 @@
 <template>
-  <div class="admin-navigation">
-    <ul>
-      <li><router-link to="/admin/dashboard">Dashboard</router-link></li>
-      <li><router-link to="/admin/courses">Courses</router-link></li>
-      <li><router-link to="/admin/users">Users</router-link></li>
-      <li><router-link to="/admin/settings">Settings</router-link></li>
-    </ul>
-  </div>
+  <v-navigation-drawer app permanent class="admin-navigation">
+    <v-list dense>
+      <v-list-item link to="/admin/dashboard">
+        <v-list-item-content>
+          <v-list-item-title>Dashboard</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item link to="/admin/courses">
+        <v-list-item-content>
+          <v-list-item-title>Courses</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item link to="/admin/users">
+        <v-list-item-content>
+          <v-list-item-title>Users</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item link to="/admin/settings">
+        <v-list-item-content>
+          <v-list-item-title>Settings</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+  </v-navigation-drawer>
 </template>
 
 <script>
@@ -16,28 +32,4 @@ export default {
 </script>
 
 <style scoped>
-.admin-navigation {
-  background: #f4f4f4;
-  padding: 20px;
-  width: 200px;
-}
-
-.admin-navigation ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.admin-navigation li a {
-  text-decoration: none;
-  color: #333;
-  display: block;
-  padding: 10px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.admin-navigation li a:hover {
-  background-color: #ddd;
-}
 </style>
