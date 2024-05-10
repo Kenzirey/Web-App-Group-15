@@ -12,7 +12,8 @@ import jakarta.persistence.ManyToOne;
 /**
  * Represents a link between a course and its provider.
  * This class defines the relationship between a specific course and the provider offering it.
- * Note: This entity serves as a bridge table in a many-to-many relationship between Course and CourseProvider.
+ * Note: This entity serves as a bridge table in a
+ * many-to-many relationship between Course and CourseProvider.
  * This entity is no longer used
  */
 @Entity

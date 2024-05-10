@@ -1,20 +1,18 @@
 package no.ntnu.database.services;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Collections;
-
+import no.ntnu.database.entities.Role;
+import no.ntnu.database.entities.User;
+import no.ntnu.database.repositories.RoleRepository;
+import no.ntnu.database.repositories.UserRepository;
+import no.ntnu.dto.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import no.ntnu.database.entities.Role;
-import no.ntnu.database.entities.User;
-import no.ntnu.database.repositories.UserRepository;
-import no.ntnu.dto.UserRegistrationDto;
-import no.ntnu.database.repositories.RoleRepository;
 
 @Service
 public class UserService {

@@ -56,10 +56,10 @@ public class ImageController {
 	 *
 	 * @param id The id of the image to return.
 	 * @return {@link ResponseEntity} object containing either:
-	 * <ul>
-	 *    <li>A corresponding image that matches the id, returns status 200</li>
-	 *    <li>If no match is found, return status 404</li>
-	 * </ul>
+	 *     <ul>
+	 *         <li>A corresponding image that matches id, returns status 200.</li>
+	 *         <li>If no match is found, returns status 404.</li>
+	 *     </ul>
 	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<Image> getImage(@PathVariable Integer id) {

@@ -1,9 +1,7 @@
 package no.ntnu.database.repositories;
 
-import no.ntnu.database.entities.Role;
-
 import java.util.Optional;
-
+import no.ntnu.database.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

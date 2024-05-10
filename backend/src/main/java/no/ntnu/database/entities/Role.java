@@ -1,13 +1,12 @@
 package no.ntnu.database.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 /**
  * Role entity class.
