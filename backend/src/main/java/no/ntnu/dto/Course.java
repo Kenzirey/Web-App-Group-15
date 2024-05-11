@@ -1,5 +1,6 @@
 package no.ntnu.dto;
 
+//TODO: Javadoc
 public class Course {
 	private String name;
 	private String description;
@@ -8,6 +9,7 @@ public class Course {
 	public Course() {
 	}
 
+	//TODO: Javadoc
 	public Course(String name, String description, int createdBy) {
 		this.name = name;
 		this.description = description;

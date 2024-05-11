@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * REST API controller for the course provider collection.
+ * Code adapted from the app-dev repository by Gist.
  */
 @CrossOrigin
 @RestController
@@ -91,13 +92,16 @@ public class CourseProviderController {
 	}
 
 	/**
-	 * HTTP POST endpoint for adding a new course provider.
+	 * HTTP POST endpoint for adding a new {@link CourseProvider}.
 	 *
 	 * @param provider 	the data of the {@link CourseProvider} being added.
+	 *
 	 * @return 			<p>Returns a {@link ResponseEntity} with status 201 if successfully
 	 * 					created and the value of the new ID.</p>
 	 * 					<p>Returns a {@link ResponseEntity} with status 400 for bad request
 	 * 					if data is illegal or inappropriate.</p>
+	 * 					<p>Returns a {@link ResponseEntity} with status 403 for unauthorized access
+	 * 					if incorrect level of authorization.</p>
 	 */
 	@Operation(
 			summary = "Adds a new course provider",
@@ -107,6 +111,8 @@ public class CourseProviderController {
 			responseCode = "201", description = "A course provider was successfully added")
 	@ApiResponse(
 			responseCode = "400", description = "Course provider failed to be added, bad request")
+	@ApiResponse(
+			responseCode = "403", description = "Forbidden, not authorized")
 	@PostMapping
 	public ResponseEntity<String> add(@RequestBody CourseProvider provider) {
 		ResponseEntity<String> response;
@@ -123,7 +129,10 @@ public class CourseProviderController {
 	 * Deletes a course provider from the collection.
 	 *
 	 * @param id 	The id of the course provider to be removed from the collection.
+	 *
 	 * @return 		<p>Returns a {@link ResponseEntity} with status 200 if successfully deleted.</p>
+	 * 				<p>Returns a {@link ResponseEntity} with status 403 if incorrect level
+	 * 				of authorization.</p>
 	 * 				<p>Returns a {@link ResponseEntity} with status 404
 	 * 				if course to be deleted was not found.</p>
 	 */
@@ -132,6 +141,7 @@ public class CourseProviderController {
 			description = "Deletes the course provider corresponding to the given id"
 	)
 	@ApiResponse(responseCode = "200", description = "Course provider was successfully deleted")
+	@ApiResponse(responseCode = "403", description = "Forbidden, not authorized")
 	@ApiResponse(responseCode = "404", description = "Course provider was not found")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable int id) {
@@ -154,6 +164,8 @@ public class CourseProviderController {
 	 *
 	 * @return 		<p>a {@link ResponseEntity} with code 204 on success.</p>
 	 * 				<p>a {@link ResponseEntity} with code 400 if illegal argument is provided.</p>
+	 * 				<p>Returns a {@link ResponseEntity} with status 403 if incorrect level
+	 * 				of authorization.</p>
 	 * 				<p>a {@link ResponseEntity} with code 404 if course to update is not found.</p>
 	 */
 	@Operation(
@@ -162,6 +174,7 @@ public class CourseProviderController {
 	)
 	@ApiResponse(responseCode = "204", description = "Course successfully updated")
 	@ApiResponse(responseCode = "400", description = "Bad request")
+	@ApiResponse(responseCode = "403", description = "Forbidden, not authorized")
 	@ApiResponse(responseCode = "404", description = "Course provider was not found")
 	@PutMapping("/{id}")
 	public ResponseEntity<String> update(
@@ -181,8 +194,9 @@ public class CourseProviderController {
 	/**
 	 * Endpoint to search for providers.
 	 *
-	 * @param query The query to use when searching for providers
-	 * @return Providers that match the search query
+	 * @param query The query to use when searching for providers.
+	 *
+	 * @return Providers that match the search query.
 	 */
 	@GetMapping(value = "/search/{query}", produces = {"application/json"})
 	public Iterable<CourseProvider> searchCategory(@PathVariable String query) {

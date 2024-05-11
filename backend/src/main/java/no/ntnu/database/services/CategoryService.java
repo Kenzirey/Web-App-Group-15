@@ -8,11 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-
 /**
  * Service class for handling business logic for category
  * Interacts with the {@link CategoryRepository} to perform CRUD operations.
+ * Code adapted from app-dev repository by Gist.
  */
 @Service
 public class CategoryService {
@@ -90,7 +89,8 @@ public class CategoryService {
 	/**
 	 * Searches for a specific category.
 	 *
-	 * @param query The search query to use when searching for categories
+	 * @param query The search query to use when searching for categories.
+	 *
 	 * @return Any categories that match the search query
 	 */
 	public Iterable<Category> searchCategory(String query) {

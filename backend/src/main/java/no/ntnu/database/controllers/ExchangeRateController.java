@@ -29,6 +29,7 @@ public class ExchangeRateController {
 	 * Gets all available exchange rates.
 	 *
 	 * @param fromCurrency The currency to use as the base currency for all the exchange rates
+	 *
 	 * @return A map of all exchange rates
 	 */
 	@ApiResponse(
@@ -56,6 +57,7 @@ public class ExchangeRateController {
 	 *
 	 * @param fromCurrency The currency to exchange from
 	 * @param toCurrency The currency to exchange to
+	 *
 	 * @return The exchange rate between the two currencies
 	 */
 	@ApiResponse(

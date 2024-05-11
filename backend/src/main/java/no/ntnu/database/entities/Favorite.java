@@ -1,10 +1,10 @@
 package no.ntnu.database.entities;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
-
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -95,6 +95,7 @@ public final class Favorite {
 		return valid;
 	}
 
+	//TODO: Javadoc
 	public static class FavoriteId implements Serializable {
 		private int productId;
 		private int userId;
@@ -110,8 +111,12 @@ public final class Favorite {
 
 		@Override
 		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
+			if (this == o) {
+				return true;
+			}
+			if (o == null || getClass() != o.getClass())  {
+				return false;
+			}
 			FavoriteId that = (FavoriteId) o;
 			return productId == that.productId && userId == that.userId;
 		}

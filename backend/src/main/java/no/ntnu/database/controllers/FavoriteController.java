@@ -58,10 +58,10 @@ public class FavoriteController {
 	 *
 	 * @param id 	The id of the course to return.
 	 * @return 		{@link ResponseEntity} object containing either:
-	 * 		<ul>
-	 * 		  <li>A corresponding course that matches the id, returns status 200</li>
-	 * 		  <li>If no match is found, return status 404</li>
-	 * 		</ul>
+	 *     <ul>
+	 *         <li>A corresponding course that matches id, returns status 200.</li>
+	 *         <li>If no match is found, returns status 404.</li>
+	 *     </ul>
 	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<Favorite> getFavorite(@PathVariable int id) {

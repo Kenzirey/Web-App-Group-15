@@ -1,5 +1,7 @@
 package no.ntnu.database.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.ntnu.database.entities.Category;
 import no.ntnu.database.services.CategoryService;
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller for category endpoints.
+ * Code adapted from app-dev repository by Gist.
  */
 @CrossOrigin
 @RestController
@@ -43,6 +46,9 @@ public class CategoryController {
 	 *
 	 * @return All categories
 	 */
+	@Operation(summary = "Get all categories",
+			description = "Returns a list of all the categories in the database")
+	@ApiResponse(responseCode = "200", description = "successful request")
 	@GetMapping(produces = {"application/json"})
 	public Iterable<Category> getAllCategories() {
 		LOGGER.info("Getting all categories");
@@ -52,9 +58,14 @@ public class CategoryController {
 	/**
 	 * Endpoint to search for categories.
 	 *
-	 * @param query The query to use when searching for categories
+	 * @param query The query to use when searching for categories.
+	 *
 	 * @return Categories that match the search queries
 	 */
+	@Operation(summary = "Search for categories",
+			description = "Search for categories based on a database query string")
+	//TODO: Improve swagger here with api responses.
+	@ApiResponse(responseCode = "200", description = "Successfully searched")
 	@GetMapping(value = "{query}", produces = {"application/json"})
 	public Iterable<Category> searchCategory(@PathVariable String query) {
 		return query == null || query.isBlank()
@@ -63,11 +74,19 @@ public class CategoryController {
 	}
 
 	/**
-	 * Adds a category to the collection.
+	 * Adds a new {@link Category} to the collection.
 	 *
-	 * @param category The category added
-	 * @return 201 CREATED status on success, 400 Bad request on error
+	 * @param category The {@link Category} added.
+	 *
+	 * @return a {@link ResponseEntity} with 201 CREATED status on success,
+	 * 									400 Bad request on error
+	 * 									or 403 if incorrect authorization.
 	 */
+	@Operation(summary = "Adds a new category",
+			description = "Adds a new category to the database")
+	@ApiResponse(responseCode = "201", description = "Category successfully added")
+	@ApiResponse(responseCode = "400", description = "Bad request, category not added")
+	@ApiResponse(responseCode = "403", description = "Forbidden, not authorized")
 	@PostMapping
 	public ResponseEntity<String> add(@RequestBody Category category) {
 		ResponseEntity<String> response;
@@ -83,11 +102,19 @@ public class CategoryController {
 
 
 	/**
-	 * Removes a category from the collection.
+	 * Removes a {@link Category} from the collection.
 	 *
-	 * @param id The id of the category to be removed.
-	 * @return 200 OK status on success, 404 NOT FOUND on error
+	 * @param id The id of the {@link Category} to be removed.
+	 *
+	 * @return a {@link ResponseEntity} with 200 OK status on success,
+	 * 									403 if incorrect authorization
+	 * 									or 404 NOT FOUND on error.
 	 */
+	@Operation(summary = "Deletes a category",
+			description = "Deletes a category from the database, based on its provided id")
+	@ApiResponse(responseCode = "200", description = "Category successfully deleted")
+	@ApiResponse(responseCode = "403", description = "Forbidden, not authorized")
+	@ApiResponse(responseCode = "404", description = "Category not found")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> delete(@PathVariable Integer id) {
 		ResponseEntity<String> response;
@@ -101,12 +128,21 @@ public class CategoryController {
 
 
 	/**
-	 * Updates a category in the repository.
+	 * Updates a {@link Category} in the database.
 	 *
-	 * @param id The id of the category to update.
-	 * @param category New category data to store.
-	 * @return 200 OK status on success, 400 Bad request on error
+	 * @param id The id of the {@link Category} to update.
+	 * @param category the {@link Category} being added to the database.
+	 *
+	 * @return a {@link ResponseEntity} with code 200 on success,
+	 * 									400 if it is a bad request
+	 * 									or 403 if not authorized.
 	 */
+	@Operation(summary = "Updates a category",
+			description = "Updates an existing category in the database, "
+					+ "based on its provided id")
+	@ApiResponse(responseCode = "200", description = "Category successfully updated")
+	@ApiResponse(responseCode = "400", description = "Bad request")
+	@ApiResponse(responseCode = "403", description = "Forbidden, not authorized")
 	@PutMapping("/{id}")
 	public ResponseEntity<String> update(@PathVariable int id, @RequestBody Category category) {
 		ResponseEntity<String> response;
@@ -118,7 +154,5 @@ public class CategoryController {
 		}
 		return response;
 	}
-
-
 
 }

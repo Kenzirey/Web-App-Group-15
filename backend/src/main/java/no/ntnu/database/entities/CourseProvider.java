@@ -14,7 +14,7 @@ import java.util.Set;
  * CourseProvider class represents a course provider entity within the application,
  * mapped to a corresponding database table via JPA annotations.
  *
- * <p>Supports Java persistence API's requirement of a no-argument constructor.</p>
+ * <p>Supports Java persistence APIs requirement of a no-argument constructor.</p>
  */
 @Entity
 public final class CourseProvider {
@@ -30,6 +30,8 @@ public final class CourseProvider {
 
 	@ManyToMany(mappedBy = "courseProviders")
 	@JsonIgnore
+	@Schema(description = "A set of courses associated with this course provider."
+			+ "Managed via inverse side of ManyToMany relationship with Course.")
 	private Set<Course> courses = new HashSet<>();
 
 

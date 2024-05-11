@@ -1,5 +1,8 @@
 package no.ntnu.database.jwt;
 
+import no.ntnu.dto.AuthenticationRequest;
+import no.ntnu.dto.AuthenticationResponse;
+import no.ntnu.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import no.ntnu.dto.AuthenticationRequest;
-import no.ntnu.dto.AuthenticationResponse;
-import no.ntnu.security.SecurityUtil;
 
 /**
  * Controller responsible for the JWT authentication. Work in progress,
@@ -40,7 +39,8 @@ public class JwtAuthenticationController {
 	 * @return OK + JWT token; Or UNAUTHORIZED
 	 */
 	@PostMapping("/authenticate")
-	public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
+	public ResponseEntity<?> authenticate(
+			@RequestBody AuthenticationRequest authenticationRequest) {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 					authenticationRequest.getUsername(),
@@ -49,12 +49,14 @@ public class JwtAuthenticationController {
 			return new ResponseEntity<>("Invalid username or password", HttpStatus.UNAUTHORIZED);
 		}
 		
-		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+		final UserDetails userDetails =
+				userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         if (userDetails instanceof AccessUserDetails) {
             AccessUserDetails customUserDetails = (AccessUserDetails) userDetails;
             if (customUserDetails.isTwoFactorEnabled()) {
-                if (authenticationRequest.getTwoFactorToken() == null || 
-                    !SecurityUtil.verify2FaToken(authenticationRequest.getTwoFactorToken(), customUserDetails.getTwoFactorSecret())) {
+                if (authenticationRequest.getTwoFactorToken() == null
+						|| !SecurityUtil.verify2FaToken(authenticationRequest.getTwoFactorToken(),
+						customUserDetails.getTwoFactorSecret())) {
                     return new ResponseEntity<>("Invalid 2FA token", HttpStatus.UNAUTHORIZED);
                 }
             }

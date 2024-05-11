@@ -1,9 +1,7 @@
 package no.ntnu.dto;
 
-import java.io.Serializable;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import no.ntnu.database.entities.Role;
 
 
@@ -18,7 +16,7 @@ public class UserProfileDto {
     private boolean isTwoFactorEnabled;
     private Long id;
 
-    public UserProfileDto(Long id,String username, Set<Role> roles, boolean isTwoFactorEnabled) {
+    public UserProfileDto(Long id, String username, Set<Role> roles, boolean isTwoFactorEnabled) {
         this.id = id;
         this.username = username;
         this.roles = roles.stream().map(Role::getName).collect(Collectors.toSet());
