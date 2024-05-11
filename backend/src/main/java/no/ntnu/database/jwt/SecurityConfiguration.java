@@ -2,7 +2,6 @@ package no.ntnu.database.jwt;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +22,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * TODO: Javadoc.
+ * Code adapted from AppDev repository by Gist.
+ */
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfiguration {
@@ -49,29 +52,33 @@ public class SecurityConfiguration {
     /**
      * This method will be called automatically by the framework to find the authentication to use.
      *
-     * @param http HttpSecurity setting builder
+     * @param http the {@link HttpSecurity} setting builder
+     *
      * @throws Exception When security configuration fails
      */
     @Bean
-    public SecurityFilterChain configureAuthorizationFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain configureAuthorizationFilterChain(
+            HttpSecurity http) throws Exception {
         // Set up the authorization requests, starting from most restrictive at the top,
         // to least restrictive on the bottom
 
         //TODO: properly test the search stuff for favorites.
-		// Disable CSRF and CORS checks. Without this it will be hard to make automated tests.
+        // Disable CSRF and CORS checks. Without this it will be hard to make automated tests.
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // Configure authorization requests
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/authenticate", "/h2-console/**", "/users/register").permitAll() // Permit all for authenticate and H2 console
+                        .requestMatchers("/authenticate", "/h2-console/**", "/users/register")
+                        .permitAll() // Permit all for authenticate and H2 console
 						.requestMatchers(HttpMethod.GET,
 								"/categories", "/categories/{query}",
 								"/courses", "/courses/{id}", "/courses/search/{query}",
-								"/providers", "/providers/{id}", "/providers/search/{query}","/favorites",
-                                "/favorites/{int}","/favorites/{id}"
+								"/providers", "/providers/{id}", "/providers/search/{query}",
+                                "/favorites", "/favorites/{int}", "/favorites/{id}"
 						).permitAll()
                         .requestMatchers("/admin/users/count/2fa").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/").permitAll()  // The default URL / is accessible to everyone
+                        .requestMatchers("/")
+                        .permitAll() // The default URL/is accessible to everyone
                         .anyRequest().authenticated()  // All other requests require authentication
                 )
                 // Enable stateless session policy
@@ -106,8 +113,10 @@ public class SecurityConfiguration {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowedMethods(Arrays.asList(
+                "GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList(
+                "Authorization", "Cache-Control", "Content-Type"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

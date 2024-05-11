@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/images")
 public class ImageController {
+	//TODO: Tony, Swagger.
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
 
