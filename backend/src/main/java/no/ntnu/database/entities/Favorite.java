@@ -2,110 +2,90 @@ package no.ntnu.database.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import java.io.Serializable;
 import java.util.Objects;
 
 
 /**
- * This class represents the users favorite,
- * with the userID and productID.
- *
+ * Represents a favorite course, added by a user.
  */
 @Entity
-@IdClass(Favorite.FavoriteId.class)
 public final class Favorite {
+	@EmbeddedId
+	@JsonIgnore
+	private FavoriteId id;
 
-	@Id
-	@Schema(description = "An Unique ID for the product whom the user has marked favorite",
-			example = "1111")
-	private int productId;
+	@Schema(description = "An course whom the user has marked favorite")
+	@ManyToOne
+	@JoinColumn(name = "course_id", insertable = false, updatable = false)
+	private Course course;
 
-	@Id
-	@Schema(description = "An Unique ID for the user", example = "0")
-	private int userId;
-
-
+	@Schema(description = "A user who marked the course as favorite")
+	@ManyToOne
+	@JoinColumn(name = "user_id", insertable = false, updatable = false)
+	private User user;
 
 	/**
 	 * An empty constructor for JPA requirement.
 	 */
-	public Favorite() {
-		// Empty constructor for JPA.
-	}
-
+	public Favorite() {}
 
 	/**
-	 * Sets the userId for favourite.
+	 * Creates a favorite entry given a specified course & user.
 	 *
-	 * @param userId The new userId.
+	 * @param course The course to create an entry for
+	 * @param user The user to create an entry for
 	 */
-	public void setUserId(int userId) {
-		if (userId < 0) {
-			throw new IllegalArgumentException("The userID ID cannot be less than 0");
-		}
+	public Favorite(Course course, User user) {
+		this.id = new FavoriteId(course.getCourseId(), user.getId());
+		this.course = course;
+		this.user = user;
 	}
 
+	public FavoriteId getId() {
+		return id;
+	}
+
+	public Course getCourse() {
+		return course;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setId(FavoriteId id) {
+		this.id = id;
+	}
+
+	public void setCourse(Course course) {
+		this.course = course;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	/**
-	 * Sets the productId for favourite.
-	 *
-	 * @param productId The new productId.
+	 * Composite primary key containing {@code course_id} and {@code user_id}.
 	 */
-	public void setProductId(int productId) {
-		if (productId < 0) {
-			throw new IllegalArgumentException("The product ID cannot be less than 0");
-		}
-		this.productId = productId;
-	}
-
-	/**
-	 * Returns the userId for favourite.
-	 *
-	 * @return The userId for the favourite.
-	 */
-	public int getUserId() {
-		return userId;
-	}
-
-
-	/**
-	 * Returns the productId for favourite.
-	 *
-	 * @return The productId for the favourite.
-	 */
-	public int getProductId() {
-		return productId;
-	}
-
-
-	/**
-	 * Checks if the object is valid.
-	 *
-	 * @return True when valid, false when invalid
-	 */
-	@JsonIgnore
-	public boolean isValid() {
-		boolean  valid = false;
-		if (userId > 0 && productId > 0) {
-			valid = true;
-		}
-		return valid;
-	}
-
-	//TODO: Javadoc
+	@Embeddable
 	public static class FavoriteId implements Serializable {
-		private int productId;
-		private int userId;
+		@Column(name = "course_id")
+		private int courseId;
+		@Column(name = "user_id")
+		private long userId;
 
-		public FavoriteId() {
-			// Default constructor
-		}
+		public FavoriteId() {}
 
-		public FavoriteId(int productId, int userId) {
-			this.productId = productId;
+		public FavoriteId(int courseId, long userId) {
+			this.courseId = courseId;
 			this.userId = userId;
 		}
 
@@ -118,12 +98,12 @@ public final class Favorite {
 				return false;
 			}
 			FavoriteId that = (FavoriteId) o;
-			return productId == that.productId && userId == that.userId;
+			return courseId == that.courseId && userId == that.userId;
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(productId, userId);
+			return Objects.hash(courseId, userId);
 		}
 	}
 }

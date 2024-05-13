@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -35,6 +36,9 @@ public class User {
     private String twoFactorSecret;
 	@Column(name = "two_factor_enabled")
 	private boolean isTwoFactorEnabled;
+
+	@OneToMany(mappedBy = "user")
+	private Set<Favorite> favorites;
 
 	/**
 	 * Empty constructor needed for JPA.

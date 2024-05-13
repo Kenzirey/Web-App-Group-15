@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
  * An interface for SQL access to our database favorite table.
  */
 @Repository
-public interface FavoriteRepository extends CrudRepository<Favorite, Integer> {
+public interface FavoriteRepository extends CrudRepository<Favorite, Favorite.FavoriteId> {
+	Iterable<Favorite> findAllByIdUserId(long userId);
 }

@@ -3,8 +3,6 @@ package no.ntnu.database.services;
 import java.util.Optional;
 import no.ntnu.database.entities.Favorite;
 import no.ntnu.database.repositories.FavoriteRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +15,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class FavoriteService {
-
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(FavoriteService.class);
-
-
 	private final FavoriteRepository repository;
 
 	/**
@@ -34,76 +27,49 @@ public class FavoriteService {
 		this.repository = favoriteRepository;
 	}
 
-
 	/**
-	 * Adds a favorite course in the database.
+	 * Adds a favorite entry in the database.
 	 *
-	 * @param favorite The {@link Favorite} added to the database.
-	 * @return The {@link Favorite}'id inserted.
+	 * @param favorite The {@link Favorite} entry to be added to the database.
 	 */
-	public int add(Favorite favorite) {
-
-		if (!favorite.isValid()) {
-			LOGGER.warn("Favorite is invalid");
-		}
-
+	public void add(Favorite favorite) {
 		repository.save(favorite);
-		return favorite.getProductId();
 	}
 
 	/**
-	 * Returns all favorites courses in the database.
+	 * Returns all favorite entries for the specified {@link no.ntnu.database.entities.User User}.
 	 *
+	 * @param userId The ID of the user to get all favorite entries for
 	 * @return All courses in the database.
 	 */
-	public Iterable<Favorite> getAllFavourites() {
-		return repository.findAll();
+	public Iterable<Favorite> getAllFavourites(long userId) {
+		return repository.findAllByIdUserId(userId);
 	}
 
-
 	/**
-	 * Returns a favorite course from the database corresponding with the ID.
+	 * Returns a favorite entry from the database with the corresponding
+	 * {@link no.ntnu.database.entities.Course Course} and
+	 * {@link no.ntnu.database.entities.User User} ID.
 	 *
-	 * @param id The id of the course to return.
-	 * @return The course id, or an empty Optional if not found
+	 * @param courseId The course ID of the favorite entry to find
+	 * @param userId The user ID of the favorite entry to find
+	 * @return The favorite entry found, or an empty Optional if not found
 	 */
-	public Optional<Favorite> findByProductId(int id) {
-		return repository.findById(id);
+	public Optional<Favorite> findById(int courseId, long userId) {
+		return repository.findById(new Favorite.FavoriteId(courseId, userId));
 	}
 
-
 	/**
-	 * Updates the favorite course.
+	 * Deletes a favorite entry from the database.
 	 *
-	 * @param favorite The new course with a new course id
+	 * @param courseId The course ID of the favorite entry to delete
+	 * @param userId The user ID of the favorite entry to delete
+	 * @return Returns true if deleted. False if the entry doesn't exist in the database
 	 */
-	public void updateFavorite(int id, Favorite favorite) {
-		Optional<Favorite> existingFavorite = repository.findById(id);
-
-		if (existingFavorite.isEmpty()) {
-			throw new IllegalStateException(String.format("No favorite: %s", id));
-		} else {
-			favorite.setProductId(id);
-			repository.save(favorite);
-		}
-
-	}
-
-
-	/**
-	 *	Deletes a favorite course from the database.
-	 *
-	 * @return Returns true if deleted. False if the course doesn't exist in the database
-	 */
-	public boolean delete(int id) {
-		Optional<Favorite> favorite = repository.findById(id);
-		if (id < 0) {
-			LOGGER.warn("Invalid ID");
-		}
-
-		if (favorite.isPresent()) {
-			repository.deleteById(id);
-		}
+	public boolean delete(int courseId, long userId) {
+		Optional<Favorite> favorite = repository
+				.findById(new Favorite.FavoriteId(courseId, userId));
+		favorite.ifPresent(repository::delete);
 		return favorite.isPresent();
 	}
 

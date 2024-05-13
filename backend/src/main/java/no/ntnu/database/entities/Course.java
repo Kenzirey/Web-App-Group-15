@@ -50,7 +50,6 @@ public final class Course {
 			"This course teaches the basics of SQL.")
 	private String courseDescription;
 
-
 	@ManyToMany
 	@JoinTable(
 			name = "provider_course",
@@ -70,6 +69,9 @@ public final class Course {
 	)
 	private Set<Category> categories = new HashSet<>();
 
+	@OneToMany(mappedBy = "course")
+	private Set<Favorite> favorites;
+
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL,
 			orphanRemoval = true)
 	private Set<Image> images = new HashSet<>();
@@ -80,6 +82,7 @@ public final class Course {
 	 * Empty constructor for JPA requirement.
 	 */
 	public Course() {
+		// Empty constructor for JPA requirement.
 	}
 
 	/**
