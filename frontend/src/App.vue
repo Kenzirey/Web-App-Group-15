@@ -3,12 +3,12 @@
     <!--The header is the v-app-bar from the toolbar-->
     <TopToolbar class="toolbar" :lastGlobalClick="lastClick" />
 
-    <body class="body-content">
+    
       <main class="course-content">
         <!-- The main content of the page, replaced based on the current route -->
         <router-view id="content"></router-view>
       </main>
-    </body>
+
     <!--Footer component-->
     <Footer></Footer>
   </v-app>
@@ -49,11 +49,8 @@ export default {
 }
 
 @media (max-width: 350px) {
-  .body-content {
+  .course-content {
     margin: 59px auto 0 auto;
-  }
-
-  body {
     font-size: 16px;
     line-height: 1.4;
     max-width: none !important;
@@ -71,7 +68,7 @@ export default {
   /* Inspector complained about duplicate ID of "app" due to v-app inherently having an id named app
   But noticed a bug on favorites and account page if I didn't target both
   That is where app + courseApp comes from. */
-  .body-content {
+  .course-content {
     /* top right bottom left */
     margin: 80px auto 0 auto;
     text-align: center;

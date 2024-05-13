@@ -1,11 +1,13 @@
 <template>
   <!--Content wrapper-->
-  <main class="course-container">
+  <div class="course-container">
     <h2 class="course-title">{{ course.title }}</h2>
-    <div class="session-date"><span class="key">Course Session:</span> <span class="value">{{ course.sessionDate
-        }}</span></div>
         <!-- Info Container for all course details -->
         <section class="info-container">
+          <div class="info-item">
+            <span class="key">Course Session:</span>
+            <span class="value">{{ course.sessionDate }}</span>
+          </div>
           <div class="info-item">
             <span class="key">Difficulty Level:</span>
             <span class="value">{{ course.level }}</span>
@@ -42,11 +44,12 @@
         </div>
         <figure class="course-image">
           <img :src=course.image alt={{course.imageText}}>
+          <figcaption>{{ course.imageText }}</figcaption>
         </figure>
-        <section class="course-description">
+        <p class="course-description">
           Course description goes here
-        </section>
-    </main>
+        </p>
+    </div>
 </template>
 
 
@@ -120,17 +123,26 @@ export default {
 }
 
 /* Adjustments specifically for mobile devices */
-@media screen and (max-width: 479px) {
+@media screen and (max-width: 600px) {
   .course-title {
     font-size: 1.5em;
   }
 
   .info-item {
-    flex-direction: row; // Ensure key and value are stacked for clarity
+    flex-direction: row;
   }
 
   .course-image img {
     max-width: 80%;
+  }
+
+  /* For readability on mobile, as it would be too close to the edges otherwise. */
+  .course-container {
+    margin: 15px 10px 15px 10px;
+  }
+
+  .info-buttons .v-btn {
+    margin: 2px 4px;
   }
 }
 
@@ -140,32 +152,33 @@ export default {
     align-items: center;
     max-width: 80%;
     margin: 0 auto;
-    flex-wrap: wrap;
-  }
-
-.info-buttons {
-    display: flex;
-    align-items: center;
-    max-width: 80%;
+    margin-top: 10px;
     flex-wrap: wrap;
   }
 
 .course-title {
   text-align: center;
   font-size: 1.7em;
+  margin-bottom: 10px;
 }
 
 .info-container {
   display: flex;
   flex-direction: column;
+  align-items: flex-start; //Left align text for readability. (Dyslexia)
+  justify-content: center;
+  max-width: 450px;
+  margin: 0 auto;
 }
 
 .info-item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: 5px 5px 5px 5px;
+  justify-content: flex-start;
+  margin-bottom: 5px;
+  text-align: left;
 }
+
 
 .key,
 .value {
@@ -174,7 +187,9 @@ export default {
 
 .key {
   font-weight: bold;
+  white-space: nowrap;
 }
+
 
 .v-btn {
   background-image: linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo)));
