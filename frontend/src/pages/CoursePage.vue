@@ -5,30 +5,30 @@
         <!-- Info Container for all course details -->
         <section class="info-container">
           <div class="info-item">
-            <span class="key">Course Session:</span>
+            <em class="key">Course Session:</em>
             <span class="value">{{ course.sessionDate }}</span>
           </div>
           <div class="info-item">
-            <span class="key">Difficulty Level:</span>
+            <em class="key">Difficulty Level:</em>
             <span class="value">{{ course.level }}</span>
           </div>
           <div class="info-item">
-            <span class="key">Course Size:</span>
+            <em class="key">Course Size:</em>
             <span class="value">{{ course.credits }}</span>
           </div>
           <div class="info-item">
-            <span class="key">Hours per week:</span>
+            <em class="key">Hours per week:</em>
             <span class="value">{{ course.hours }}</span>
           </div>
           <div class="info-item">
-            <span class="key">Related Certifications:</span>
+            <em class="key">Related Certifications:</em>
             <span class="value">{{ course.certification }}</span>
           </div>
           <!-- Provider and Cost -->
           <div v-for="(provider, index) in course.providers" :key="index" class="info-item">
-            <span class="key">Provider:</span>
+            <em class="key">Provider:</em>
             <span class="value">{{ provider.name }}</span>
-            <span class="key">Cost:</span>
+            <em class="key">Cost:</em>
             <span class="value">${{ provider.cost }}</span>
           </div>
         </section>
