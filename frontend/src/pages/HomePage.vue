@@ -40,6 +40,7 @@ export default {
           category: [{id: 1, name: "SQL"}, {id: 2, name: "Java"}, {id: 3, name: "JPA"}],
           sale: 0.1,
           image: '/images/AWS.png', // Directly reference images from the public/images folder for testing!
+          alt:'Amazon Web Service Image',
           id: 1
         }, {
           name: 'Advanced SQL',
@@ -47,6 +48,7 @@ export default {
           category: [{id: 1, name: "SQL"}, {id: 2, name: "Java"}, {id: 4, name: "JDBC"}],
           sale: 0.3,
           image: '/images/machine-learning.jpg',
+          alt:'Machine-Learning',
           id: 2
         }, {
           name: 'SQL Basics',
@@ -54,6 +56,7 @@ export default {
           category: [{id: 1, name: "SQL"}],
           sale: 0,
           image: '/images/SQL-image.jpg',
+          alt:'SQL Basics Image',
           id: 3
         }
       ]
