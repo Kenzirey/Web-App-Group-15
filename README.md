@@ -1,23 +1,27 @@
+Disclaimer in this project, Chatgpt was used for help for ideas on how to solve things though code was never purely used copy-pasted as is, 
+but some code is adapted from it,
+and Github Copilot was used to auto-finish documentation based on previously written documentation by the human.
+
 # Instructions for running the backend application
 The backend part can be found via a directory named "backend".
 1. An environmental file called "application.properties" is required to run CourseApplication (SpringApplication run class).
-It should be placed in the resources folder. MySQL needs to be installed and set up on the computer being used to run the backend application.
+It should be placed in the "resources" folder. MySQL needs to be installed and set up on the computer being used to run the backend application.
 The required information for application.properties:
-1. spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-2. spring.datasource.username=username
+2. spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver 
+3. spring.datasource.username=username
     <p>Note, after username=, you need to replace username with your own MySQL username.</p>
-3. spring.datasource.password=password \n
+4. spring.datasource.password=password
     <p>Note, after password=, you need to replace password with your own MySQL password.</p>
-4. spring.jpa.generate-ddl=true
-5. spring.datasource.url=jdbc:mysql://localhost:3306/DatabaseName
+5. spring.jpa.generate-ddl=true
+6. spring.datasource.url=jdbc:mysql://localhost:3306/DatabaseName
      <p>Note, you need to replace the port 3306 (or keep) and DatabaseName
        to match your own localhost port and the name of your database. </p>
-6. spring.jpa.hibernate.ddl-auto=update
-7. exchange-rates.api-key=ca_live_dRut7mcwQz60d4Om7n1ei550LoECjIgmr6UIoJHY
+7. spring.jpa.hibernate.ddl-auto=update
+8. exchange-rates.api-key=ca_live_dRut7mcwQz60d4Om7n1ei550LoECjIgmr6UIoJHY
    <p>The exchange rate's api is not a security concern, so we will just place it here. </p>
-8. server.port=8080
+9. server.port=8080
    <p>Replace the 8080 with the localhost port you wish to use.</p>
-9.  jwt_secret_key=Jonas,WhatWeDoHere?
+10. jwt_secret_key=Jonas,WhatWeDoHere?
     <p>As the jwt secret key is a security concern, this will be uploaded in Inspera, or whatever we decide upon later. This line will be edited./p>
 
 

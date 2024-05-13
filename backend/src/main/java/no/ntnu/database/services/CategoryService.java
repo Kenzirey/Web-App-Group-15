@@ -1,7 +1,7 @@
 package no.ntnu.database.services;
 
 import java.util.Optional;
-import no.ntnu.database.entities.Category;
+import no.ntnu.database.model.Category;
 import no.ntnu.database.repositories.CategoryRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

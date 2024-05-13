@@ -1,7 +1,7 @@
 package no.ntnu.database.services;
 
 import java.util.Optional;
-import no.ntnu.database.entities.Favorite;
+import no.ntnu.database.model.Favorite;
 import no.ntnu.database.repositories.FavoriteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

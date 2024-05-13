@@ -1,4 +1,4 @@
-package no.ntnu.database.entities;
+package no.ntnu.database.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;

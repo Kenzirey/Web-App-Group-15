@@ -4,8 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import no.ntnu.database.entities.Role;
-import no.ntnu.database.entities.User;
+import no.ntnu.database.model.Role;
+import no.ntnu.database.model.User;
 import no.ntnu.database.repositories.RoleRepository;
 import no.ntnu.database.repositories.UserRepository;
 import no.ntnu.dto.UserRegistrationDto;
@@ -86,7 +86,6 @@ public class UserService {
      * @param updatedUser the updated {@link User}.
      *
      * @return the updated {@link User}.
-     * TODO: Document excxeption?
      */
     public User updateUser(Long id, User updatedUser) {
         return userRepository.findById(id)

@@ -1,7 +1,7 @@
 package no.ntnu.database.services;
 
 import java.util.Optional;
-import no.ntnu.database.entities.CourseProvider;
+import no.ntnu.database.model.CourseProvider;
 import no.ntnu.database.repositories.CourseProviderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

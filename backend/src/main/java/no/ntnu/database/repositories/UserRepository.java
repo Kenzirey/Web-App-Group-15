@@ -1,12 +1,12 @@
 package no.ntnu.database.repositories;
 
 import java.util.Optional;
-import no.ntnu.database.entities.User;
+import no.ntnu.database.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 /**
- * Repository for SQL-handling of User entities.
+ * Repository for SQL-handling of User model.
  */
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByUsername(String username);

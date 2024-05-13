@@ -2,7 +2,7 @@ package no.ntnu.database.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import no.ntnu.database.entities.Category;
+import no.ntnu.database.model.Category;
 import no.ntnu.database.services.CategoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

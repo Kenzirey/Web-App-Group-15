@@ -1,6 +1,6 @@
 package no.ntnu.database.repositories;
 
-import no.ntnu.database.entities.Favorite;
+import no.ntnu.database.model.Favorite;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

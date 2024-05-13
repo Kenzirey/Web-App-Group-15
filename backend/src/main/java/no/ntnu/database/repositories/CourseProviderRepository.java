@@ -1,6 +1,6 @@
 package no.ntnu.database.repositories;
 
-import no.ntnu.database.entities.CourseProvider;
+import no.ntnu.database.model.CourseProvider;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

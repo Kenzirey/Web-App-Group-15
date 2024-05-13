@@ -23,12 +23,13 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
- * TODO: Javadoc.
- * Code adapted from AppDev repository by Gist.
+ * Configures security settings for the application.
+ * Code adapted from app-dev repository by Gist.
  */
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfiguration {
+
     /**
      * A service providing our users from the database.
      */
@@ -51,6 +52,7 @@ public class SecurityConfiguration {
 
     /**
      * This method will be called automatically by the framework to find the authentication to use.
+     * Define security filter chain that applies to HTTP requests.
      *
      * @param http the {@link HttpSecurity} setting builder
      *
@@ -93,6 +95,14 @@ public class SecurityConfiguration {
     }
 
 
+    /**
+     * Provides the {@link AuthenticationManager} bean that manages authentication for users.
+     *
+     * @param config the {@link AuthenticationConfiguration} used to retrieve the manager.
+     *
+     * @return the {@link AuthenticationManager}.
+     * @throws Exception if unable to get the authentication manager.
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
             throws Exception {
@@ -109,6 +119,11 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configures Cross-Origin Resource Sharing (CORS) setting for the application.
+     *
+     * @return the {@link CorsConfigurationSource} that provides the CORS configuration.
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

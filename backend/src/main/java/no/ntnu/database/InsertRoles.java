@@ -1,6 +1,6 @@
 package no.ntnu.database;
 
-import no.ntnu.database.entities.Role;
+import no.ntnu.database.model.Role;
 import no.ntnu.database.repositories.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

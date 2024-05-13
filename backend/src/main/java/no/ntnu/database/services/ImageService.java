@@ -1,7 +1,7 @@
 package no.ntnu.database.services;
 
 import java.util.Optional;
-import no.ntnu.database.entities.Image;
+import no.ntnu.database.model.Image;
 import no.ntnu.database.repositories.ImageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

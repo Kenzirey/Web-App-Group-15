@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
-import no.ntnu.database.entities.CourseProvider;
+import no.ntnu.database.model.CourseProvider;
 import no.ntnu.database.services.CourseProviderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
