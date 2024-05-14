@@ -17,8 +17,6 @@ import SearchResults from '@/pages/SearchResults.vue';
 import LoginForm from '@/components/LoginForm.vue';
 
 
-
-
 //Add the routes / paths to the "pages" here.
 const routes = [
   { path: '/', component: HomePage, name: 'Home' },
@@ -30,7 +28,8 @@ const routes = [
   { path: '/admin', component: AdminDashboard, name: 'AdminDashboard', meta: { requiresAuth: true, roles: ['admin'] } },
   { path: '/admin/courses', component: AdminCourses, name: 'AdminCourses', meta: { requiresAuth: true, roles: ['admin'] } },
   { path: '/admin/users', component: AdminUsers, name: 'AdminUsers', meta: { requiresAuth: true, roles: ['admin'] } },
-  { path: '/forms', component: FormsPage, name: 'Forms' },
+  { path: '/forms/:courseId', component: FormsPage, name: 'Forms', props: true },
+  { path: '/forms', component: FormsPage, name: 'FormsNoCourse' },
   { path: '/search', component: SearchResults, name: 'SearchResults'},
   { path: '/login', component: LoginForm, name: 'Login', meta: { requiresAuth: false } },
   { path: '/submit', component: SubmitPage, name: 'Submit' }

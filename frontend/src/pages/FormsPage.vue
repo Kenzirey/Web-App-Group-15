@@ -1,82 +1,84 @@
 <!-- src/pages/FormsPage.vue -->
 
 <template>
-  <form class="formBox">
+  <v-form v-model="valid" class="formBox" ref="form">
     <fieldset class="fieldBox">
       <h1 class="formSections">Personal information</h1>
 
-      <v-form v-model="valid">
-        <v-container>
-          <v-row>
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="firstName"
-                :rules="nameRules"
-                label="First name"
-                required
-              ></v-text-field>
-            </v-col>
+      <!-- First name, Last name, Email, Phone number, Gender -->
 
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="lastName"
-                :rules="nameRules"
-                label="Last name"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-form>
+      <v-container>
+        <v-row>
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="firstName"
+              :rules="InputRules"
+              label="First name"
+              required
+            ></v-text-field>
+          </v-col>
 
-      <!-- Email, Phone number -->
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="lastName"
+              :rules="InputRules"
+              label="Last name"
+              required
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-container>
 
-      <v-form v-model="valid">
-        <v-container>
-          <v-row>
-            <v-col cols="12" md="15">
-              <v-text-field
-                v-model="email"
-                :rules="emailRules"
-                label="E-mail"
-                required
-              ></v-text-field>
-            </v-col>
+      <v-container>
+        <v-row>
+          <v-col cols="12" md="15">
+            <v-text-field
+              v-model="email"
+              :rules="emailRules"
+              label="E-mail"
+              required
+            ></v-text-field>
+          </v-col>
 
-            <v-col cols="12" md="15">
-              <v-text-field
-                v-model.number="age"
-                :counter="8"
-                label="Phone number"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-form>
+          <v-col cols="12" md="15">
+            <v-text-field
+              v-model="phoneNumber"
+              @keypress="filter(event)"
+              :counter="8"
+              :rules="InputRules"
+              maxlength="8"
+              label="Phone number"
+              required
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-container>
 
       <v-col cols="12" md="15">
         <v-select
           v-model="selectGender"
           :items="genders"
+          :rules="[(v) => !!v || 'Please select a gender']"
           label="Gender:"
           required
+          placeholder="Select gender"
         ></v-select>
       </v-col>
 
       <v-container>
         <v-row justify="start">
-          <v-date-picker
+          <v-date-picker 
             title="Select birth date"
             show-adjacent-months
-            color="primary"
-            width="500"
+            width="500px"
+            color="gradiantTwo"
           ></v-date-picker>
         </v-row>
       </v-container>
+
     </fieldset>
 
-    <!-- Address og by-->
+    <!-- Address, city postcode, country-->
 
     <fieldset class="fieldBox">
       <h1 class="formSections">Address</h1>
@@ -84,49 +86,51 @@
       <v-col cols="12" md="15">
         <v-text-field
           v-model="address"
-          :counter="10"
           label="Address"
+          :rules="InputRules"
           hide-details
           required
         ></v-text-field>
       </v-col>
 
       <v-col cols="12" md="4"> </v-col>
+      <v-container>
+        <v-row>
+          <v-col cols="15" md="6">
+            <v-text-field
+              v-model="cityName"
+              label="City"
+              :rules="InputRules"
+              required
+            ></v-text-field>
+          </v-col>
 
-      <v-row>
-        <v-col cols="15" md="6">
-          <v-text-field
-            v-model="cityName"
-            :counter="10"
-            label="City"
-            required
-          ></v-text-field>
-        </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="postCode"
+              @keypress="filter(event)"
+              :rules="InputRules"
+              label="Postcode"
+              required
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-container>
 
-        <v-col cols="12" md="6">
-          <v-text-field
-            v-model="postCode"
-            :counter="10"
-            label="Postcode"
-            required
-          ></v-text-field>
-        </v-col>
+      <v-col cols="12" md="4"> </v-col>
 
-        <v-col cols="12" md="4"> </v-col>
-      </v-row>
-
-      <!-- TODO legg til land der brukeren bor-->
-      <v-select
-        class="selectFormat"
-        v-model="selectCountry"
-        :items="Country"
-        label="Country"
-        required
-      ></v-select>
+      <v-col cols="12" md="15">
+        <v-text-field
+          v-model="country"
+          label="Country"
+          :rules="InputRules"
+          hide-details
+          required
+        ></v-text-field>
+      </v-col>
     </fieldset>
 
     <!-- Application Details -->
-    <!--Temporary name finner på noe senere enn Application Details-->
     <fieldset class="fieldBox">
       <h3 class="formSections">Application Details</h3>
       <p class="labelParagraph">
@@ -137,6 +141,7 @@
         <v-text-field
           v-model="courseName"
           label="Course Name"
+          :rules="InputRules"
           required
         ></v-text-field>
       </v-col>
@@ -144,67 +149,43 @@
       <v-col cols="12" md="15">
         <v-text-field
           v-model="university"
-          label="University:"
-          required
-        ></v-text-field>
-      </v-col>
-
-      <v-col cols="12" md="15">
-        <v-text-field
-          v-model="courseProivder"
-          label="Course provider:"
+          label="University"
+          :rules="InputRules"
           required
         ></v-text-field>
       </v-col>
     </fieldset>
 
+    <!-- Additional information -->
     <fieldset class="fieldBox">
       <h4 class="formSections">Additional information</h4>
 
       <v-textarea
         v-model="additionalInfo"
-        placeholder="If there are any more additional information the schools should know write here"
+        placeholder="If there is any more additional information the school should know, please write here"
       ></v-textarea>
     </fieldset>
 
-    <!--TODO: Action-->
-    <v-btn text="submit" type="submit" href="/submit" />
-  </form>
-
-  <!-- Vue card med generel info om course, knapp går til forms der brukeren kan fylle ut info-->
-  <v-card title="SQL for beginners" variant="outlined">
-    <v-card-text>
-      <!-- Fyll in  text her med info om course-->
-
-      <div class="info-item">
-        <span class="key">Course Providers:</span>
-        <span class="value">NTNU</span>
-      </div>
-      <div class="info-item">
-        <span class="key">Difficulty Level:</span>
-        <span class="value">Beginner</span>
-      </div>
-      <div class="info-item">
-        <span class="key">Course Size:</span>
-        <span class="value">ECTs Credits</span>
-      </div>
-    </v-card-text>
-
-    <v-card-actions>
-      <v-btn text="Apply to course" type="apply" href="/forms"></v-btn>
-    </v-card-actions>
-  </v-card>
+    <v-btn text="submit" type="submit" @click.prevent="validate" class="mr-3"
+      >Submit</v-btn
+    >
+    <v-btn @click="clearForm">Clear</v-btn>
+  </v-form>
 </template>
 
 <style lang="scss" scoped>
 .formBox {
   max-width: 1049px;
   margin: auto;
-  background: rgb(var(--v-theme-primary));
+  background: linear-gradient(
+    to right,
+    rgb(var(--v-theme-gradiantOne)),
+    rgb(var(--v-theme-gradiantTwo))
+  );
   padding: 40px;
-  border-radius: 4px;
-  border-style: solid;
+
 }
+
 
 .fieldBox {
   background: white;
@@ -238,38 +219,18 @@
 }
 </style>
 
+
 <script>
 export default {
+  props: ["courseId"],
   data() {
     return {
+      // Data properties for form fields
+      course: null,
       firstName: "",
       lastName: "",
-      nameRules: [
-        (value) => {
-          if (value) return true;
-
-          return "Name is required.";
-        },
-      ],
-
-      emailRules: [
-        (value) => {
-          if (value) return true;
-
-          return "E-mail is requred.";
-        },
-        (value) => {
-          if (/.+@.+\..+/.test(value)) return true;
-
-          return "E-mail must be valid.";
-        },
-      ],
-
       email: "",
       phoneNumber: "",
-      selectGender: "Select gender",
-      selectCountry: "Select country",
-
       genders: [
         "Male",
         "Female",
@@ -278,18 +239,60 @@ export default {
         "Prefer not to say",
       ],
 
-      highSchoolAddress: "",
-      dateGraduated: "",
+      address: "",
       cityName: "",
       postCode: "",
-
+      country: "",
       courseName: "",
       university: "",
-      courseProivder: "",
-      courseId: "",
-
       additionalInfo: "",
+
+      // Validation rules for form fields
+      InputRules: [
+        (value) => {
+          if (value) return true;
+
+          return "Input is required.";
+        },
+      ],
+      emailRules: [
+        (value) => !!value || "E-mail is required.",
+        (value) => /.+@.+\..+/.test(value) || "E-mail must be valid. example: john@something.com",
+      ],
     };
+  },
+  methods: {
+    filter: function (evt) {
+      evt = evt ? evt : window.event;
+      let expect = evt.target.value.toString() + evt.key.toString();
+
+      if (!/^[-+]?[0-9]*\.?[0-9]*$/.test(expect)) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
+    clearForm() {
+      this.firstName = "";
+      this.lastName = "";
+      this.email = "";
+      this.phoneNumber = "";
+      this.selectGender = "";
+      this.address = "";
+      this.cityName = "";
+      this.postCode = "";
+      this.country = "";
+      this.courseName = "";
+      this.university = "";
+      this.additionalInfo = "";
+    },
+    async validate() {
+      const { valid } = await this.$refs.form.validate();
+
+      if (valid) {
+        this.$router.push("/submit");
+      }
+    },
   },
 };
 </script>
