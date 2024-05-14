@@ -7,6 +7,7 @@ import no.ntnu.database.entities.User;
 import no.ntnu.database.repositories.UserRepository;
 import no.ntnu.database.services.CourseService;
 import no.ntnu.database.services.UserService;
+import no.ntnu.dto.UserUpdateDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -163,8 +164,8 @@ public class AdminController {
 	* @return The ResponseEntity containing the updated user object.
 	*/
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-        User updatedUser = userService.updateUser(id, user);
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserUpdateDto userUpdateDto) {
+        User updatedUser = userService.updateUser(id, userUpdateDto);
         return ResponseEntity.ok(updatedUser);
     }
 
