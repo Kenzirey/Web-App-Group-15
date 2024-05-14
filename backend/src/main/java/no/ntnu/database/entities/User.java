@@ -101,7 +101,7 @@ public class User {
         return twoFactorSecret;
     }
 
-    public void setTwoFactorSecret(String twoFactorSecret) {
+	public void setTwoFactorSecret(String twoFactorSecret) {
         this.twoFactorSecret = twoFactorSecret;
     }
 
