@@ -2,12 +2,10 @@ package no.ntnu.dto;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-import no.ntnu.database.entities.Role;
-
-
+import no.ntnu.database.model.Role;
 
 /**
- * Data Transfer Object for user profile information.
+ * Data Transfer Object for the collection of user profile information.
  */
 public class UserProfileDto {
 
@@ -16,7 +14,16 @@ public class UserProfileDto {
     private boolean isTwoFactorEnabled;
     private Long id;
 
-    public UserProfileDto(Long id, String username, Set<Role> roles, boolean isTwoFactorEnabled) {
+    /**
+     * Constructs a new user profile data transfer object with the specified details.
+     *
+     * @param id                    The unique id of the user.
+     * @param username              The name of the user.
+     * @param roles                 The roles assigned to the user.
+     * @param isTwoFactorEnabled    Boolean of whether two factor is enabled.
+     */
+    public UserProfileDto(Long id, String username,
+                          Set<Role> roles, boolean isTwoFactorEnabled) {
         this.id = id;
         this.username = username;
         this.roles = roles.stream().map(Role::getName).collect(Collectors.toSet());

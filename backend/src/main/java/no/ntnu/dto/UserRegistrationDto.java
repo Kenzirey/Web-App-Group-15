@@ -1,7 +1,9 @@
 package no.ntnu.dto;
 
 
-
+/**
+ * Represents the data transfer object (DTO) for user registration.
+ */
 public class UserRegistrationDto {
     private String name;
     private String email;
@@ -10,11 +12,25 @@ public class UserRegistrationDto {
     private boolean twoFactorEnabled;
 
 
+    /**
+     * Default no-argument constructor.
+     */
     public UserRegistrationDto() {
 
     }
 
-    public UserRegistrationDto(String name, String email, String password, String role, boolean twoFactorEnabled) {
+    /**
+     * Constructs a DTO of user registration with specified details.
+     *
+     * @param name              The name of the user.
+     * @param email             The email address of the user.
+     * @param password          The password of the user.
+     * @param role              The user's role.
+     * @param twoFactorEnabled  Boolean value whether two factor is enabled.
+     */
+    public UserRegistrationDto(String name, String email,
+                               String password, String role,
+                               boolean twoFactorEnabled) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -22,7 +38,7 @@ public class UserRegistrationDto {
         this.twoFactorEnabled = twoFactorEnabled;
     }
 
-    public String GetName() {
+    public String getName() {
         return name;
     }
 

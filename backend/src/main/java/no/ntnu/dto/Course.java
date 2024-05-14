@@ -1,6 +1,8 @@
 package no.ntnu.dto;
 
-//TODO: Javadoc
+/**
+ * Represents a course entity (model) for tracking which admin created it.
+ */
 public class Course {
 	private String name;
 	private String description;
@@ -9,7 +11,13 @@ public class Course {
 	public Course() {
 	}
 
-	//TODO: Javadoc
+	/**
+	 * Constructs a course with the name of the admin.
+	 *
+	 * @param name 			the name of the course.
+	 * @param description	description of the course.
+	 * @param createdBy		the unique id of the admin who created the course.
+	 */
 	public Course(String name, String description, int createdBy) {
 		this.name = name;
 		this.description = description;
