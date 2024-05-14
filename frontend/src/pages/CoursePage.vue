@@ -1,34 +1,34 @@
 <template>
 	<!--Content wrapper-->
-	<main class="course-container" v-if="course != null">
+	<div class="course-container" v-if="course != null">
 		<h2 class="course-title">{{ course.courseName }}</h2>
 		<!-- Info Container for all course details -->
 		<section class="info-container">
-			<div class="session-date">
-				<span class="key">Course Session:</span>
+			<div class="info-item">
+				<em class="key">Course Session:</em>
 				<span class="value">{{ course.startDate }} - {{ course.endDate }} (TODO: Format this)</span>
 			</div>
 			<div class="info-item">
-				<span class="key">Difficulty Level:</span>
+				<em class="key">Difficulty Level:</em>
 				<span class="value">{{ course.difficultyLevel }}</span>
 			</div>
 			<div class="info-item">
-				<span class="key">Course Size:</span>
+				<em class="key">Course Size:</em>
 				<span class="value">{{ course.courseCredits }}</span>
 			</div>
 			<div class="info-item">
-				<span class="key">Hours per week:</span>
+				<em class="key">Hours per week:</em>
 				<span class="value">{{ course.hoursPerWeek }}</span>
 			</div>
 			<div class="info-item">
-				<span class="key">Related Certifications:</span>
+				<em class="key">Related Certifications:</em>
 				<span class="value">{{ course.relatedCertification }}</span>
 			</div>
 			<!-- Provider and Cost -->
 			<div v-for="(provider, index) in course.courseProvider" :key="index" class="info-item">
-				<span class="key">Provider:</span>
+				<em class="key">Provider:</em>
 				<span class="value">{{ provider.providerName }}</span>
-				<span class="key">Cost:</span>
+				<em class="key">Cost:</em>
 				<span class="value">$N/A (We don't have this in our database yet)</span>
 			</div>
 		</section>
@@ -44,7 +44,8 @@
 		</div>
 		<figure>
 			<img class="course-image" v-if="course.images.length > 0" :src=course.images[0]
-				alt="TODO: We don't have this in out database yet">
+				alt="TODO: We don't have this in our database yet">
+			<figcaption v-if="course.images.length > 0">TODO: We don't have this in our database yet</figcaption>
 			<div id="no-image" class="course-image" v-if="course.images.length == 0">
 				<h1>(No image)</h1>
 			</div>
@@ -52,8 +53,10 @@
 		<p class="course-description">
 			{{ course.courseDescription }}
 		</p>
-	</main>
-	<div id="no-course" v-if="!course"><h1>(404 - Course not found)</h1></div>
+	</div>
+	<div id="no-course" v-if="!course">
+		<h1>(404 - Course not found)</h1>
+	</div>
 </template>
 
 
@@ -166,7 +169,15 @@ export default {
 
 	#no-image {
 		width: 80%;
-		height: calc(80% / 16 * 9);
+	}
+
+	/* For readability on mobile, as it would be too close to the edges otherwise. */
+	.course-container {
+		margin: 15px 10px 15px 10px;
+	}
+
+	.info-buttons .v-btn {
+		margin: 2px 4px;
 	}
 }
 
@@ -176,32 +187,33 @@ export default {
 	align-items: center;
 	max-width: 80%;
 	margin: 0 auto;
-	flex-wrap: wrap;
-}
-
-.info-buttons {
-	display: flex;
-	align-items: center;
-	max-width: 80%;
+	margin-top: 10px;
 	flex-wrap: wrap;
 }
 
 .course-title {
 	text-align: center;
 	font-size: 1.7em;
+	margin-bottom: 10px;
 }
 
 .info-container {
 	display: flex;
 	flex-direction: column;
+	align-items: flex-start; //Left align text for readability. (Dyslexia)
+	justify-content: center;
+	max-width: 450px;
+	margin: 0 auto;
 }
 
 .info-item {
 	display: flex;
 	align-items: center;
-	justify-content: center;
-	margin: 5px 5px 5px 5px;
+	justify-content: flex-start;
+	margin-bottom: 5px;
+	text-align: left;
 }
+
 
 .key,
 .value {
@@ -210,7 +222,9 @@ export default {
 
 .key {
 	font-weight: bold;
+	white-space: nowrap;
 }
+
 
 .v-btn {
 	background-image: linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo)));
