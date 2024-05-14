@@ -1,10 +1,10 @@
-package no.ntnu.database.controllers;
+package no.ntnu.database.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.Optional;
 import no.ntnu.database.model.Course;
-import no.ntnu.database.services.CourseService;
+import no.ntnu.database.service.CourseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

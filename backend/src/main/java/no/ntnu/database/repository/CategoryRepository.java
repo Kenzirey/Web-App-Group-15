@@ -1,4 +1,4 @@
-package no.ntnu.database.repositories;
+package no.ntnu.database.repository;
 
 import no.ntnu.database.model.Category;
 import org.springframework.data.jpa.repository.Query;

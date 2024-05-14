@@ -1,8 +1,8 @@
-package no.ntnu.database.services;
+package no.ntnu.database.service;
 
 import java.util.Optional;
 import no.ntnu.database.model.User;
-import no.ntnu.database.repositories.UserRepository;
+import no.ntnu.database.repository.UserRepository;
 import no.ntnu.security.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

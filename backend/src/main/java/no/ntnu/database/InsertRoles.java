@@ -1,7 +1,7 @@
 package no.ntnu.database;
 
 import no.ntnu.database.model.Role;
-import no.ntnu.database.repositories.RoleRepository;
+import no.ntnu.database.repository.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

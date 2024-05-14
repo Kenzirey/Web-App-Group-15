@@ -1,8 +1,8 @@
-package no.ntnu.database.controllers;
+package no.ntnu.database.controller;
 
 import java.util.Optional;
-import no.ntnu.database.model.Image;
-import no.ntnu.database.services.ImageService;
+import no.ntnu.database.model.Favorite;
+import no.ntnu.database.service.FavoriteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,72 +20,72 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 /**
- * REST API controller for Image collection.
+ * REST API controller for favorite collection.
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/images")
-public class ImageController {
-	//TODO: Tony, Swagger.
+@RequestMapping("/favorites")
+public class FavoriteController {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(FavoriteController.class);
 
-	private final ImageService imageService;
+	private final FavoriteService favoriteService;
 
 
 	/**
-	 * Makes the image controller.
+	 * Makes the favorite controller.
+	 *
+	 * @param favoriteService The service class for communication
 	 */
-	public ImageController(@Autowired ImageService imageService) {
-		this.imageService = imageService;
+	public FavoriteController(@Autowired FavoriteService favoriteService) {
+		this.favoriteService = favoriteService;
 	}
 
+
 	/**
-	 * Returns all images in the database.
+	 * Returns all favorite courses in the database.
 	 *
-	 * @return All images in the database.
+	 * @return All courses in the database.
 	 */
 	@GetMapping
-	public Iterable<Image> getAllImages() {
-		LOGGER.info("Getting all images");
-		return imageService.getAllImages();
+	public Iterable<Favorite> getAllFavorites() {
+		LOGGER.info("Getting all favorites");
+		return favoriteService.getAllFavourites();
 	}
 
-
 	/**
-	 * Endpoint to search for a specific image.
+	 * Endpoint to search for a specific favorite course.
 	 *
-	 * @param id The id of the image to return.
-	 * @return {@link ResponseEntity} object containing either:
+	 * @param id 	The id of the course to return.
+	 * @return 		{@link ResponseEntity} object containing either:
 	 *     <ul>
-	 *         <li>A corresponding image that matches id, returns status 200.</li>
+	 *         <li>A corresponding course that matches id, returns status 200.</li>
 	 *         <li>If no match is found, returns status 404.</li>
 	 *     </ul>
 	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<Image> getImage(@PathVariable Integer id) {
-		ResponseEntity<Image> response;
-		Optional<Image> image = imageService.findById(id);
-		if (image.isPresent()) {
-			response = ResponseEntity.ok(image.get());
+	public ResponseEntity<Favorite> getFavorite(@PathVariable int id) {
+		ResponseEntity<Favorite> response;
+		Optional<Favorite> favorite = favoriteService.findByProductId(id);
+		if (favorite.isPresent()) {
+			response = ResponseEntity.ok(favorite.get());
 		} else {
 			response = ResponseEntity.notFound().build();
 		}
 		return response;
 	}
 
-
 	/**
-	 * Adds an image to the collection.
+	 * Adds a favorite course to the collection.
 	 *
-	 * @param image The image added
+	 * @param favorite The favorite added
 	 * @return 201 CREATED status on success, 400 Bad request on error
 	 */
 	@PostMapping
-	public ResponseEntity<String> add(@RequestBody Image image) {
+	public ResponseEntity<String> add(@RequestBody Favorite favorite) {
 		ResponseEntity<String> response;
 		try {
-			int id = imageService.add(image);
+			int id = favoriteService.add(favorite);
 			response = new ResponseEntity<>(String.valueOf(id), HttpStatus.CREATED);
 		} catch (IllegalArgumentException ia) {
 			response = new ResponseEntity<>(ia.getMessage(), HttpStatus.BAD_REQUEST);
@@ -96,34 +96,35 @@ public class ImageController {
 
 
 	/**
-	 * Removes an image from the collection.
+	 * Removes a favorite course from the collection.
 	 *
-	 * @param id The id of image to be removed.
+	 * @param id The id of course to be removed.
 	 * @return 200 OK status on success, 404 NOT FOUND on error
 	 */
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable int id) {
+	public ResponseEntity<String> delete(@PathVariable Integer id) {
 		ResponseEntity<String> response;
-		if (imageService.deleteImage(id)) {
+		if (favoriteService.delete(id)) {
 			response = new ResponseEntity<>(HttpStatus.OK);
 		} else {
 			response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		return response;
+		return  response;
 	}
 
+
 	/**
-	 * Update image in the repository.
+	 * Update a favorite course in the repository.
 	 *
-	 * @param id    The id of the image to update.
-	 * @param image New image data to store.
+	 * @param id The id of the course  to update.
+	 * @param favorite New course data to store.
 	 * @return 200 OK status on success, 400 Bad request on error
 	 */
 	@PutMapping("/{id}")
-	public ResponseEntity<String> update(@PathVariable int id, @RequestBody Image image) {
+	public ResponseEntity<String> update(@PathVariable int id, @RequestBody Favorite favorite) {
 		ResponseEntity<String> response;
 		try {
-			imageService.update(id, image);
+			favoriteService.updateFavorite(id, favorite);
 			response = new ResponseEntity<>(HttpStatus.OK);
 		} catch (IllegalArgumentException ia) {
 			response = new ResponseEntity<>(ia.getMessage(), HttpStatus.BAD_REQUEST);
@@ -132,4 +133,6 @@ public class ImageController {
 	}
 
 
+
 }
+

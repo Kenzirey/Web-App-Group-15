@@ -1,8 +1,8 @@
-package no.ntnu.database.controllers;
+package no.ntnu.database.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import no.ntnu.database.services.UserService;
+import no.ntnu.database.service.UserService;
 import no.ntnu.dto.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

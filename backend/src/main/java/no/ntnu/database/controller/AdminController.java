@@ -1,4 +1,4 @@
-package no.ntnu.database.controllers;
+package no.ntnu.database.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import no.ntnu.database.model.Course;
 import no.ntnu.database.model.User;
-import no.ntnu.database.repositories.UserRepository;
-import no.ntnu.database.services.CourseService;
-import no.ntnu.database.services.UserService;
+import no.ntnu.database.repository.UserRepository;
+import no.ntnu.database.service.CourseService;
+import no.ntnu.database.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class AdminController {
 	private final UserRepository userRepository;
 
 	/**
-	 * Creates an admin controller via Autowired with services and repository.
+	 * Creates an admin controller via Autowired with service and repository.
 	 *
 	 * @param courseService 	The service for managing business logic of courses.
 	 * @param userRepository	The repository for handling database access to user data.

@@ -1,8 +1,8 @@
-package no.ntnu.database.services;
+package no.ntnu.database.service;
 
 import java.util.Optional;
 import no.ntnu.database.model.Course;
-import no.ntnu.database.repositories.CourseRepository;
+import no.ntnu.database.repository.CourseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

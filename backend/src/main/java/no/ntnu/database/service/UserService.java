@@ -1,4 +1,4 @@
-package no.ntnu.database.services;
+package no.ntnu.database.service;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Optional;
 import no.ntnu.database.model.Role;
 import no.ntnu.database.model.User;
-import no.ntnu.database.repositories.RoleRepository;
-import no.ntnu.database.repositories.UserRepository;
+import no.ntnu.database.repository.RoleRepository;
+import no.ntnu.database.repository.UserRepository;
 import no.ntnu.dto.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

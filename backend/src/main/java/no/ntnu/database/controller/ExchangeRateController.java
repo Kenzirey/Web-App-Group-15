@@ -1,4 +1,4 @@
-package no.ntnu.database.controllers;
+package no.ntnu.database.controller;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.Map;

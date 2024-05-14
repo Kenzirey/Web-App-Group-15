@@ -1,8 +1,8 @@
-package no.ntnu.database.services;
+package no.ntnu.database.service;
 
 import java.util.Optional;
 import no.ntnu.database.model.Favorite;
-import no.ntnu.database.repositories.FavoriteRepository;
+import no.ntnu.database.repository.FavoriteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
-package no.ntnu.database.services;
+package no.ntnu.database.service;
 
 import java.util.Optional;
 import no.ntnu.database.model.Image;
-import no.ntnu.database.repositories.ImageRepository;
+import no.ntnu.database.repository.ImageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

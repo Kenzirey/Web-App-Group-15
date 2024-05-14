@@ -1,10 +1,10 @@
-package no.ntnu.database.controllers;
+package no.ntnu.database.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.security.Principal;
-import no.ntnu.database.services.TwoFactorRequests;
+import no.ntnu.database.service.TwoFactorRequests;
 import no.ntnu.dto.TwoFactorDto;
 import no.ntnu.security.SecurityUtil;
 import org.slf4j.Logger;

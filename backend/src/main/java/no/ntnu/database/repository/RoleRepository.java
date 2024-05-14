@@ -1,4 +1,4 @@
-package no.ntnu.database.repositories;
+package no.ntnu.database.repository;
 
 import java.util.Optional;
 import no.ntnu.database.model.Role;

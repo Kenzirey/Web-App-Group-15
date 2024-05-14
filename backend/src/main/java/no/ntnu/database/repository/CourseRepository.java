@@ -1,4 +1,4 @@
-package no.ntnu.database.repositories;
+package no.ntnu.database.repository;
 
 import no.ntnu.database.model.Course;
 import org.springframework.data.jpa.repository.Query;
