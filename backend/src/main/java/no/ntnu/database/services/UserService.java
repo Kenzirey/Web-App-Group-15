@@ -4,11 +4,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import no.ntnu.database.entities.Role;
 import no.ntnu.database.entities.User;
 import no.ntnu.database.repositories.RoleRepository;
 import no.ntnu.database.repositories.UserRepository;
 import no.ntnu.dto.UserRegistrationDto;
+import no.ntnu.dto.UserUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -88,18 +90,32 @@ public class UserService {
      * @return the updated {@link User}.
      * TODO: Document excxeption?
      */
-    public User updateUser(Long id, User updatedUser) {
+    public User updateUser(Long id, UserUpdateDto updatedUserDto) {
         return userRepository.findById(id)
             .map(user -> {
-                user.setUsername(updatedUser.getUsername());
-                if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
-                    user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+                user.setId(id);
+                user.setUsername(updatedUserDto.getUsername());
+                if (updatedUserDto.getPassword() != null && !updatedUserDto.getPassword().isEmpty()) {
+                    user.setPassword(passwordEncoder.encode(updatedUserDto.getPassword()));
                 }
-                user.setActive(updatedUser.isActive());
-                user.setRoles(updatedUser.getRoles());
-                user.setTwoFactorEnabled(updatedUser.isTwoFactorEnabled());
-                user.setTwoFactorSecret(updatedUser.getTwoFactorSecret());
-                return userRepository.save(user);
+                user.setActive(updatedUserDto.isActive());
+                if (updatedUserDto.getTwoFactorSecret() != null) {
+                    user.setTwoFactorSecret(updatedUserDto.getTwoFactorSecret());
+                }
+                user.setTwoFactorEnabled(updatedUserDto.isTwoFactorEnabled());
+
+                if (updatedUserDto.getRoles() != null && !updatedUserDto.getRoles().isEmpty()) {
+                    Set<Role> roles = new HashSet<>();
+                    for (String roleName : updatedUserDto.getRoles()) {
+                        Role existingRole = roleRepository.findByName(roleName)
+                                .orElseThrow(() -> new RuntimeException("Role not found: " + roleName));
+                        roles.add(existingRole);
+                    }
+                    user.setRoles(roles);
+                }
+
+                User savedUser = userRepository.save(user);
+                return savedUser;
             })
             .orElseThrow(() -> new RuntimeException("User not found with id " + id));
     }
