@@ -22,7 +22,7 @@ import LoginForm from '@/components/LoginForm.vue';
 //Add the routes / paths to the "pages" here.
 const routes = [
   { path: '/', component: HomePage, name: 'Home' },
-  { path: '/course', component: CoursePage, name: 'Course' },
+  { path: '/course/:id', component: CoursePage, name: 'Course' },
   { path: '/contact', component: ContactPage, name: 'Contact'},
   { path: '/about', component: AboutPage, name: 'About' },
   { path: '/account', component: AccountPage, name: 'Account', meta: { requiresAuth: true } },

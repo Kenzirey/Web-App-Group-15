@@ -69,6 +69,7 @@ public final class Course {
 	)
 	private Set<Category> categories = new HashSet<>();
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "course")
 	private Set<Favorite> favorites;
 
@@ -281,6 +282,12 @@ public final class Course {
 		this.images = images;
 	}
 
+	public Set<Favorite> getFavorites() {
+		return favorites;
+	}
 
+	public void setFavorites(Set<Favorite> favorites) {
+		this.favorites = favorites;
+	}
 
 }

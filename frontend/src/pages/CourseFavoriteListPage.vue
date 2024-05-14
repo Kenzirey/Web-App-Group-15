@@ -2,7 +2,7 @@
 	<div class="flex-container">
 		<h1>Favorite Courses</h1>
 		<p>I pulled Tony's fire alarm again, this time on purpose</p>
-		<section class="favorite-items">
+		<section class="favorite-items" v-if="favoriteCourses.length != 0">
 			<div class="favorite-course-card" v-for="course in favoriteCourses" :key="course.courseId">
 				<v-card class="favorite-card-container">
 					<v-card-title class="card-title-container">
@@ -16,6 +16,9 @@
 					</v-card-text>
 				</v-card>
 			</div>
+		</section>
+		<section id="no-results" v-if="favoriteCourses.length == 0">
+			<h1>(No favorites)</h1>
 		</section>
 	</div>
 </template>
@@ -52,7 +55,7 @@ export default {
 				fetch(this.$backendUrl + "favorites/" + courseId, { method: "DELETE", headers: { Authorization: "Bearer " + this.jwt } })
 					.then(response => {
 						if (response.ok) {
-							const removedCourse = this.favoriteCourses.find(course => course.courseId = courseId);
+							const removedCourse = this.favoriteCourses.find(course => course.courseId == courseId);
 							if (removedCourse) {
 								this.favoriteCourses.splice(this.favoriteCourses.indexOf(removedCourse), 1);
 							}
@@ -66,6 +69,19 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+#no-results {
+	height: 60vh;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+
+	h1 {
+		color: rgb(var(--v-theme-weakText));
+		font-weight: lighter;
+	}
+}
+
 .card-title-container {
 	display: grid;
 	grid-template-columns: 1fr auto;
