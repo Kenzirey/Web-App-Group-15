@@ -78,7 +78,7 @@ public class SecurityConfiguration {
 								"/providers", "/providers/{id}", "/providers/search/{query}",
                                 "/favorites", "/favorites/{int}", "/favorites/{id}"
 						).permitAll()
-                        .requestMatchers("/admin/users/count/2fa").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/admin/users/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/")
                         .permitAll() // The default URL/is accessible to everyone
                         .anyRequest().authenticated()  // All other requests require authentication

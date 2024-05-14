@@ -26,9 +26,9 @@
               class="user-list-item"
             >
               <v-row align="center" justify="space-between" no-gutters>
-                <v-col cols="8">
+                <v-col cols="8" md="8" class="user-info-container">
                   <div class="user-info">
-                    <v-list-item-title>{{ user.username }}</v-list-item-title>
+                    <v-list-item-title>{{ user.username }} (ID: {{ user.id }})</v-list-item-title>
                     <v-list-item-subtitle
                       :class="{'text-green': user.twoFactorEnabled, 'text-red': !user.twoFactorEnabled}"
                     >
@@ -36,7 +36,7 @@
                     </v-list-item-subtitle>
                   </div>
                 </v-col>
-                <v-col cols="4" class="d-flex justify-end">
+                <v-col cols="4" md="4" class="d-flex justify-end user-actions-container">
                   <v-list-item-action class="user-actions">
                     <v-btn icon @click="$emit('edit-user', user)" color="orange">
                       <v-icon>mdi-pencil</v-icon>
@@ -54,7 +54,6 @@
     </v-row>
   </v-container>
 </template>
-
 
 <script>
 export default {
@@ -87,10 +86,20 @@ export default {
   margin: 20px auto;
 }
 
+.user-info-container {
+  display: flex;
+  align-items: center;
+}
+
 .user-list-item .user-info {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.user-actions-container {
+  display: flex;
+  align-items: center;
 }
 
 .user-list-item .user-actions {
@@ -113,4 +122,3 @@ export default {
   font-weight: bold;
 }
 </style>
-
