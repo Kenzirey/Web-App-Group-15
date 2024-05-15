@@ -71,7 +71,6 @@
             title="Select birth date"
             show-adjacent-months
             width="500px"
-            color="gradiantTwo"
           ></v-date-picker>
         </v-row>
       </v-container>
@@ -174,6 +173,24 @@
 </template>
 
 <style lang="scss" scoped>
+/* To get access to the date picker and override to allow gradient */
+::v-deep .v-date-picker-header{
+  background: linear-gradient(
+    to right,
+    rgb(var(--v-theme-gradiantOne)),
+    rgb(var(--v-theme-gradiantTwo))
+  ) !important;
+  color: white;
+}
+::v-deep .v-picker-title {
+  background: linear-gradient(
+    to right,
+    rgb(var(--v-theme-gradiantOne)),
+    rgb(var(--v-theme-gradiantTwo))
+  );
+  color: white;
+}
+
 .formBox {
   max-width: 1049px;
   margin: auto;
