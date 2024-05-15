@@ -1,7 +1,6 @@
 <template>
 	<div class="flex-container">
 		<h1>Favorite Courses</h1>
-		<p>I pulled Tony's fire alarm again, this time on purpose</p>
 		<section class="favorite-items" v-if="favoriteCourses.length != 0">
 			<div class="favorite-course-card" v-for="course in favoriteCourses" :key="course.courseId">
 				<v-card class="favorite-card-container">
