@@ -139,7 +139,7 @@
 
       <v-col cols="12" md="15">
         <v-text-field
-          v-model="courseName"
+          v-model="title"
           label="Course Name"
           :rules="InputRules"
           required
@@ -222,11 +222,10 @@
 
 <script>
 export default {
-  props: ["courseId"],
+  props: ["courseId", "title"],
   data() {
     return {
       // Data properties for form fields
-      course: null,
       firstName: "",
       lastName: "",
       email: "",
@@ -243,7 +242,7 @@ export default {
       cityName: "",
       postCode: "",
       country: "",
-      courseName: "",
+      title: this.title,
       university: "",
       additionalInfo: "",
 
@@ -282,17 +281,15 @@ export default {
       this.cityName = "";
       this.postCode = "";
       this.country = "";
-      this.courseName = "";
+      this.title = "";
       this.university = "";
       this.additionalInfo = "";
     },
     async validate() {
       const { valid } = await this.$refs.form.validate();
-
       if (valid) {
         this.$router.push("/submit");
       }
     },
-  },
-};
+  }};
 </script>

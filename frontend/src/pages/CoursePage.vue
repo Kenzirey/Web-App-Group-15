@@ -123,21 +123,15 @@ export default {
       console.log("Loaded Favorites: ", favorites); // Debugging output on load, remove before deploying
       return favorites;
     },
-    methods: {
-      orderCourse() {
-        // Navigate to the FormsPage and pass the course data
-        this.$router.push({
-          name: "Forms",
-          params: { courseId: this.course.id },
-        });
-      },
+    orderCourse() {
+      this.$router.push({
+        name: "Forms",
+        params: { courseId: this.course.id, title: this.course.title },
+      });
     },
-    created() {
-      console.log(
-        "Component Created, Favorites Loaded: ",
-        this.favoriteCourses
-      ); // Initial load check
-    },
+  },
+  created() {
+    console.log("Component Created, Favorites Loaded: ", this.favoriteCourses); // Initial load check
   },
 };
 </script>

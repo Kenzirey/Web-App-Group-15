@@ -28,7 +28,7 @@ const routes = [
   { path: '/admin', component: AdminDashboard, name: 'AdminDashboard', meta: { requiresAuth: true, roles: ['admin'] } },
   { path: '/admin/courses', component: AdminCourses, name: 'AdminCourses', meta: { requiresAuth: true, roles: ['admin'] } },
   { path: '/admin/users', component: AdminUsers, name: 'AdminUsers', meta: { requiresAuth: true, roles: ['admin'] } },
-  { path: '/forms/:courseId', component: FormsPage, name: 'Forms', props: true },
+  { path: '/forms/:courseId/:title', component: FormsPage, name: 'Forms', props: true },
   { path: '/forms', component: FormsPage, name: 'FormsNoCourse' },
   { path: '/search', component: SearchResults, name: 'SearchResults'},
   { path: '/login', component: LoginForm, name: 'Login', meta: { requiresAuth: false } },
