@@ -215,10 +215,19 @@ public class AdminController {
 	@Operation(summary = "Add user",
 			description = "Adds a new user to the database")
 	@ApiResponse(responseCode = "201", description = "User created")
+	@ApiResponse(responseCode = "404", description = "User not found")
 	@PostMapping("/users")
 	public ResponseEntity<User> addUser(@RequestBody User user) {
-		User savedUser = userService.saveUser(user);
-		return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+		ResponseEntity<User> response;
+		try {
+			User savedUser = userService.saveUser(user);
+			response = ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
+		} catch (IllegalStateException ise) {
+			LOGGER.warn(ise.getMessage());
+			response = ResponseEntity.notFound().build();
+		}
+		return response;
+
 	}
 
 	/**
@@ -232,13 +241,21 @@ public class AdminController {
 	@Operation(summary = "Update user",
 			description = "Updates an existing user")
 	@ApiResponse(responseCode = "200", description = "User updated")
+	@ApiResponse(responseCode = "404", description = "User not found")
 	@PutMapping("/users/{id}")
 	public ResponseEntity<User> updateUser(
 			@PathVariable Long id,
 			@RequestBody UserUpdateDto userUpdateDto
 	) {
-		User updatedUser = userService.updateUser(id, userUpdateDto);
-		return ResponseEntity.ok(updatedUser);
+		ResponseEntity<User> response;
+		try {
+			User updatedUser = userService.updateUser(id, userUpdateDto);
+			response = ResponseEntity.ok(updatedUser);
+		} catch (IllegalStateException ise) {
+			LOGGER.warn(ise.getMessage());
+			response = ResponseEntity.notFound().build();
+		}
+		return response;
 	}
 
 	/**
@@ -251,10 +268,18 @@ public class AdminController {
 	@Operation(summary = "Delete user",
 			description = "Deletes a user from the database")
 	@ApiResponse(responseCode = "204", description = "User deleted")
+	@ApiResponse(responseCode = "404", description = "User not found")
 	@DeleteMapping("/users/{id}")
 	public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-		userService.deleteUser(id);
-		return ResponseEntity.noContent().build();
+		ResponseEntity<Void> response;
+		try {
+			userService.deleteUser(id);
+			response = ResponseEntity.noContent().build();
+		} catch (IllegalStateException ise) {
+			LOGGER.warn(ise.getMessage());
+			response = ResponseEntity.notFound().build();
+		}
+		return response;
 	}
 
 	/**
@@ -282,18 +307,25 @@ public class AdminController {
 	 * @param isActive The new active status for the user.
 	 *
 	 * @return A {@link ResponseEntity} with code 200 on success,
-	 * 									or code 404 if not found.
+	 *     or code 404 if not found.
 	 */
 	@Operation(summary = "Toggle state of user",
 			description = "Toggle the current active state of a user")
 	@ApiResponse(responseCode = "200", description = "User status toggled")
-	//This is from user service class.
 	@ApiResponse(responseCode = "404", description = "User not found")
 	@PostMapping("/users/{id}/toggle-active")
 	public ResponseEntity<String> toggleUserActive(
 			@PathVariable Long id,
 			@RequestBody boolean isActive
 	) {
-		return userService.toggleUserActive(id, isActive);
+		ResponseEntity<String> response;
+		if (userService.toggleUserActive(id, isActive)) {
+			response = ResponseEntity.ok(
+					"User " + (isActive ? "activated" : "deactivated") + " successfully."
+			);
+		} else {
+			response = ResponseEntity.notFound().build();
+		}
+		return response;
 	}
 }

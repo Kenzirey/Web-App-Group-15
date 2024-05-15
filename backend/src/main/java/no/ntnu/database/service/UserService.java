@@ -147,18 +147,15 @@ public class UserService {
      * @param id the id of the {@link User} to toggle.
      * @param isActive the new active status of the {@link User}.
      *
-     * @return {@link ResponseEntity} with either code 200 for success,
-     *                                or code 404 if not found.
+     * @return True if the user exists, false if not
      */
-    public ResponseEntity<String> toggleUserActive(Long id, boolean isActive) {
-        return userRepository.findById(id)
-            .map(user -> {
-                user.setActive(isActive);
-                userRepository.save(user);
-                return ResponseEntity.ok(
-                        "User " + (isActive ? "activated" : "deactivated") + " successfully.");
-            })
-            .orElseGet(() -> ResponseEntity.notFound().build());
+    public boolean toggleUserActive(Long id, boolean isActive) {
+		Optional<User> userOptional = userRepository.findById(id);
+		userOptional.ifPresent(user -> {
+			user.setActive(isActive);
+			userRepository.save(user);
+		});
+		return userOptional.isPresent();
     }
 
     
