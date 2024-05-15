@@ -6,7 +6,7 @@
 		<section class="info-container">
 			<div class="info-item">
 				<em class="key">Course Session:</em>
-				<span class="value">{{ course.startDate }} - {{ course.endDate }} (TODO: Format this)</span>
+				<span class="value">{{ new Date(course.startDate).toLocaleDateString() }} - {{ new Date(course.endDate).toLocaleDateString() }}</span>
 			</div>
 			<div class="info-item">
 				<em class="key">Difficulty Level:</em>
@@ -31,13 +31,17 @@
 				<em class="key">Cost:</em>
 				<span class="value">$N/A (We don't have this in our database yet)</span>
 			</div>
+      <div class="info-item" v-if="course.courseProvider.length == 0">
+				<em class="key">Note:</em>
+				<span class="value">This course is currently unavailable<br/>Please check again later</span>
+			</div>
 		</section>
 		<div class="info-buttons">
 			<nav>
 				<v-btn aria-label="Order Course" prepend-icon="mdi-cart-check" text="Order Course" type="apply"
 					href="/forms" variant="outlined"></v-btn>
 			</nav>
-			<v-btn aria-label="Add to Favorites" @click="toggleFavorite" :disabled="waitingForFavoriteToggle || !jwt"
+			<v-btn aria-label="Add to Favorites" @click="toggleFavorite" :disabled="waitingForFavoriteToggle"
 				:prepend-icon="isFavorite ? 'mdi-heart-off-outline' : 'mdi-heart'">
 				{{ isFavorite ? 'Remove Favorite' : 'Add to Favorites' }}
 			</v-btn>
@@ -61,8 +65,6 @@
 
 
 <script>
-import { getCookie } from '@/utility/cookieHelper';
-import { store } from '@/utility/store';
 import { watch } from 'vue';
 
 //TODO: remove the console debugging lines before deploying our project.
@@ -78,38 +80,31 @@ export default {
 	methods: {
 		toggleFavorite() {
 			this.waitingForFavoriteToggle = true;
-			fetch(this.$backendUrl + "favorites/" + this.course.courseId,
-				{
-					method: this.isFavorite ? "DELETE" : "POST", // If true, is already favorite, remove it. If false, is not favorite, add it
-					headers: { Authorization: "Bearer " + this.jwt }
-				}
+			this.$authFetchOrPromptLogin(
+				this.$backendUrl + "favorites/" + this.course.courseId,
+				{ method: this.isFavorite ? "DELETE" : "POST" } // If true, is already favorite, remove it. If false, is not favorite, add it
 			).then(response => {
-				if (response.ok) {
+				if (response != null && response.ok) {
 					this.isFavorite = !this.isFavorite;
 				}
 				this.waitingForFavoriteToggle = false;
 			});
 		},
 		async fetchData() {
-			this.isFavorite = false;
-			this.course = null;
-			if (this.jwt) {
-				const response = await fetch(this.$backendUrl + "favorites/" + this.$route.params.id, { headers: { Authorization: "Bearer " + this.jwt } });
-				if (response.ok) {
-					this.isFavorite = true;
-					this.course = (await response.json()).course;
-				}
-			}
-			if (this.course == null) {
-				const response = await fetch(this.$backendUrl + "courses/" + this.$route.params.id);
-				if (response.ok) {
-					this.course = await response.json();
+			const favoriteResponse = await this.$authFetch(this.$backendUrl + "favorites/" + this.$route.params.id);
+			if (favoriteResponse != null && favoriteResponse.ok) {
+				this.isFavorite = true;
+				this.course = (await favoriteResponse.json()).course;
+			} else {
+				this.isFavorite = false;
+				const courseResponse = await fetch(this.$backendUrl + "courses/" + this.$route.params.id);
+				if (courseResponse.ok) {
+					this.course = await courseResponse.json();
+				} else {
+					this.course = null;
 				}
 			}
 		}
-	},
-	setup() {
-		return { jwt: store.user.isLoggedIn ? getCookie("authToken") : null };
 	},
 	created() {
 		this.fetchData();
@@ -142,7 +137,8 @@ export default {
 
 #no-image {
 	aspect-ratio: 16 / 9;
-	width: 60%;
+	width: 80%;
+  max-width: 80%;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
@@ -165,10 +161,6 @@ export default {
 
 	.course-image {
 		max-width: 80%;
-	}
-
-	#no-image {
-		width: 80%;
 	}
 
 	/* For readability on mobile, as it would be too close to the edges otherwise. */
