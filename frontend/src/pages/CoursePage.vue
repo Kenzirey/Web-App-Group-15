@@ -154,7 +154,7 @@ export default {
 }
 
 /* Adjustments specifically for mobile devices */
-@media screen and (max-width: 479px) {
+@media screen and (max-width: 600px) {
 	.course-title {
 		font-size: 1.5em;
 	}
@@ -179,6 +179,9 @@ export default {
 	.info-buttons .v-btn {
 		margin: 2px 4px;
 	}
+	.info-buttons {
+		flex-wrap: wrap;
+	}
 }
 
 .info-buttons {
@@ -188,7 +191,7 @@ export default {
 	max-width: 80%;
 	margin: 0 auto;
 	margin-top: 10px;
-	flex-wrap: wrap;
+	gap: 5px;
 }
 
 .course-title {
