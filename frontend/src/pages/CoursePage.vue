@@ -110,12 +110,12 @@ export default {
 				}
 			}
 		},
-    orderCourse() {
-      this.$router.push({
-        name: "Forms",
-        params: { courseId: this.course.id, title: this.course.title },
-      });
-    },
+		orderCourse() {
+   this.$router.push({
+     name: "Forms",
+     params: { courseId: this.course.courseId, title: this.course.courseName },
+   });
+},
 	},
 	setup() {
 		return { jwt: store.user.isLoggedIn ? getCookie("authToken") : null };
