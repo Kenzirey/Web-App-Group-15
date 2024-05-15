@@ -26,7 +26,7 @@
 
         <v-select
           label="Role"
-          :items="['admin', 'user']"
+          :items="['ROLE_ADMIN', 'ROLE_USER']"
           v-model="user.role"
           required
         ></v-select>
@@ -195,6 +195,8 @@ button:disabled {
 </style>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'UserForm',
   props: {
@@ -213,7 +215,7 @@ export default {
     async handleSubmit() {
       try {
         const method = this.user.id ? 'put' : 'post';
-        const url = this.user.id ? `${this.apiEndpoint}/${this.user.id}` : this.apiEndpoint;
+        const url = this.user.id ? `${this.$backendUrl}users/${this.user.id}` : `${this.$backendUrl}users/register`;
         
         const response = await axios[method](url, this.user);
         console.log(response.data);

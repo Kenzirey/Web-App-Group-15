@@ -11,7 +11,7 @@
 			<swiper-slide v-for="course in filteredCourses">
 				<div class="bullet-positioning-box">
 					<router-link :to="'/course/' + course.id">
-						<v-img :src="course.image" :aspect-ratio="aspectRatio" cover></v-img>
+						<v-img alt="course.alt":src="course.image" :aspect-ratio="aspectRatio" cover></v-img>
 						{{ course.name }}
 					</router-link>
 				</div>

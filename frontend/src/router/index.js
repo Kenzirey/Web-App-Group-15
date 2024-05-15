@@ -20,7 +20,7 @@ import LoginForm from '@/components/LoginForm.vue';
 //Add the routes / paths to the "pages" here.
 const routes = [
   { path: '/', component: HomePage, name: 'Home' },
-  { path: '/course', component: CoursePage, name: 'Course' },
+  { path: '/course/:id', component: CoursePage, name: 'Course' },
   { path: '/contact', component: ContactPage, name: 'Contact'},
   { path: '/about', component: AboutPage, name: 'About' },
   { path: '/account', component: AccountPage, name: 'Account', meta: { requiresAuth: true } },
@@ -53,10 +53,12 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
     next({ name: 'Login' });
   } else if (isLoggedIn) {
-    if (userRoles.includes('ROLE_ADMIN') && !to.path.startsWith('/admin')) {
-      next({ path: '/admin' });
-    } else if (!userRoles.includes('ROLE_ADMIN') && to.path.startsWith('/admin')) {
-      next({ path: '/' });
+    if (to.matched.some(record => record.meta.roles && record.meta.roles.includes('ROLE_ADMIN'))) {
+      if (userRoles.includes('ROLE_ADMIN')) {
+        next();
+      } else {
+        next({ path: '/' });
+      }
     } else {
       next();
     }

@@ -80,10 +80,7 @@ export default {
 
 				const type = this.$route.query.type ? this.$route.query.type.toLowerCase() : null;
 				const category = this.$route.query.category;
-				console.log(courses);
-				console.log(providers);
 				this.results = [...courses, ...providers];
-				console.log(this.results);
 				if (type) {
 					this.results = this.results.filter(result => result.type.toLowerCase() == type);
 				}
