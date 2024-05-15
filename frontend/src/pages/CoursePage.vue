@@ -39,7 +39,7 @@
           prepend-icon="mdi-cart-check"
           text="Order Course"
           @click="orderCourse"
-        >
+        ></v-btn>
 			</nav>
 			<v-btn aria-label="Add to Favorites" @click="toggleFavorite" :disabled="waitingForFavoriteToggle || !jwt"
 				:prepend-icon="isFavorite ? 'mdi-heart-off-outline' : 'mdi-heart'">
