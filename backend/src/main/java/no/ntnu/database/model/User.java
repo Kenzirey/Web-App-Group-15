@@ -1,5 +1,6 @@
 package no.ntnu.database.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -35,6 +37,10 @@ public class User {
     private String twoFactorSecret;
 	@Column(name = "two_factor_enabled")
 	private boolean isTwoFactorEnabled;
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "user")
+	private Set<Favorite> favorites;
 
 	/**
 	 * Empty constructor needed for JPA.
@@ -112,4 +118,12 @@ public class User {
     public void setTwoFactorEnabled(boolean twoFactorEnabled) {
         isTwoFactorEnabled = twoFactorEnabled;
     }
+
+	public Set<Favorite> getFavorites() {
+		return favorites;
+	}
+
+	public void setFavorites(Set<Favorite> favorites) {
+		this.favorites = favorites;
+	}
 }

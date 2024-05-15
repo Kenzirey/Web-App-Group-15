@@ -27,7 +27,8 @@ const lightTheme = {
     warning: '#ff9800',
     info: '#03a9f4',
     success: '#8bc34A',
-    text: '#000000'
+    text: '#000000',
+    weakText: "aaaaaa"
   },
   variables: {
     'border-color': '#000000',

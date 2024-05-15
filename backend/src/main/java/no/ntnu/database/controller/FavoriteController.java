@@ -1,20 +1,21 @@
 package no.ntnu.database.controller;
 
-import java.util.Optional;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.ntnu.database.model.Favorite;
+import no.ntnu.database.model.User;
+import no.ntnu.database.service.CourseService;
 import no.ntnu.database.service.FavoriteService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import no.ntnu.database.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,10 +27,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/favorites")
 public class FavoriteController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(FavoriteController.class);
-
 	private final FavoriteService favoriteService;
+	private final UserService userService;
+	private final CourseService courseService;
 
 
 	/**
@@ -37,102 +37,111 @@ public class FavoriteController {
 	 *
 	 * @param favoriteService The service class for communication
 	 */
-	public FavoriteController(@Autowired FavoriteService favoriteService) {
+	public FavoriteController(
+			@Autowired FavoriteService favoriteService,
+			@Autowired UserService userService,
+			@Autowired CourseService courseService
+	) {
 		this.favoriteService = favoriteService;
+		this.userService = userService;
+		this.courseService = courseService;
+	}
+
+	/**
+	 * Gets the currently authenticated {@link User}.
+	 *
+	 * @return The currently authenticated user
+	 */
+	private User getUser() {
+		return userService.findByUsername(SecurityContextHolder
+				.getContext()
+				.getAuthentication()
+				.getName()
+		).orElseThrow(() -> new IllegalStateException(
+				"Favorite method accessed with invalid user authentication"
+		));
 	}
 
 
 	/**
-	 * Returns all favorite courses in the database.
+	 * Returns all favorite entries for the authenticated {@link User}.
 	 *
-	 * @return All courses in the database.
+	 * @return All favorite entries for the authenticated user
 	 */
+	@Operation(summary = "Get all favorites",
+			description = "Gets all the favorites for the specific user")
+	@ApiResponse(responseCode = "200", description = "All favorites returned")
 	@GetMapping
 	public Iterable<Favorite> getAllFavorites() {
-		LOGGER.info("Getting all favorites");
-		return favoriteService.getAllFavourites();
+		return favoriteService.getAllFavourites(getUser().getId());
 	}
 
 	/**
-	 * Endpoint to search for a specific favorite course.
+	 * Endpoint to find a specific favorite entry for the authorized {@link User}.
 	 *
-	 * @param id 	The id of the course to return.
-	 * @return 		{@link ResponseEntity} object containing either:
+	 * @param courseId The id of the {@link no.ntnu.database.model.Course Course}
+	 *                 in the favorite entry
+	 *
+	 * @return {@link ResponseEntity} object containing either:
 	 *     <ul>
-	 *         <li>A corresponding course that matches id, returns status 200.</li>
+	 *         <li>A favorite entry for the authorized user with course that matches id,
+	 *             returns status 200.</li>
 	 *         <li>If no match is found, returns status 404.</li>
 	 *     </ul>
 	 */
-	@GetMapping("/{id}")
-	public ResponseEntity<Favorite> getFavorite(@PathVariable int id) {
-		ResponseEntity<Favorite> response;
-		Optional<Favorite> favorite = favoriteService.findByProductId(id);
-		if (favorite.isPresent()) {
-			response = ResponseEntity.ok(favorite.get());
-		} else {
-			response = ResponseEntity.notFound().build();
-		}
-		return response;
+	@Operation(summary = "Get favorite",
+			description = "Get a specific favorite through the specified course id")
+	@ApiResponse(responseCode = "200", description = "Entry found")
+	@ApiResponse(responseCode = "404", description = "Entry not found")
+	@GetMapping("/{courseId}")
+	public ResponseEntity<Favorite> getFavorite(@PathVariable int courseId) {
+		return favoriteService.findById(courseId, getUser().getId())
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	/**
-	 * Adds a favorite course to the collection.
+	 * Adds a favorite entry for the authorized {@link User}.
 	 *
-	 * @param favorite The favorite added
-	 * @return 201 CREATED status on success, 400 Bad request on error
+	 * @param courseId The ID of the {@link no.ntnu.database.model.Course Course}
+	 *                 to include in the entry
+	 *
+	 * @return 201 CREATED status on success, 400 BAD REQUEST on error
 	 */
-	@PostMapping
-	public ResponseEntity<String> add(@RequestBody Favorite favorite) {
-		ResponseEntity<String> response;
-		try {
-			int id = favoriteService.add(favorite);
-			response = new ResponseEntity<>(String.valueOf(id), HttpStatus.CREATED);
-		} catch (IllegalArgumentException ia) {
-			response = new ResponseEntity<>(ia.getMessage(), HttpStatus.BAD_REQUEST);
-		}
-		return response;
-
+	@Operation(summary = "Add favorite",
+			description = "Adds a course to the favorite list")
+	@ApiResponse(responseCode = "201", description = "Favorite entry successfully added")
+	@ApiResponse(responseCode = "400", description = "Bad request, entry not added")
+	@PostMapping("/{courseId}")
+	public ResponseEntity<Favorite> add(@PathVariable int courseId) {
+		return courseService
+				.findById(courseId)
+				.map(course -> new Favorite(course, getUser()))
+				.map(favorite -> {
+					favoriteService.add(favorite);
+					return new ResponseEntity<>(favorite, HttpStatus.CREATED);
+				})
+				.orElse(ResponseEntity.badRequest().build());
 	}
 
 
 	/**
-	 * Removes a favorite course from the collection.
+	 * Removes a favorite entry for the authorized {@link User}.
 	 *
-	 * @param id The id of course to be removed.
+	 * @param courseId The id of the {@link no.ntnu.database.model.Course Course}
+	 *                 in the entry to remove
+	 *
 	 * @return 200 OK status on success, 404 NOT FOUND on error
 	 */
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> delete(@PathVariable Integer id) {
-		ResponseEntity<String> response;
-		if (favoriteService.delete(id)) {
-			response = new ResponseEntity<>(HttpStatus.OK);
-		} else {
-			response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		return  response;
+	@Operation(summary = "Delete favorite",
+			description = "Deletes a favorite entry from the favorite list")
+	@ApiResponse(responseCode = "200", description = "Successfully removed entry")
+	@ApiResponse(responseCode = "404", description = "Entry not found")
+	@DeleteMapping("/{courseId}")
+	public ResponseEntity<String> delete(@PathVariable int courseId) {
+		return favoriteService.delete(courseId, getUser().getId())
+				? ResponseEntity.ok().build()
+				: ResponseEntity.notFound().build();
 	}
-
-
-	/**
-	 * Update a favorite course in the repository.
-	 *
-	 * @param id The id of the course  to update.
-	 * @param favorite New course data to store.
-	 * @return 200 OK status on success, 400 Bad request on error
-	 */
-	@PutMapping("/{id}")
-	public ResponseEntity<String> update(@PathVariable int id, @RequestBody Favorite favorite) {
-		ResponseEntity<String> response;
-		try {
-			favoriteService.updateFavorite(id, favorite);
-			response = new ResponseEntity<>(HttpStatus.OK);
-		} catch (IllegalArgumentException ia) {
-			response = new ResponseEntity<>(ia.getMessage(), HttpStatus.BAD_REQUEST);
-		}
-		return response;
-	}
-
-
-
 }
 
