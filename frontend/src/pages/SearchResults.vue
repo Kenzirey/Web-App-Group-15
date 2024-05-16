@@ -31,11 +31,7 @@ export default {
 	methods: {
 		selectResult(result) {
 			if (result.type == "course") {
-				const query = new URLSearchParams();
-				query.append("id", result.courseId);
-				if (query.get("id")) {
-					location.href = "./course?" + query.toString();
-				}
+				this.$router.push("/course/" + result.id);
 			} else if (result.type == "provider") {
 				if (result.url) {
 					location.href = result.url;

@@ -75,9 +75,9 @@ public class SecurityConfiguration {
 						.requestMatchers(HttpMethod.GET,
 								"/categories", "/categories/{query}",
 								"/courses", "/courses/{id}", "/courses/search/{query}",
-								"/providers", "/providers/{id}", "/providers/search/{query}",
-                                "/favorites", "/favorites/{int}", "/favorites/{id}"
+								"/providers", "/providers/{id}", "/providers/search/{query}"
 						).permitAll()
+                        .requestMatchers("/favorites/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers("/admin/users/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/")
                         .permitAll() // The default URL/is accessible to everyone
