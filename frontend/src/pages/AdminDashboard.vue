@@ -10,8 +10,8 @@
           </v-col>
         </v-row>
 
+        <!-- Navigation Items -->
         <v-container>
-          <!-- Navigation Items -->
           <v-row class="navigation-container">
             <v-btn text @click="goToDashboard">Dashboard</v-btn>
             <v-btn text @click="goToCourses">Courses</v-btn>

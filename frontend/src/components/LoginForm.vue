@@ -1,7 +1,7 @@
 <template>
-  <v-container>
-    <v-card>
-      <v-card-title class="text-h5">Sign In</v-card-title>
+  <v-container class="login-container">
+    <v-card class="login-card">
+      <v-card-title class="login-title">Sign In</v-card-title>
       <v-card-text>
         <v-form ref="loginForm" @submit.prevent="login">
           <v-text-field
@@ -10,6 +10,7 @@
             required
             autocomplete="username"
             :error-messages="emailErrors"
+            class="login-input"
           ></v-text-field>
           <v-text-field
             label="Password"
@@ -18,13 +19,14 @@
             required
             autocomplete="current-password"
             :error-messages="passwordErrors"
+            class="login-input"
           ></v-text-field>
-          <v-btn type="submit" color="primary" class="mr-4">Sign In</v-btn>
-          <v-alert type="error" v-if="errorMessage" class="mt-4">{{ errorMessage }}</v-alert>
+          <v-btn type="submit" class="login-button">Sign In</v-btn>
+          <v-alert type="error" v-if="errorMessage" class="login-alert">{{ errorMessage }}</v-alert>
         </v-form>
       </v-card-text>
-      <v-card-actions>
-        <v-btn text @click="clear">Clear</v-btn>
+      <v-card-actions class="login-actions">
+        <v-btn text class="login-clear" @click="clear">Clear</v-btn>
       </v-card-actions>
     </v-card>
   </v-container>
@@ -89,3 +91,54 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  width: 60vh;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 600px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.login-title {
+  color: #333;
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 5px;
+}
+
+.login-input {
+  margin-bottom: 16px;
+}
+
+
+.login-alert {
+  margin-top: 30x;
+}
+
+.login-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.v-card-text {
+  background-color: white;
+  color: black;
+}
+
+.v-btn {
+  background-image: linear-gradient(to right, rgb(var(--v-theme-gradiantOne)), rgb(var(--v-theme-gradiantTwo)));
+	color: rgb(var(--v-theme-background));
+}
+</style>
