@@ -20,6 +20,8 @@ import Footer from './components/Footer.vue';
 
 // import function to register Swiper custom elements
 import { register } from 'swiper/element/bundle';
+import { store } from './utility/store';
+import { getCookie } from './utility/cookieHelper';
 // register Swiper custom elements
 register();
 
@@ -29,6 +31,12 @@ export default {
   components: {
     TopToolbar,
     Footer
+  },
+  setup() {
+    const jwt = getCookie("authToken");
+    if (jwt) {
+      store.login(getCookie("authToken"));
+    }
   },
   data() {
     return { lastClick: null }
