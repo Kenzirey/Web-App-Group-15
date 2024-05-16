@@ -18,7 +18,6 @@ public class ImageService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ImageService.class);
 
-
 	private final ImageRepository imageRepository;
 
 
@@ -37,39 +36,25 @@ public class ImageService {
 	 * Adds an image in the database.
 	 *
 	 * @param image the image added in the database.
-	 * @return the image ID if the image has been inserted, if not return invalid
 	 */
-	public int add(Image image) {
-		if (!image.isValid()) {
-			LOGGER.warn("Favorite is invalid");
+	public void add(Image image) {
+		if (image == null) {
+			throw new IllegalArgumentException("Image \"image\" cannot be null");
 		}
-
 		imageRepository.save(image);
-		return image.getImageId();
-	}
-
-	/**
-	 * Returns all images in the database.
-	 *
-	 * @return All the images in the database
-	 */
-	public Iterable<Image> getAllImages() {
-		return imageRepository.findAll();
 	}
 
 	/**
 	 * Updates the image.
 	 *
-	 * @param image The new image with a new url
+	 * @param image The new image with new bytes
 	 */
 	public void update(int id, Image image) {
-		Optional<Image> existingImage = imageRepository.findById(id);
-		if (existingImage.isEmpty()) {
+		if (!imageRepository.existsById(id)) {
 			throw new IllegalStateException(String.format("No favorite: %s", id));
-		} else {
-			image.setImageId(id);
-			imageRepository.save(image);
 		}
+		image.setImageId(id);
+		imageRepository.save(image);
 
 	}
 
@@ -80,14 +65,12 @@ public class ImageService {
 	 * @return Returns true if deleted. False if the image doesn't exist in the database
 	 */
 	public boolean deleteImage(int id) {
-		Optional<Image> image = imageRepository.findById(id);
 		if (id < 0) {
 			LOGGER.warn("Invalid ID");
 		}
-		if (image.isPresent()) {
-			imageRepository.deleteById(id);
-		}
-		return image.isPresent();
+		boolean existed = imageRepository.existsById(id);
+		imageRepository.deleteById(id);
+		return existed;
 	}
 
 

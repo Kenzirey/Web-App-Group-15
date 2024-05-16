@@ -76,11 +76,12 @@ public class SecurityConfiguration {
 								"/categories", "/categories/{query}",
 								"/courses", "/courses/{id}", "/courses/search/{query}",
 								"/providers", "/providers/{id}", "/providers/search/{query}",
-                                "/favorites", "/favorites/{int}", "/favorites/{id}"
+                                "/favorites", "/favorites/{int}", "/favorites/{id}",
+                                "/images/**"
 						).permitAll()
-                        .requestMatchers("/admin/users/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/")
-                        .permitAll() // The default URL/is accessible to everyone
+                        .requestMatchers("/admin/users/**", "/images/**").hasAuthority("ROLE_ADMIN")
+                        // The default URL is accessible to everyone
+                        .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()  // All other requests require authentication
                 )
                 // Enable stateless session policy
