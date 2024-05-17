@@ -1,11 +1,17 @@
 package no.ntnu.database.service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import no.ntnu.database.model.Course;
+import no.ntnu.database.repository.CategoryRepository;
+import no.ntnu.database.repository.CourseProviderRepository;
 import no.ntnu.database.repository.CourseRepository;
+import no.ntnu.database.repository.ImageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
 
@@ -18,6 +24,9 @@ public class CourseService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CourseService.class);
 
 	private final CourseRepository repository;
+	private final CourseProviderRepository courseProviderRepository;
+	private final CategoryRepository categoryRepository;
+	private final ImageRepository imageRepository;
 
 	/**
 	 * Makes the course service.
@@ -25,17 +34,53 @@ public class CourseService {
 	 * @param courseRepository The repository class for communication
 	 */
 	@Autowired
-	public CourseService(CourseRepository courseRepository) {
+	public CourseService(
+			CourseRepository courseRepository,
+			CourseProviderRepository courseProviderRepository,
+			CategoryRepository categoryRepository,
+			ImageRepository imageRepository
+	) {
 		this.repository = courseRepository;
+		this.courseProviderRepository = courseProviderRepository;
+		this.categoryRepository = categoryRepository;
+		this.imageRepository = imageRepository;
+	}
+
+	private <T, I> Set<T> findAllAsSet(Iterable<I> ids, CrudRepository<T, I> repository) {
+		Set<T> objs = new HashSet<>();
+		for (T obj : repository.findAllById(ids)) {
+			objs.add(obj);
+		}
+		return objs;
 	}
 
 	/**
 	 * Adds a course to the database.
 	 *
-	 * @param course the {@link Course} being added to the database.
+	 * @param courseDto A {@link Course.Dto Dto} representing a
+	 *                  {@link Course} to add to the database
 	 * @return the added {@link Course}'s id.
 	 */
-	public int add(Course course) {
+	public int add(Course.Dto courseDto) {
+		Course course = new Course();
+		course.setCourseName(courseDto.courseName());
+		course.setDifficultyLevel(courseDto.difficultyLevel());
+		course.setStartDate(courseDto.startDate());
+		course.setEndDate(courseDto.endDate());
+		course.setCourseCredits(courseDto.courseCredits());
+		course.setHoursPerWeek(courseDto.hoursPerWeek());
+		course.setRelatedCertification(courseDto.relatedCertification());
+		course.setCourseDescription(courseDto.courseDescription());
+		if (courseDto.courseProviderIds() != null) {
+			course.setCourseProviders(
+					findAllAsSet(courseDto.courseProviderIds(), courseProviderRepository)
+			);
+		}
+		if (courseDto.categoryIds() != null) {
+			course.setCategories(findAllAsSet(courseDto.categoryIds(), categoryRepository));
+		}
+		course.setImage(imageRepository.findById(courseDto.imageId()).orElse(null));
+
 		if (!course.isValid()) {
 			LOGGER.warn("Course is invalid");
 		}
@@ -52,14 +97,14 @@ public class CourseService {
 		return repository.findAll();
 	}
 
-    /**
-     * Returns the count of all courses in the database.
-     *
-     * @return the count of courses.
-     */
-    public long countAllCourses() {
-        return repository.count();
-    }
+	/**
+	 * Returns the count of all courses in the database.
+	 *
+	 * @return the count of courses.
+	 */
+	public long countAllCourses() {
+		return repository.count();
+	}
 
 	/**
 	 * Updates a course in the database corresponding to its ID.

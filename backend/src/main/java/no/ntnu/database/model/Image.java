@@ -8,8 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotNull;
 
 
@@ -27,29 +26,37 @@ public final class Image {
 	private int imageId;
 
 	@NotNull
+	@JsonIgnore
 	@Schema(description = "An URL pointing to the image associated with this entity", example = "https://www.ntnu.no/")
 	@Column(name = "image_bytes", length = Integer.MAX_VALUE)
 	private byte[] imageBytes;
-
 
 	@NotNull
 	@Schema(description = "The file type of the image", example = "jpeg")
 	private String imageType;
 
-	@ManyToOne
-	@JoinColumn(name = "course_id")
-	private Course course;
+	private String altText;
 
+	@JsonIgnore
+	@OneToOne(mappedBy = "image")
+	private Course course;
 
 	/**
 	 * An empty constructor for JPA requirement.
 	 */
-	public Image() {
-	}
+	public Image() {}
 
-	public Image(byte[] imageBytes, String imageType) {
+	/**
+	 * Creates an image.
+	 *
+	 * @param imageBytes The bytes that make up the image data
+	 * @param imageType The filetype of the image
+	 * @param altText The image's alt text / caption
+	 */
+	public Image(byte[] imageBytes, String imageType, String altText) {
 		setImageBytes(imageBytes);
 		setImageType(imageType);
+		setAltText(altText);
 	}
 
 	public Course getCourse() {
@@ -122,4 +129,11 @@ public final class Image {
 		return imageBytes != null && imageBytes.length != 0;
 	}
 
+	public String getAltText() {
+		return altText;
+	}
+
+	public void setAltText(String altText) {
+		this.altText = altText;
+	}
 }

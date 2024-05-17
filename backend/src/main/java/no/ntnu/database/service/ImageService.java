@@ -48,16 +48,17 @@ public class ImageService {
 	 * Updates the image.
 	 *
 	 * @param image The new image with new bytes
+	 * @return True if the image existed & was updated, false if not
 	 */
-	public void update(int id, Image image) {
-		if (!imageRepository.existsById(id)) {
-			throw new IllegalStateException(String.format("No favorite: %s", id));
+	public boolean update(int id, Image image) {
+		boolean exists = false;
+		if (imageRepository.existsById(id)) {
+			exists = true;
+			image.setImageId(id);
+			imageRepository.save(image);
 		}
-		image.setImageId(id);
-		imageRepository.save(image);
-
+		return exists;
 	}
-
 
 	/**
 	 * Deletes an image from the database.
