@@ -111,7 +111,7 @@ public class ImageController {
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Integer> add(
 			@RequestParam("image") MultipartFile imgFile,
-			@RequestParam("altText") String altText
+			@RequestParam(value = "altText", required = false) String altText
 	) {
 		return getImageResponse(imgFile, altText, image -> {
 			imageService.add(image);
@@ -145,7 +145,7 @@ public class ImageController {
 	public ResponseEntity<Object> update(
 			@PathVariable int id,
 			@RequestParam("image") MultipartFile imgFile,
-			@RequestParam("altText") String altText
+			@RequestParam(value = "altText", required = false) String altText
 	) {
 		return getImageResponse(imgFile, altText, image ->
 				new ResponseEntity<>(imageService.update(id, image)
