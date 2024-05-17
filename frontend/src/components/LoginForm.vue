@@ -54,9 +54,7 @@ export default {
           username: this.email,
           password: this.password
         });
-
-        const decoded = jwtDecode(response.data.jwt);
-        store.login(response.data.jwt, decoded.roles);
+        const decoded = store.login(response.data.jwt);
         console.log('Decoded JWT:', decoded);
         this.$emit('login-success', { user: decoded.sub, roles: decoded.roles });
 

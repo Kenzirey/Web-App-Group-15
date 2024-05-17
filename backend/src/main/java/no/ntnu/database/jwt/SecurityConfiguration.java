@@ -70,15 +70,15 @@ public class SecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // Configure authorization requests
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/authenticate", "/h2-console/**", "/users/register")
+                        .requestMatchers("/authenticate", "/h2-console/**", "/users/register", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll() // Permit all for authenticate and H2 console
 						.requestMatchers(HttpMethod.GET,
 								"/categories", "/categories/{query}",
 								"/courses", "/courses/{id}", "/courses/search/{query}",
 								"/providers", "/providers/{id}", "/providers/search/{query}",
-                                "/favorites", "/favorites/{int}", "/favorites/{id}",
                                 "/images/**"
 						).permitAll()
+                        .requestMatchers("/favorites/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers("/admin/users/**", "/images/**").hasAuthority("ROLE_ADMIN")
                         // The default URL is accessible to everyone
                         .requestMatchers("/").permitAll()
