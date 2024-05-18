@@ -1,16 +1,16 @@
-<!-- src/pages/ConatctPage.vue -->
+<!-- src/pages/ContactPage.vue -->
 
 <template>
     <div>
         <section id="contactUsOverHead">
             <h2 class="space">Contact us!</h2>
-            <p> If there is anything you are wondering about 
+            <p> If there is anything you are wondering about
                 ,or have any input on our website, we would love to hear from you!</p>
         </section>
 
-    
-        <section id="reportIssues">
-            <div class="box2">
+
+        <section id="reportIssues" class="flex-container">
+            <div class="box">
                 <div class="topLeftText">
                     Report issues
                 </div>
@@ -20,47 +20,38 @@
             </div>
         </section>
 
-        <section id="adresses">
-            <div class="box2">
+        <section id="adresses" class="flex-container">
+            <div class="box">
                 <div class="topLeftText">
                     Contact us :D
                 </div>
                 <p class="pContact">  Address: Larsgårdsvegen 2, 6009 Ålesund <br>
-                
-                
+
+
                 </p>
 
                 <!--TODO legg til kontakter diskuterer med gruppa -->
             </div>
         </section>
-    
+
     </div>
 </template>
 
 <style lang="scss" scoped>
-    
-.box {
-    /*Hvit box med svart tekst og border  */
-    padding: 75px 0;
-    width: 800px;
-    text-align: left;
-    background: #eae3e3;
-    margin: 25px;
-    border: 3px solid black;
-    display: inline-block;
-  }
 
-  .box2 {
-    /*Ikke noe box med svart tekst   */
-    padding: 75px 0;
-    width: 800px;
-    text-align: left;
-    margin: 25px;
-    display: inline-block;
-  }
+.flex-container {
+  display: flex;
+}
+
+.box {
+  padding: 75px 0;
+  text-align: left;
+  margin: 25px;
+  display: inline-block;
+  flex: 1; /* Equal height for both sections */
+}
 
   .topLeftText {
-    /* color: rgb(47, 46, 46); */
     color: rgb(0, 0, 0);
     position: relative;
     top: -70px;
@@ -69,7 +60,6 @@
   }
 
   .pContact {
-    /*color: rgb(47, 46, 46); */
     color: rgb(0, 0, 0);
     position: relative;
     top: -70px;
@@ -81,5 +71,6 @@
   padding: 15px 0;
   }
 
-  
+
+
 </style>

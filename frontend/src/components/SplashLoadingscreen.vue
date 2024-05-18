@@ -22,8 +22,8 @@ export default {
  }
 
  .loading-image {
-   width: 100px; /* Set the width to your desired size */
-   height: auto; /* Maintain aspect ratio */
+   width: 100px;
+   height: auto;
  }
 
  .text {
