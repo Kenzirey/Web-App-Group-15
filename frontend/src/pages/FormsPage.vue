@@ -1,9 +1,10 @@
 <!-- src/pages/FormsPage.vue -->
 
 <template>
+  <h1>Place Order</h1>
   <v-form v-model="valid" class="formBox" ref="form">
     <fieldset class="fieldBox">
-      <h1 class="formSections">Personal information</h1>
+      <h2 class="formSections">Personal information</h2>
 
       <!-- First name, Last name, Email, Phone number, Gender -->
 
@@ -67,7 +68,7 @@
 
       <v-container>
         <v-row justify="start">
-          <v-date-picker 
+          <v-date-picker
             title="Select birth date"
             show-adjacent-months
             width="500px"
@@ -170,6 +171,9 @@
     >
     <v-btn @click="clearForm">Clear</v-btn>
   </v-form>
+
+  <v-col cols="12" md="4"> </v-col>
+
 </template>
 
 <style lang="scss" scoped>
@@ -234,6 +238,9 @@
   display: flex;
   justify-content: space-between;
 }
+
+
+
 </style>
 
 

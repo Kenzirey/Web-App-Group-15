@@ -34,11 +34,12 @@ const routes = [
   { path: '/login', component: LoginForm, name: 'Login', meta: { requiresAuth: false } },
   { path: '/submit', component: SubmitPage, name: 'Submit' }
 
+
   // Define routes for other pages
 ];
 
 /**
- * Creates a router instance, to navigate the Vue application.  
+ * Creates a router instance, to navigate the Vue application.
  */
 const router = createRouter({
   history: createWebHistory(),
