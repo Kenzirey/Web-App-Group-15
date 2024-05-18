@@ -2,7 +2,6 @@ package no.ntnu.database.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import java.util.Optional;
 import no.ntnu.database.model.Course;
 import no.ntnu.database.service.CourseService;
 import org.slf4j.Logger;
@@ -38,7 +37,9 @@ public class CourseController {
 	 * @param courseService The service class for communication
 	 */
 	@Autowired
-	public CourseController(CourseService courseService) {
+	public CourseController(
+			CourseService courseService
+	) {
 		this.courseService = courseService;
 	}
 
@@ -78,21 +79,16 @@ public class CourseController {
 			responseCode = "404", description = "A course with a corresponding id was not found")
 	@GetMapping(value = "/{id}", produces = {"application/json"})
 	public ResponseEntity<Course> getCourse(@PathVariable Integer id) {
-		ResponseEntity<Course> response;
-		Optional<Course> course = courseService.findById(id);
-		if (course.isPresent()) {
-			response = ResponseEntity.ok(course.get());
-		} else {
-			response = ResponseEntity.notFound().build();
-		}
-		return response;
+		return courseService.findById(id)
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	/**
 	 * HTTP POST endpoint for adding a new course.
 	 *
-	 * @param course 	the data of the {@link Course} being added.
-	 * @return 			<p>Returns a {@link ResponseEntity} with status 201 if successfully
+	 * @param courseDto the data of the {@link Course} being added.
+	 * @return 		    <p>Returns a {@link ResponseEntity} with status 201 if successfully
 	 * 					created and the value of the new ID.</p>
 	 * 					<p>Returns a {@link ResponseEntity} with status 401 for bad request
 	 * 					if data is illegal or inappropriate.</p>
@@ -107,11 +103,13 @@ public class CourseController {
 	@ApiResponse(responseCode = "400", description = "Course failed to be added, bad request")
 	@ApiResponse(responseCode = "403", description = "Forbidden, not authorized")
 	@PostMapping
-	public ResponseEntity<String> add(@RequestBody Course course) {
+	public ResponseEntity<String> add(@RequestBody Course.Dto courseDto) {
 		ResponseEntity<String> response;
 		try {
-			int id = courseService.add(course);
-			response = new ResponseEntity<>(String.valueOf(id), HttpStatus.CREATED);
+			response = new ResponseEntity<>(
+					String.valueOf(courseService.add(courseDto)),
+					HttpStatus.CREATED
+			);
 		} catch (IllegalArgumentException ia) {
 			response = new ResponseEntity<>(ia.getMessage(), HttpStatus.BAD_REQUEST);
 		}

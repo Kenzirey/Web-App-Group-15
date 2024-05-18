@@ -25,13 +25,13 @@
 				<span class="value">{{ course.relatedCertification }}</span>
 			</div>
 			<!-- Provider and Cost -->
-			<div v-for="(provider, index) in course.courseProvider" :key="index" class="info-item">
+			<div v-for="(provider, index) in course.courseProviders" :key="index" class="info-item">
 				<em class="key">Provider:</em>
 				<span class="value">{{ provider.providerName }}</span>
 				<em class="key">Cost:</em>
 				<span class="value">$N/A (We don't have this in our database yet)</span>
 			</div>
-      <div class="info-item" v-if="course.courseProvider.length == 0">
+      		<div class="info-item" v-if="course.courseProviders.length === 0">
 				<em class="key">Note:</em>
 				<span class="value">This course is currently unavailable<br/>Please check again later</span>
 			</div>
@@ -46,14 +46,13 @@
 				{{ isFavorite ? 'Remove Favorite' : 'Add to Favorites' }}
 			</v-btn>
 		</div>
-		<figure>
-			<img class="course-image" v-if="course.images.length > 0" :src=course.images[0]
-				alt="TODO: We don't have this in our database yet">
-			<figcaption v-if="course.images.length > 0">TODO: We don't have this in our database yet</figcaption>
-			<div id="no-image" class="course-image" v-if="course.images.length == 0">
-				<h1>(No image)</h1>
-			</div>
+		<figure v-if="course.image != null && imageUrl != null">
+			<img class="course-image" :src=imageUrl :alt="course.image.altText">
+			<figcaption>{{ course.image.altText }}</figcaption>
 		</figure>
+		<div id="no-image" class="course-image" v-else>
+			<h1>(No image)</h1>
+		</div>
 		<p class="course-description">
 			{{ course.courseDescription }}
 		</p>
@@ -67,12 +66,12 @@
 <script>
 import { watch } from 'vue';
 
-//TODO: remove the console debugging lines before deploying our project.
 export default {
 	name: 'CoursePage',
 	data() {
 		return {
 			course: null,
+			imageUrl: null,
 			isFavorite: false,
 			waitingForFavoriteToggle: false,
 		};
@@ -104,11 +103,24 @@ export default {
 					this.course = null;
 				}
 			}
+			if (this.course != null && this.course.image != null) {
+				const response = await fetch(this.$backendUrl + "images/" + this.course.image.imageId);
+				if (response.ok) {
+					if (this.imageUrl != null) {
+						URL.revokeObjectURL(this.imageUrl);
+					}
+					this.imageUrl = URL.createObjectURL(await response.blob());
+				}
+			}
 		}
 	},
 	created() {
 		this.fetchData();
 		watch(() => this.$route.params.id, this.fetchData);
+	},
+	unmounted() {
+		URL.revokeObjectURL(this.imageUrl);
+		this.imageUrl = null;
 	}
 }
 
@@ -130,6 +142,7 @@ export default {
 .course-image {
 	/* To reduce the size of the image */
 	max-width: 60%;
+	max-height: 120vh;
 	height: auto;
 	display: block;
 	margin: 8px auto;

@@ -75,12 +75,13 @@ public class SecurityConfiguration {
 						.requestMatchers(HttpMethod.GET,
 								"/categories", "/categories/{query}",
 								"/courses", "/courses/{id}", "/courses/search/{query}",
-								"/providers", "/providers/{id}", "/providers/search/{query}"
+								"/providers", "/providers/{id}", "/providers/search/{query}",
+                                "/images/**"
 						).permitAll()
                         .requestMatchers("/favorites/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                        .requestMatchers("/admin/users/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/")
-                        .permitAll() // The default URL/is accessible to everyone
+                        .requestMatchers("/admin/users/**", "/images/**").hasAuthority("ROLE_ADMIN")
+                        // The default URL is accessible to everyone
+                        .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()  // All other requests require authentication
                 )
                 // Enable stateless session policy

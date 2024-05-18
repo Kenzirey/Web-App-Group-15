@@ -67,10 +67,10 @@ public class AdminController {
 	@ApiResponse(responseCode = "201", description = "Course added successfully")
 	@ApiResponse(responseCode = "400", description = "Bad request, course was not added")
 	@PostMapping("/courses")
-	public ResponseEntity<String> addCourse(@RequestBody Course course) {
+	public ResponseEntity<String> addCourse(@RequestBody Course.Dto course) {
 		try {
 			courseService.add(course);
-			LOGGER.info("Course added successfully: {}", course.getCourseName());
+			LOGGER.info("Course added successfully: {}", course.courseName());
 			return ResponseEntity.status(HttpStatus.CREATED).body("Course added successfully");
 		} catch (Exception e) {
 			LOGGER.error("Error adding course", e);
