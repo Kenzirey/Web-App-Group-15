@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import no.ntnu.database.model.CourseProvider;
+import no.ntnu.database.model.CourseProviderLink;
+import no.ntnu.database.service.CourseProviderLinkService;
 import no.ntnu.database.service.CourseProviderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,7 @@ public class CourseProviderController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CourseProviderController.class);
 
 	private final CourseProviderService service;
+	private final CourseProviderLinkService linkService;
 
 	/**
 	 * Makes the course provider controller via autowired.
@@ -40,8 +43,10 @@ public class CourseProviderController {
 	 * @param service the service class for communication.
 	 */
 	@Autowired
-	public CourseProviderController(CourseProviderService service) {
+	public CourseProviderController(CourseProviderService service,
+									CourseProviderLinkService linkService) {
 		this.service = service;
+		this.linkService = linkService;
 	}
 
 	/**
@@ -198,10 +203,139 @@ public class CourseProviderController {
 	 *
 	 * @return Providers that match the search query.
 	 */
+	@Operation(summary = "Search for provider(s)",
+			description = "search for provider(s) via a query")
+	@ApiResponse(responseCode = "200", description = "Successfully searched")
 	@GetMapping(value = "/search/{query}", produces = {"application/json"})
-	public Iterable<CourseProvider> searchCategory(@PathVariable String query) {
+	public Iterable<CourseProvider> searchProvider(@PathVariable String query) {
 		return query == null || query.isBlank()
 				? service.getAllProviders()
 				: service.searchProvider(query);
 	}
+
+	/**
+	 * Get a specific link via its {@link CourseProvider}- and course ids.
+	 *
+	 * @param providerId 	the linked {@link CourseProvider}'s unique id.
+	 * @param courseId		the course's unique id.
+	 *
+	 * @return 		<p>a {@link ResponseEntity} with code 200 on success.</p>
+	 * 				<p>a {@link ResponseEntity} with code 404 if course to update is not found.</p>
+	 */
+	@Operation(summary = "Get a course provider link",
+			description = "Returns details of a specific course provider link")
+	@ApiResponse(responseCode = "200", description = "Successfully retrieved")
+	@ApiResponse(responseCode = "404", description = "Course provider link not found")
+	@GetMapping("{providerId}/coursePriceListings/{courseId}")
+	public ResponseEntity<CourseProviderLink> getCourseProviderLink(@PathVariable int providerId,
+																	@PathVariable int courseId) {
+		Optional<CourseProviderLink> link =
+				linkService.findCourseProviderLink(providerId, courseId);
+		return link.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
+	/**
+	 * Updates a course provider link.
+	 *
+	 * @param providerId 	the linked {@link CourseProvider}'s id.
+	 * @param courseId		the linked course's id.
+	 * @param updatedLink	the updated link with new price.
+	 *
+	 * @return 		<p>a {@link ResponseEntity} with code 204 on success.</p>
+	 * 				<p>a {@link ResponseEntity} with code 400 if illegal argument is provided.</p>
+	 * 				<p>a {@link ResponseEntity} with status 403 if incorrect level
+	 * 											of authorization.</p>
+	 * 				<p>a {@link ResponseEntity} with code 404 if course to update is not found.</p>
+	 */
+	@Operation(summary = "Update a course provider link",
+			description = "Updates an existing course provider link with new information")
+	@ApiResponse(responseCode = "204", description = "Successfully updated the link")
+	@ApiResponse(responseCode = "400", description = "Invalid data provided")
+	@ApiResponse(responseCode = "404", description = "Course provider link not found")
+	@PutMapping("{providerId}/coursePriceListings/{courseId}")
+	public ResponseEntity<String> updateCourseProviderLink(@PathVariable int providerId,
+														   @PathVariable int courseId,
+														   @RequestBody
+															   CourseProviderLink updatedLink) {
+		try {
+			linkService.updateCourseProviderLink(providerId, courseId, updatedLink);
+			return ResponseEntity.noContent().build();
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.badRequest().body("Bad request: " + e.getMessage());
+		} catch (EntityNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course provider link not found.");
+		}
+	}
+
+	/**
+	 * Adds a price listing based on which {@link CourseProvider} the course has.
+	 *
+	 * @param providerId the {@link CourseProvider}'s id.
+	 * @param dto        the data transfer object containing course and price information.
+	 *
+	 * @return 		<p>a {@link ResponseEntity} with code 201 on success.</p>
+	 * 				<p>a {@link ResponseEntity} with code 400 if illegal argument is provided.</p>
+	 * 				<p>a {@link ResponseEntity} with status 403 if incorrect level
+	 * 											of authorization.</p>
+	 * 				<p>a {@link ResponseEntity} with code 404 if course to update is not found.</p>
+	 */
+	@Operation(summary = "Adds a price listing for a course provider",
+			description = "Adds a new price listing for a specific course provider")
+	@ApiResponse(responseCode = "201", description = "Price listing successfully added")
+	@ApiResponse(responseCode = "400", description = "Bad request")
+	@ApiResponse(responseCode = "403", description = "Forbidden, incorrect authorization")
+	@ApiResponse(responseCode = "404", description = "Entity not found")
+	@PostMapping("/{providerId}/coursePriceListings")
+	public ResponseEntity<String> addCoursePriceListing(@PathVariable int providerId,
+														@RequestBody CourseProviderLink
+																.CourseProviderLinkDto dto) {
+		try {
+			linkService.addCourseListing(providerId, dto);
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body("Course's price listing added successfully");
+		} catch (EntityNotFoundException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("Course or provider not found.");
+		}
+	}
+
+	/**
+	 * Deletes an existing price listing for a course provider.
+	 *
+	 * @param providerId the {@link CourseProvider}'s id.
+	 * @param courseId   the course's id to remove the listing from.
+	 *
+	 * @return 		<p>a {@link ResponseEntity} with code 204 on success.</p>
+	 * 				<p>a {@link ResponseEntity} with code 400 if illegal argument is provided.</p>
+	 * 				<p>a {@link ResponseEntity} with status 403 if incorrect level
+	 * 											of authorization.</p>
+	 * 				<p>a {@link ResponseEntity} with code 404 if course to update is not found.</p>
+	 */
+	@Operation(summary = "Deletes a price listing",
+			description = "Deletes a price listing for a specific course provider")
+	@ApiResponse(responseCode = "204", description = "Price listing successfully deleted")
+	@ApiResponse(responseCode = "400", description = "Bad request")
+	@ApiResponse(responseCode = "403", description = "Forbidden, incorrect authorization")
+	@ApiResponse(responseCode = "404", description = "Entity not found")
+	@DeleteMapping("/{providerId}/coursePriceListings/{courseId}")
+	public ResponseEntity<String> deleteCoursePriceListing(
+			@PathVariable int providerId,
+			@PathVariable int courseId) {
+		try {
+			boolean deleted = linkService.deleteCourseListing(providerId, courseId);
+			if (deleted) {
+				return ResponseEntity.noContent().build();
+			} else {
+				String message = String.format(
+						"Course listing not found for providerId: %d and courseId: %d",
+						providerId, courseId);
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(message);
+			}
+		} catch (IllegalStateException e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body("Bad request: " + e.getMessage());
+		}
+	}
+
 }

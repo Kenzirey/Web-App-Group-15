@@ -51,14 +51,10 @@ public final class Course {
 			"This course teaches the basics of SQL.")
 	private String courseDescription;
 
-	@ManyToMany
-	@JoinTable(
-			name = "provider_course",
-			joinColumns = @JoinColumn(name = "course_Id"),
-			inverseJoinColumns = @JoinColumn(name = "course_provider_id")
-	)
-	private Set<CourseProvider> courseProviders = new HashSet<>();
-
+	@JsonIgnore
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+	@Schema(description = "A set of course-provider links associated with this course.")
+	private Set<CourseProviderLink> courseProviderLinks = new HashSet<>();
 
 	@ManyToMany
 	@JoinTable(
@@ -248,6 +244,7 @@ public final class Course {
 		this.courseId = courseId;
 	}
 
+
 	/**
 	 * Returns the unique id for the course.
 	 *
@@ -265,13 +262,14 @@ public final class Course {
 		this.categories = categories;
 	}
 
-	public Set<CourseProvider> getCourseProviders() {
-		return courseProviders;
+	public Set<CourseProviderLink> getCourseProviderLinks() {
+		return courseProviderLinks;
 	}
 
-	public void setCourseProviders(Set<CourseProvider> courseProvider) {
-		this.courseProviders = courseProvider;
+	public void setCourseProviderLinks(Set<CourseProviderLink> courseProviderLinks) {
+		this.courseProviderLinks = courseProviderLinks;
 	}
+
 
 	public Image getImage() {
 		return image;
@@ -314,9 +312,6 @@ public final class Course {
 	 * @param relatedCertification The related certifications for this course,
 	 *                             unchanged in {@link Course}
 	 * @param courseDescription    The course's description, unchanged in {@link Course}
-	 * @param courseProviderIds    The IDs of every provider providing this course.
-	 *                             This is mapped from {@code Set<Integer>} to
-	 *                             {@code Set<}{@link CourseProvider}{@code >} in {@link Course}
 	 * @param categoryIds          The IDs of every category that should contain this course.
 	 *                             This is mapped from {@code Set<Integer>} to
 	 *                             {@code Set<}{@link Category}{@code >} in {@link Course}
@@ -333,7 +328,6 @@ public final class Course {
 			int hoursPerWeek,
 			String relatedCertification,
 			String courseDescription,
-			Set<Integer> courseProviderIds,
 			Set<Integer> categoryIds,
 			int imageId
 	) {
