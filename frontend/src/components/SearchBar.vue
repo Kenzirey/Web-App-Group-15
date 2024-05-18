@@ -2,49 +2,52 @@
 	<v-form ref="searchBar" @submit.prevent="() => submitSearch(getQuery())">
 		<!-- Prevents other buttons from being invoked as the submit when clicking enter -->
 		<v-text-field @keydown.tab="showSuggestions = false" id="search-bar" @click="searchBarFocused"
-			@focus="searchBarFocused" v-model="search" append-icon="mdi-magnify"
-			@click:append="() => {appendIconJustClicked = true; submitSearch(getQuery())}" placeholder="Search..." required autocomplete="off"
-			hide-details />
-		<div id="search-suggestions-center-align">
-			<div v-if="showSuggestions" id="search-suggestions">
-				<v-chip-group v-model="difficultyIndex" id="difficulties" class="suggestion-box">
-					<v-chip v-for="difficulty in difficulties" :key="difficulty">{{ difficulty }}</v-chip>
-				</v-chip-group>
-				<div id="courses-suggestions" class="suggestion-box">
-					<h2>Courses:</h2>
-					<ul>
-						<li v-for="course in filteredCourses" :key="course.name">
-							<router-link @click="showSuggestions = false" :to="'/course/' + course.id">{{ course.name }}</router-link>
-						</li>
-					</ul>
-					<router-link @click="showSuggestions = false" :to="{path: '/search', query: getQuery('course')}">More courses...</router-link>
-				</div>
-				<div id="categories-suggestions" class="suggestion-box">
-					<h2>Categories:</h2>
-					<ul>
-						<li v-for="category in filteredCategories" :key="category.name">
-							<router-link @click="showSuggestions = false" :to="{path: '/search', query: getQuery('course', category.id, false)}">{{ category.name }}</router-link>
-						</li>
-					</ul>
-				</div>
-				<div id="all-suggestions" class="suggestion-box">
-					<h2>All Results:</h2>
-					<ul>
-						<li v-for="suggestion in allSuggestionsFiltered" :key="suggestion.name">
-							<a v-if="suggestion.type == 'provider'" :href="suggestion.url">
-								{{ suggestion.name }} [{{ suggestion.type }}]
-							</a>
-							<router-link @click="showSuggestions = false"
-								v-if="suggestion.type != 'provider'"
-								:to="suggestion.type == 'course' ? '/course/' + suggestion.id : suggestion.type == 'category' ? {path: '/search', query: getQuery('course', suggestion.id, false)} : null"
-							>
-								{{ suggestion.name }} [{{ suggestion.type }}]
-							</router-link>
-						</li>
-					</ul>
-					<router-link @click="showSuggestions = false" :to="{path: '/search', query: getQuery()}">More results...</router-link>
-				</div>
+			@focus="searchBarFocused" v-model="search" append-inner-icon="mdi-magnify"
+			@click:append-inner="() => { appendIconJustClicked = true; submitSearch(getQuery()) }"
+			placeholder="Search..." required autocomplete="off" hide-details></v-text-field>
+		<div v-if="showSuggestions" id="search-suggestions">
+			<v-chip-group v-model="difficultyIndex" id="difficulties" class="suggestion-box">
+				<v-chip v-for="difficulty in difficulties" :key="difficulty">{{ difficulty }}</v-chip>
+			</v-chip-group>
+			<div id="courses-suggestions" class="suggestion-box">
+				<h2>Courses:</h2>
+				<ul>
+					<li v-for="course in filteredCourses" :key="course.name">
+						<router-link @click="showSuggestions = false" :to="'/course/' + course.id">{{ course.name
+							}}</router-link>
+					</li>
+				</ul>
+				<router-link @click="showSuggestions = false" :to="{ path: '/search', query: getQuery('course') }">More
+					courses...</router-link>
 			</div>
+			<div id="categories-suggestions" class="suggestion-box">
+				<h2>Categories:</h2>
+				<ul>
+					<li v-for="category in filteredCategories" :key="category.name">
+						<router-link @click="showSuggestions = false"
+							:to="{ path: '/search', query: getQuery('course', category.id, false) }">{{ category.name
+							}}</router-link>
+					</li>
+				</ul>
+			</div>
+			<div id="all-suggestions" class="suggestion-box">
+				<h2>All Results:</h2>
+				<ul>
+					<li v-for="suggestion in allSuggestionsFiltered" :key="suggestion.name">
+						<a v-if="suggestion.type == 'provider'" :href="suggestion.url">
+							{{ suggestion.name }} [{{ suggestion.type }}]
+						</a>
+						<router-link @click="showSuggestions = false" v-if="suggestion.type != 'provider'"
+							:to="suggestion.type == 'course' ? '/course/' + suggestion.id : suggestion.type == 'category' ? { path: '/search', query: getQuery('course', suggestion.id, false) } : null">
+							{{ suggestion.name }} [{{ suggestion.type }}]
+						</router-link>
+					</li>
+				</ul>
+				<router-link @click="showSuggestions = false" :to="{ path: '/search', query: getQuery() }">More
+					results...</router-link>
+			</div>
+		</div>
+		<div id="search-suggestions-center-align">
 		</div>
 	</v-form>
 </template>
@@ -59,7 +62,7 @@ export default {
 	computed: {
 		allSuggestionsFiltered() {
 			return this.filteredCourses.concat(this.filteredProviders).concat(this.filteredCategories);
-		}	
+		}
 	},
 	methods: {
 		searchify(str) {
@@ -67,10 +70,10 @@ export default {
 		},
 		filterResults(results, query, difficulty) {
 			return results.filter(result =>
-			this.searchify(result.name).includes(this.searchify(query))
-			&& (!difficulty || result.type.toLowerCase() != "course" || result.difficulty.toLowerCase() == difficulty.toLowerCase()));
+				this.searchify(result.name).includes(this.searchify(query))
+				&& (!difficulty || result.type.toLowerCase() != "course" || result.difficulty.toLowerCase() == difficulty.toLowerCase()));
 		},
-		getQuery(type, category, includeSearchQuery=true) {
+		getQuery(type, category, includeSearchQuery = true) {
 			const query = {};
 			if (type) {
 				query.type = type.toLowerCase();
@@ -107,28 +110,34 @@ export default {
 			}
 		},
 		standardizeCourses(courses) {
-			return courses.map(course => { return {
-				type: "course",
-				id: course.courseId,
-				name: course.courseName,
-				description: course.courseDescription,
-				difficulty: course.difficultyLevel
-			}})
+			return courses.map(course => {
+				return {
+					type: "course",
+					id: course.courseId,
+					name: course.courseName,
+					description: course.courseDescription,
+					difficulty: course.difficultyLevel
+				}
+			})
 		},
 		standardizeProviders(providers) {
-			return providers.map(provider => { return {
-				type: "provider",
-				id: provider.courseProviderId,
-				name: provider.providerName,
-				url: provider.url
-			}; });
+			return providers.map(provider => {
+				return {
+					type: "provider",
+					id: provider.courseProviderId,
+					name: provider.providerName,
+					url: provider.url
+				};
+			});
 		},
 		standardizeCategories(categories) {
-			return categories.map(category => { return {
-				type: "category",
-				id: category.categoryId,
-				name: category.categoryName
-			}; });
+			return categories.map(category => {
+				return {
+					type: "category",
+					id: category.categoryId,
+					name: category.categoryName
+				};
+			});
 		},
 		async fetchCourses() {
 			const response = await fetch(this.$backendUrl + "courses");
@@ -219,15 +228,20 @@ export default {
 	border-style: solid;
 	border-width: 5px;
 	color: rgb(var(--v-theme-text));
-	position: relative;
+	border-color: rgb(var(--v-theme-gradiantOne));
+	position: absolute;
+	left: 0;
+	top: 60px;
 	display: grid;
-	height: 40vw;
-	max-height: 80vh;
-	width: 40vw;
-	left: -20vw;
+	width: calc(100% + 200px);
+	height: calc(85vh - 50px);
 	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 	grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr);
 	overflow: auto;
+}
+
+.test {
+	background-color: red;
 }
 
 #search-suggestions a {
@@ -246,6 +260,7 @@ export default {
 	word-break: break-word;
 	text-align: left;
 	padding: 10px;
+	border-color: rgb(var(--v-theme-gradiantOne));
 }
 
 .suggestion-box ul {
@@ -287,5 +302,40 @@ export default {
 	grid-column-end: 3;
 	grid-row-start: 2;
 	grid-row-end: 4;
+}
+
+@media screen and (max-width: 1024px) {
+	#search-suggestions {
+		left: -50px;
+		width: calc(100% + 300px);
+	}
+}
+
+@media screen and (max-width: 768px) {
+	#search-suggestions {
+		width: calc(100% + 100px);
+	}
+
+	#courses-suggestions {
+		display: none;
+	}
+
+	#categories-suggestions {
+		display: none;
+	}
+
+	#all-suggestions {
+		border-width: 2.5px 0 0 0;
+		grid-column-start: 1;
+		grid-column-end: 3;
+		grid-row-start: 2;
+		grid-row-end: 4;
+	}
+}
+
+@media screen and (max-width: 480px) {
+	#search-suggestions {
+		left: 0;
+	}
 }
 </style>
