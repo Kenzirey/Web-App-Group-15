@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -50,15 +51,10 @@ public final class Course {
 			"This course teaches the basics of SQL.")
 	private String courseDescription;
 
-	@ManyToMany
-	@JoinTable(
-			name = "provider_course",
-			joinColumns = @JoinColumn(name = "course_Id"),
-			inverseJoinColumns = @JoinColumn(name = "course_provider_id")
-	)
-	private Set<CourseProvider> courseProviders = new HashSet<>();
-
-
+	@JsonIgnore
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+	@Schema(description = "A set of course-provider links associated with this course.")
+	private Set<CourseProviderLink> courseProviderLinks = new HashSet<>();
 
 	@ManyToMany
 	@JoinTable(
@@ -73,10 +69,9 @@ public final class Course {
 	@OneToMany(mappedBy = "course")
 	private Set<Favorite> favorites;
 
-	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL,
-			orphanRemoval = true)
-	private Set<Image> images = new HashSet<>();
-
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+	@JoinColumn(name = "image_id", referencedColumnName = "image_id")
+	private Image image;
 
 
 	/**
@@ -196,7 +191,7 @@ public final class Course {
 	}
 
 	/**
-	 *  Sets the number of hours per week for the course.
+	 * Sets the number of hours per week for the course.
 	 *
 	 * @param hoursPerWeek The number of hours per week for the course.
 	 */
@@ -249,6 +244,7 @@ public final class Course {
 		this.courseId = courseId;
 	}
 
+
 	/**
 	 * Returns the unique id for the course.
 	 *
@@ -266,28 +262,74 @@ public final class Course {
 		this.categories = categories;
 	}
 
-	public Set<CourseProvider> getCourseProvider() {
-		return courseProviders;
+	public Set<CourseProviderLink> getCourseProviderLinks() {
+		return courseProviderLinks;
 	}
 
-	public void setCourseProviderLink(Set<CourseProvider> courseProvider) {
-		this.courseProviders = courseProvider;
+	public void setCourseProviderLinks(Set<CourseProviderLink> courseProviderLinks) {
+		this.courseProviderLinks = courseProviderLinks;
 	}
 
-	public Set<Image> getImages() {
-		return images;
+
+	public Image getImage() {
+		return image;
 	}
 
-	public void setImages(Set<Image> images) {
-		this.images = images;
+	public void setImage(Image image) {
+		this.image = image;
 	}
 
+	/**
+	 * Gets the set of favorite entries containing this course.
+	 *
+	 * @return The set of favorite entries containing this course
+	 */
 	public Set<Favorite> getFavorites() {
 		return favorites;
 	}
 
+	/**
+	 * Sets the set of favorite entries containing this course.
+	 *
+	 * @param favorites The set of favorite entries containing this course
+	 */
 	public void setFavorites(Set<Favorite> favorites) {
 		this.favorites = favorites;
 	}
 
+	/**
+	 * A DTO for {@link Course}.
+	 * This does not include {@link Course#getFavorites() favorites},
+	 * as creation of or changes to a course should never change its favorite status for any users
+	 *
+	 * @param courseName           The course's name, unchanged in {@link Course}
+	 * @param difficultyLevel      The course's difficulty, unchanged in {@link Course}
+	 * @param startDate            The course's start date, unchanged in {@link Course}
+	 * @param endDate              The course's end date, unchanged in {@link Course}
+	 * @param courseCredits        The number of credits the course is worth,
+	 *                             unchanged in {@link Course}
+	 * @param hoursPerWeek         The hours per week for this course, unchanged in {@link Course}
+	 * @param relatedCertification The related certifications for this course,
+	 *                             unchanged in {@link Course}
+	 * @param courseDescription    The course's description, unchanged in {@link Course}
+	 * @param categoryIds          The IDs of every category that should contain this course.
+	 *                             This is mapped from {@code Set<Integer>} to
+	 *                             {@code Set<}{@link Category}{@code >} in {@link Course}
+	 * @param imageId              The ID of the image associated with this course.
+	 *                             This is mapped from {@code int} to
+	 *                             {@link Image} in {@link Course}
+	 */
+	public record Dto(
+			String courseName,
+			String difficultyLevel,
+			Date startDate,
+			Date endDate,
+			double courseCredits,
+			int hoursPerWeek,
+			String relatedCertification,
+			String courseDescription,
+			Set<Integer> categoryIds,
+			int imageId
+	) {
+	}
 }

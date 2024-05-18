@@ -6,7 +6,7 @@
 		<section class="info-container">
 			<div class="info-item">
 				<em class="key">Course Session:</em>
-				<span class="value">{{ course.startDate }} - {{ course.endDate }} (TODO: Format this)</span>
+				<span class="value">{{ new Date(course.startDate).toLocaleDateString() }} - {{ new Date(course.endDate).toLocaleDateString() }}</span>
 			</div>
 			<div class="info-item">
 				<em class="key">Difficulty Level:</em>
@@ -25,11 +25,15 @@
 				<span class="value">{{ course.relatedCertification }}</span>
 			</div>
 			<!-- Provider and Cost -->
-			<div v-for="(provider, index) in course.courseProvider" :key="index" class="info-item">
+			<div v-for="(provider, index) in course.courseProviders" :key="index" class="info-item">
 				<em class="key">Provider:</em>
 				<span class="value">{{ provider.providerName }}</span>
 				<em class="key">Cost:</em>
 				<span class="value">$N/A (We don't have this in our database yet)</span>
+			</div>
+      		<div class="info-item" v-if="course.courseProviders.length === 0">
+				<em class="key">Note:</em>
+				<span class="value">This course is currently unavailable<br/>Please check again later</span>
 			</div>
 		</section>
 		<div class="info-buttons">
@@ -41,19 +45,18 @@
           @click="orderCourse"
         ></v-btn>
 			</nav>
-			<v-btn aria-label="Add to Favorites" @click="toggleFavorite" :disabled="waitingForFavoriteToggle || !jwt"
+			<v-btn aria-label="Add to Favorites" @click="toggleFavorite" :disabled="waitingForFavoriteToggle"
 				:prepend-icon="isFavorite ? 'mdi-heart-off-outline' : 'mdi-heart'">
 				{{ isFavorite ? 'Remove Favorite' : 'Add to Favorites' }}
 			</v-btn>
 		</div>
-		<figure>
-			<img class="course-image" v-if="course.images.length > 0" :src=course.images[0]
-				alt="TODO: We don't have this in our database yet">
-			<figcaption v-if="course.images.length > 0">TODO: We don't have this in our database yet</figcaption>
-			<div id="no-image" class="course-image" v-if="course.images.length == 0">
-				<h1>(No image)</h1>
-			</div>
+		<figure v-if="course.image != null && imageUrl != null">
+			<img class="course-image" :src=imageUrl :alt="course.image.altText">
+			<figcaption>{{ course.image.altText }}</figcaption>
 		</figure>
+		<div id="no-image" class="course-image" v-else>
+			<h1>(No image)</h1>
+		</div>
 		<p class="course-description">
 			{{ course.courseDescription }}
 		</p>
@@ -64,16 +67,14 @@
 </template>
 
 <script>
-import { getCookie } from '@/utility/cookieHelper';
-import { store } from '@/utility/store';
 import { watch } from 'vue';
 
-//TODO: remove the console debugging lines before deploying our project.
 export default {
 	name: 'CoursePage',
 	data() {
 		return {
 			course: null,
+			imageUrl: null,
 			isFavorite: false,
 			waitingForFavoriteToggle: false,
 		};
@@ -81,32 +82,37 @@ export default {
 	methods: {
 		toggleFavorite() {
 			this.waitingForFavoriteToggle = true;
-			fetch(this.$backendUrl + "favorites/" + this.course.courseId,
-				{
-					method: this.isFavorite ? "DELETE" : "POST", // If true, is already favorite, remove it. If false, is not favorite, add it
-					headers: { Authorization: "Bearer " + this.jwt }
-				}
+			this.$authFetchOrPromptLogin(
+				this.$backendUrl + "favorites/" + this.course.courseId,
+				{ method: this.isFavorite ? "DELETE" : "POST" } // If true, is already favorite, remove it. If false, is not favorite, add it
 			).then(response => {
-				if (response.ok) {
+				if (response != null && response.ok) {
 					this.isFavorite = !this.isFavorite;
 				}
 				this.waitingForFavoriteToggle = false;
 			});
 		},
 		async fetchData() {
-			this.isFavorite = false;
-			this.course = null;
-			if (this.jwt) {
-				const response = await fetch(this.$backendUrl + "favorites/" + this.$route.params.id, { headers: { Authorization: "Bearer " + this.jwt } });
-				if (response.ok) {
-					this.isFavorite = true;
-					this.course = (await response.json()).course;
+			const favoriteResponse = await this.$authFetch(this.$backendUrl + "favorites/" + this.$route.params.id);
+			if (favoriteResponse != null && favoriteResponse.ok) {
+				this.isFavorite = true;
+				this.course = (await favoriteResponse.json()).course;
+			} else {
+				this.isFavorite = false;
+				const courseResponse = await fetch(this.$backendUrl + "courses/" + this.$route.params.id);
+				if (courseResponse.ok) {
+					this.course = await courseResponse.json();
+				} else {
+					this.course = null;
 				}
 			}
-			if (this.course == null) {
-				const response = await fetch(this.$backendUrl + "courses/" + this.$route.params.id);
+			if (this.course != null && this.course.image != null) {
+				const response = await fetch(this.$backendUrl + "images/" + this.course.image.imageId);
 				if (response.ok) {
-					this.course = await response.json();
+					if (this.imageUrl != null) {
+						URL.revokeObjectURL(this.imageUrl);
+					}
+					this.imageUrl = URL.createObjectURL(await response.blob());
 				}
 			}
 		},
@@ -117,12 +123,13 @@ export default {
    });
 },
 	},
-	setup() {
-		return { jwt: store.user.isLoggedIn ? getCookie("authToken") : null };
-	},
 	created() {
 		this.fetchData();
 		watch(() => this.$route.params.id, this.fetchData);
+	},
+	unmounted() {
+		URL.revokeObjectURL(this.imageUrl);
+		this.imageUrl = null;
 	}
 }
 
@@ -144,6 +151,7 @@ export default {
 .course-image {
 	/* To reduce the size of the image */
 	max-width: 60%;
+	max-height: 120vh;
 	height: auto;
 	display: block;
 	margin: 8px auto;
@@ -151,7 +159,8 @@ export default {
 
 #no-image {
 	aspect-ratio: 16 / 9;
-	width: 60%;
+	width: 80%;
+  max-width: 80%;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
@@ -163,7 +172,7 @@ export default {
 }
 
 /* Adjustments specifically for mobile devices */
-@media screen and (max-width: 479px) {
+@media screen and (max-width: 600px) {
 	.course-title {
 		font-size: 1.5em;
 	}
@@ -176,11 +185,6 @@ export default {
 		max-width: 80%;
 	}
 
-
-	#no-image {
-		width: 80%;
-	}
-
 	/* For readability on mobile, as it would be too close to the edges otherwise. */
 	.course-container {
 		margin: 15px 10px 15px 10px;
@@ -188,6 +192,9 @@ export default {
 
 	.info-buttons .v-btn {
 		margin: 2px 4px;
+	}
+	.info-buttons {
+		flex-wrap: wrap;
 	}
 }
 
@@ -198,7 +205,7 @@ export default {
 	max-width: 80%;
 	margin: 0 auto;
 	margin-top: 10px;
-	flex-wrap: wrap;
+	gap: 5px;
 }
 
 .course-title {

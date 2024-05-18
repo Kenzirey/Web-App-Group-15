@@ -7,30 +7,40 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
  * A class which ensures necessary roles are present in the database when Spring
  * Boot app has started.
- * Code adapted from AppDev repository by Gist.
+ * Code adapted from DummyData from the app-dev repository by Gist.
  */
-@Component
+@Component("insertRoles")
 public class InsertRoles implements ApplicationListener<ApplicationReadyEvent> {
 
-	@Autowired
-	private RoleRepository roleRepository;
+	private final RoleRepository roleRepository;
 
 	private final Logger logger = LoggerFactory.getLogger(InsertRoles.class);
 
 	/**
+	 * Creates an insert roles component through Autowired.
+	 *
+	 * @param roleRepository the {@link RoleRepository} for role entity operations.
+	 */
+	@Autowired
+	public InsertRoles(RoleRepository roleRepository) {
+		this.roleRepository = roleRepository;
+	}
+
+	/**
 	 * This method is called when the spring application boots.
 	 * Checks if admin and user roles are in the database.
-	 * As user & admin rols are required for user authentication.
+	 * As user & admin roles are required for user authentication.
 	 *
 	 * @param event Event which we don't use :).
 	 */
 	@Override
-	public void onApplicationEvent(ApplicationReadyEvent event) {
+	public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
 		logger.info("Checking for necessary roles in database");
 
 		boolean roleUserExists = roleRepository.findByName("ROLE_USER").isPresent();
