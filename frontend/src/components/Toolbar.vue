@@ -1,24 +1,28 @@
 <template>
   <v-app-bar class="toolbar-app" :elevation="0" id="app-bar">
-    <div id="bar">
-      <div id="topbar-left">
-        <!--Look under! To use vuetify color, just set color to the variable you want to use-->
-        <v-btn size="large" @click="this.$router.push('/')">Learniverse</v-btn>
-      </div>
-      
-      <searchBar :lastGlobalClick="lastGlobalClick"></searchBar>
-  
-      <!-- Hidden, but kept for future reference -->
-      <div id="topbar-right">
-        <v-btn v-if="isLoggedIn" prepend-icon="mdi-account" stacked size="small" @click="navigateToAccount">View Account</v-btn>
+    <!--Look under! To use vuetify color, just set color to the variable you want to use-->
+      <v-btn id="home-button" class="desktop-tablet" @click="this.$router.push('/')">Learniverse</v-btn>
+      <v-btn id="home-button" class="mobile" @click="this.$router.push('/')" icon="mdi-home"></v-btn>
+    <searchBar id="search-bar" :lastGlobalClick="lastGlobalClick"></searchBar>
+
+    <!-- Hidden, but kept for future reference -->
+    <template v-slot:append>
+      <div class="desktop" id="toolbar-icons">
+        <v-btn v-if="isLoggedIn" prepend-icon="mdi-account" stacked size="small" @click="navigateToAccount">View
+          Account</v-btn>
         <v-btn v-if="isLoggedIn" prepend-icon="mdi-logout" stacked size="small" @click="handleLogout">Log Out</v-btn>
         <v-btn v-else prepend-icon="mdi-login" stacked size="small" @click="navigateToSignIn">Sign In</v-btn>
         <v-btn prepend-icon="mdi-heart" stacked size="small" @click="navigateToFavorites">View Favorites</v-btn>
       </div>
-    </div>
-    
+      <div class="tablet-mobile" id="toolbar-icons">
+        <v-btn v-if="isLoggedIn" icon="mdi-account" @click="navigateToAccount"></v-btn>
+        <v-btn v-if="isLoggedIn" icon="mdi-logout" @click="handleLogout"></v-btn>
+        <v-btn v-else icon="mdi-login" @click="navigateToSignIn"></v-btn>
+        <v-btn icon="mdi-heart" @click="navigateToFavorites"></v-btn>
+      </div>
+    </template>
+
   </v-app-bar>
-  
 </template>
 
 <script>
@@ -80,29 +84,54 @@ export default {
   flex-grow: 1;
 }
 
-#topbar-left, #topbar-right {
-  display: flex;
-  align-items: center;
-}
-
-#topbar-left {
-  justify-content: flex-start;
-  gap: 10px 20px;
-}
-
-#topbar-right {
-  justify-content: flex-end;
-  gap: 10px 20px;
-}
-
-#bar {
-  display: grid;
-  grid-auto-columns: minmax(0, 1fr);
-  grid-auto-flow: column;
-  width: 100%;
-}
-
-#app-bar {
+.toolbar-app {
   overflow: visible;
 }
+
+#toolbar-icons {
+  white-space: nowrap;
+}
+
+.tablet, .mobile, .tablet-mobile {
+  display: none;
+}
+
+#search-bar {
+  width: min(600px, calc(100vw - 530px));
+}
+
+#home-button {
+  margin: 0 10px;
+}
+
+/* start of medium tablet styles, if we want it */
+@media screen and (max-width: 768px) {
+  .desktop, .desktop-mobile {
+    display: none;
+  }
+
+  .tablet, .tablet-mobile {
+    display: block;
+  }
+
+  #search-bar {
+    width: calc(100vw - 330px);
+  }
+}
+
+/* start of phone styles */
+@media screen and (max-width: 480px) {
+  .tablet, .desktop-tablet {
+    display: none;
+  }
+
+  .mobile, .desktop-mobile {
+    display: block;
+  }
+
+  #search-bar {
+    width: calc(100vw - 248px);
+  }
+}
+
 </style>
