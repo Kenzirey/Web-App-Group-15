@@ -1,24 +1,24 @@
 <template>
   <v-app-bar class="toolbar-app" :elevation="0" id="app-bar">
     <!--Look under! To use vuetify color, just set color to the variable you want to use-->
-      <v-btn id="home-button" class="desktop-tablet" @click="this.$router.push('/')">Learniverse</v-btn>
-      <v-btn id="home-button" class="mobile" @click="this.$router.push('/')" icon="mdi-home"></v-btn>
+      <v-btn id="home-button-desktop" class="desktop-tablet" @click="this.$router.push('/')" aria-label="Home">Learniverse</v-btn>
+      <v-btn id="home-button-mobile" class="mobile" @click="this.$router.push('/')" icon="mdi-home" aria-label="Homet"></v-btn>
     <searchBar id="search-bar" :lastGlobalClick="lastGlobalClick"></searchBar>
 
     <!-- Hidden, but kept for future reference -->
     <template v-slot:append>
       <div class="desktop" id="toolbar-icons">
-        <v-btn v-if="isLoggedIn" prepend-icon="mdi-account" stacked size="small" @click="navigateToAccount">View
+        <v-btn v-if="isLoggedIn" prepend-icon="mdi-account" stacked size="small" @click="navigateToAccount" aria-label="View Account">View
           Account</v-btn>
-        <v-btn v-if="isLoggedIn" prepend-icon="mdi-logout" stacked size="small" @click="handleLogout">Log Out</v-btn>
-        <v-btn v-else prepend-icon="mdi-login" stacked size="small" @click="navigateToSignIn">Sign In</v-btn>
-        <v-btn prepend-icon="mdi-heart" stacked size="small" @click="navigateToFavorites">View Favorites</v-btn>
+        <v-btn v-if="isLoggedIn" prepend-icon="mdi-logout" stacked size="small" @click="handleLogout" aria-label="Log out">Log Out</v-btn>
+        <v-btn v-else prepend-icon="mdi-login" stacked size="small" @click="navigateToSignIn" aria-label="Sign in">Sign In</v-btn>
+        <v-btn prepend-icon="mdi-heart" stacked size="small" @click="navigateToFavorites" aria-label="View Favorites">View Favorites</v-btn>
       </div>
       <div class="tablet-mobile" id="toolbar-icons">
-        <v-btn v-if="isLoggedIn" icon="mdi-account" @click="navigateToAccount"></v-btn>
-        <v-btn v-if="isLoggedIn" icon="mdi-logout" @click="handleLogout"></v-btn>
-        <v-btn v-else icon="mdi-login" @click="navigateToSignIn"></v-btn>
-        <v-btn icon="mdi-heart" @click="navigateToFavorites"></v-btn>
+        <v-btn v-if="isLoggedIn" icon="mdi-account" @click="navigateToAccount" aria-label="View Account"></v-btn>
+        <v-btn v-if="isLoggedIn" icon="mdi-logout" @click="handleLogout" aria-label="Log out"></v-btn>
+        <v-btn v-else icon="mdi-login" @click="navigateToSignIn" aria-label="Sign in"></v-btn>
+        <v-btn icon="mdi-heart" @click="navigateToFavorites" aria-label="View Favorites"></v-btn>
       </div>
     </template>
 
@@ -100,7 +100,10 @@ export default {
   width: min(600px, calc(100vw - 530px));
 }
 
-#home-button {
+#home-button-mobile {
+  margin: 0 10px;
+}
+#home-button-desktop {
   margin: 0 10px;
 }
 

@@ -228,6 +228,7 @@ export default {
 	border-style: solid;
 	border-width: 5px;
 	color: rgb(var(--v-theme-text));
+	border-color: rgb(var(--v-theme-gradiantOne));
 	position: absolute;
 	left: 0;
 	top: 60px;
@@ -259,6 +260,7 @@ export default {
 	word-break: break-word;
 	text-align: left;
 	padding: 10px;
+	border-color: rgb(var(--v-theme-gradiantOne));
 }
 
 .suggestion-box ul {
