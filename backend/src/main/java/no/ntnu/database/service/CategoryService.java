@@ -73,7 +73,7 @@ public class CategoryService {
 	/**
 	 *	Deletes a category from the database.
 	 *
-	 * @return Returns true if deleted. False if the doesn't exist int the database
+	 * @return Returns true if deleted. False if the doesn't exist in the database
 	 */
 	public boolean delete(int id) {
 		Optional<Category> category = repository.findById(id);

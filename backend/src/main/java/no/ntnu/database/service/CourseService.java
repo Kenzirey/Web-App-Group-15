@@ -4,7 +4,10 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import no.ntnu.database.model.Course;
+import no.ntnu.database.model.CourseProvider;
+import no.ntnu.database.model.CourseProviderLink;
 import no.ntnu.database.repository.CategoryRepository;
+import no.ntnu.database.repository.CourseProviderLinkRepository;
 import no.ntnu.database.repository.CourseProviderRepository;
 import no.ntnu.database.repository.CourseRepository;
 import no.ntnu.database.repository.ImageRepository;
@@ -24,7 +27,6 @@ public class CourseService {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CourseService.class);
 
 	private final CourseRepository repository;
-	private final CourseProviderRepository courseProviderRepository;
 	private final CategoryRepository categoryRepository;
 	private final ImageRepository imageRepository;
 
@@ -36,12 +38,10 @@ public class CourseService {
 	@Autowired
 	public CourseService(
 			CourseRepository courseRepository,
-			CourseProviderRepository courseProviderRepository,
 			CategoryRepository categoryRepository,
 			ImageRepository imageRepository
 	) {
 		this.repository = courseRepository;
-		this.courseProviderRepository = courseProviderRepository;
 		this.categoryRepository = categoryRepository;
 		this.imageRepository = imageRepository;
 	}
@@ -71,11 +71,6 @@ public class CourseService {
 		course.setHoursPerWeek(courseDto.hoursPerWeek());
 		course.setRelatedCertification(courseDto.relatedCertification());
 		course.setCourseDescription(courseDto.courseDescription());
-		if (courseDto.courseProviderIds() != null) {
-			course.setCourseProviders(
-					findAllAsSet(courseDto.courseProviderIds(), courseProviderRepository)
-			);
-		}
 		if (courseDto.categoryIds() != null) {
 			course.setCategories(findAllAsSet(courseDto.categoryIds(), categoryRepository));
 		}

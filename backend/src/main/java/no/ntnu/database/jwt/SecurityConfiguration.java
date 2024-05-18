@@ -80,6 +80,12 @@ public class SecurityConfiguration {
 						).permitAll()
                         .requestMatchers("/favorites/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers("/admin/users/**", "/images/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/providers/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/providers/{providerId}/coursePriceListings").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/providers/{providerId}/coursePriceListings/{courseId}").hasAuthority("ROLE_ADMIN")
+
+
+
                         // The default URL is accessible to everyone
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated()  // All other requests require authentication

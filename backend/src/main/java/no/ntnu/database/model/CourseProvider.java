@@ -2,11 +2,12 @@ package no.ntnu.database.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,11 +29,10 @@ public final class CourseProvider {
 	@Schema(description = "URL to the course provider's website", example = "https://www.ntnu.no")
 	private String url;
 
-	@ManyToMany(mappedBy = "courseProviders")
+	@OneToMany(mappedBy = "courseProvider", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
-	@Schema(description = "A set of courses associated with this course provider."
-			+ "Managed via inverse side of ManyToMany relationship with Course.")
-	private Set<Course> courses = new HashSet<>();
+	@Schema(description = "A set of course-provider links associated with this course provider.")
+	private Set<CourseProviderLink> courseProviderLinks = new HashSet<>();
 
 
 	/**
@@ -80,12 +80,12 @@ public final class CourseProvider {
 		this.url = url;
 	}
 
-	public Set<Course> getCourses() {
-		return courses;
+	public Set<CourseProviderLink> getCourseProviderLinks() {
+		return courseProviderLinks;
 	}
 
-	public void setCourses(Set<Course> courses) {
-		this.courses = courses;
+	public void setCourseProviderLinks(Set<CourseProviderLink> courseProviderLinks) {
+		this.courseProviderLinks = courseProviderLinks;
 	}
 
 }
