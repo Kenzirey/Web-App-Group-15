@@ -15,7 +15,7 @@
                     Report issues
                 </div>
                 <p class="pContact"> If there are any issues with our website, feel free to send a report to our
-                    <a href="mailto:Tnhpham@stud.ntnu.no">email </a> or directly to those who worked on the website
+                    <a href="mailto:emmanes@stud.ntnu.no">email </a> or directly to those who worked on the website
                 </p>
             </div>
         </section>
