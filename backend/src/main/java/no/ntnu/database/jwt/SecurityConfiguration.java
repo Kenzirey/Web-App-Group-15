@@ -79,7 +79,7 @@ public class SecurityConfiguration {
                                 "/images/**"
 						).permitAll()
                         .requestMatchers("/favorites/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                        .requestMatchers("/admin/users/**", "/images/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/users/**", "/images/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/providers/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/providers/{providerId}/coursePriceListings").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/providers/{providerId}/coursePriceListings/{courseId}").hasAuthority("ROLE_ADMIN")
