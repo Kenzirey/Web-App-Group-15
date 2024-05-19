@@ -38,18 +38,30 @@ export default {
   methods: {
     async fetchCourses() {
       try {
-        const response = await axios.get('/admin/courses');
+        const response = await axios.get('/courses');
         this.courses = response.data;
       } catch (error) {
         console.error('Failed to fetch courses:', error);
       }
     },
     async addOrUpdateCourse(courseData) {
-      const url = this.currentCourse ? `/admin/courses/${this.currentCourse.id}` : '/admin/courses';
+      const url = this.currentCourse ? `/courses/${this.currentCourse.id}` : '/courses';
       const method = this.currentCourse ? 'put' : 'post';
 
+      const formData = new FormData();
+      for (const key in courseData) {
+        formData.append(key, courseData[key]);
+      }
+      if (courseData.image) {
+        formData.append('image', courseData.image);
+      }
+
       try {
-        await axios[method](url, courseData);
+        await axios[method](url, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
         this.fetchCourses();
       } catch (error) {
         console.error('Failed to add/update course:', error);
@@ -65,7 +77,7 @@ export default {
       }
 
       try {
-        await axios.delete(`/admin/courses/${courseId}`);
+        await axios.delete(`/courses/${courseId}`);
         this.courses = this.courses.filter(course => course.id !== courseId);
       } catch (error) {
         console.error('Failed to delete course:', error);
