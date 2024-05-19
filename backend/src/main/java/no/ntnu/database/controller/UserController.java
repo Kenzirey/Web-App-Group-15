@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.ntnu.database.model.User;
 import no.ntnu.database.service.UserService;
+import no.ntnu.dto.ChangePasswordDto;
 import no.ntnu.dto.UserRegistrationDto;
 import no.ntnu.dto.UserUpdateDto;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +25,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+
 
 /**
  * REST API controller for the user collection.
@@ -193,4 +197,41 @@ public class UserController {
 		}
 		return response;
 	}
+
+
+	/**
+	 * Changes the password for a specific user identified by their ID.
+	 *
+	 * @param id The ID of the user whose password is to be changed.
+	 * @param passwordDto The DTO containing the current and new password data.
+	 * @return A {@link ResponseEntity} containing a success message or an error message.
+	 */
+	@Operation(summary = "Change user password",
+		description = "Changes the password if the current password matches the existing one.")
+	@ApiResponse(responseCode = "200", 
+		description = "Password updated successfully.")
+	@ApiResponse(responseCode = "400",
+		description = "Password update failed. Incorrect current password.")
+	@PostMapping("/{id}/change-password")
+	public ResponseEntity<String> changePassword(
+		@PathVariable Long id, @RequestBody ChangePasswordDto passwordDto) {
+		try {
+			boolean success = userService.changeUserPassword(
+				id,
+			 	passwordDto.getCurrentPassword(),
+			  	passwordDto.getNewPassword());
+			if (success) {
+				return ResponseEntity.ok("Password updated successfully.");
+			} else {
+				return ResponseEntity
+				.badRequest()
+				.body("Password update failed. Incorrect current password.");
+			}
+		} catch (Exception e) {
+			LOGGER.error("Password change failed: {}", e.getMessage());
+			return ResponseEntity
+			.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Password change failed.");
+		}
+	}
+
 }
