@@ -178,4 +178,25 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    /**
+     * Changes the password for a specific user identified by their ID.
+     *
+     * @param userId The ID of the user whose password is to be changed.
+     * @param currentPassword The current password of the user.
+     * @param newPassword The new password to set.
+     * @return true if the password was successfully changed, false otherwise.
+     */
+    public boolean changeUserPassword(Long userId, String currentPassword, String newPassword) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (passwordEncoder.matches(currentPassword, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(newPassword));
+                userRepository.save(user);
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }
