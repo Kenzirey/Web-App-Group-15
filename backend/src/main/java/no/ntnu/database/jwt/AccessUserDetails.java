@@ -22,6 +22,7 @@ public class AccessUserDetails implements UserDetails {
 	private final List<GrantedAuthority> authorities = new LinkedList<>();
 	private final String twoFactorSecret;
     private final boolean isTwoFactorEnabled;
+	private final Long userId;
 
 	/**
 	 * Create access object.
@@ -35,6 +36,7 @@ public class AccessUserDetails implements UserDetails {
 		this.convertRoles(user.getRoles());
 		this.twoFactorSecret = user.getTwoFactorSecret();
         this.isTwoFactorEnabled = user.isTwoFactorEnabled();
+		this.userId = user.getId();
 	}
 
 	private void convertRoles(Set<Role> roles) {
@@ -86,4 +88,7 @@ public class AccessUserDetails implements UserDetails {
     public boolean isTwoFactorEnabled() {
         return isTwoFactorEnabled;
     }
+	public Long getUserId() {
+		return userId;
+	}
 }
