@@ -28,6 +28,8 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    
+
     /**
      * Constructs a UserService via Autowired.
      *
@@ -131,17 +133,6 @@ public class UserService {
     }
 
     /**
-     * Finds a {@link User} via the provided id.
-     *
-     * @param id the id of the {@link User}.
-     *
-     * @return an {@link Optional} of {@link User}.
-     */
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    /**
      * Toggles the active status of a {@link User}.
      *
      * @param id the id of the {@link User} to toggle.
@@ -158,5 +149,33 @@ public class UserService {
 		return userOptional.isPresent();
     }
 
-    
+    /**
+     * Counts the number of users with two-factor authentication enabled.
+     *
+     * @return the count of users with 2FA enabled.
+     */
+    public long countUsersWithTwoFactorEnabled() {
+        return userRepository.countByTwoFactorEnabledTrue();
+    }
+
+    /**
+     * Counts the total number of users.
+     *
+     * @return the total count of users.
+     */
+    public long countAllUsers() {
+        return userRepository.count();
+    }
+
+    /**
+     * Finds a {@link User} via the provided id.
+     *
+     * @param id the id of the {@link User}.
+     *
+     * @return an {@link Optional} of {@link User}.
+     */
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
 }
