@@ -8,6 +8,10 @@
       <label for="description" class="form-label">Description:</label>
       <textarea id="description" v-model="course.description" class="form-textarea" required></textarea>
     </div>
+    <div class="form-group">
+      <label for="image" class="form-label">Upload Image:</label>
+      <input id="image" type="file" @change="handleImageUpload" class="form-input" accept="image/*" ref="imageInput" required>
+    </div>
     <button type="submit" class="btn-submit">Submit</button>
   </form>
 </template>
@@ -24,12 +28,25 @@ export default {
   data() {
     return {
       course: this.initialCourse,
+      imageFile: null
     };
   },
   methods: {
+    handleImageUpload(event) {
+      this.imageFile = event.target.files[0];
+    },
     handleSubmit() {
-      this.$emit('course-submitted', this.course);
+      const formData = new FormData();
+      formData.append('name', this.course.name);
+      formData.append('description', this.course.description);
+      if (this.imageFile) {
+        formData.append('image', this.imageFile);
+      }
+
+      this.$emit('course-submitted', formData);
       this.course = { name: '', description: '' };
+      this.imageFile = null;
+      this.$refs.imageInput.value = '';
     }
   },
 };
