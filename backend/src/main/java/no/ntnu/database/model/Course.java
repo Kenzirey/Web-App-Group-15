@@ -31,7 +31,8 @@ public final class Course {
 	@Schema(description = "Unique ID for the course", example = "1")
 	@Column(name = "course_id")
 	private int courseId;
-
+	@Schema(description = "Current sale of course", example = "30% off original price")
+	private double sale;
 	@Schema(description = "Name of the course", example = "SQL for Beginners")
 	private String courseName;
 	@Schema(description = "Difficulty level of the course", example = "Beginner")
@@ -161,6 +162,24 @@ public final class Course {
 	 */
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
+	}
+
+	/**
+	 * Sets the sale of a course.
+	 *
+	 * @param sale the current sale % of a course.
+	 */
+	public void setSale(double sale) {
+		this.sale = sale;
+	}
+
+	/**
+	 * Returns the current sale % of a course.
+	 *
+	 * @return the current sale % applied to a course.
+	 */
+	public double getSale() {
+		return this.sale;
 	}
 
 	/**
@@ -309,6 +328,7 @@ public final class Course {
 	 * @param courseCredits        The number of credits the course is worth,
 	 *                             unchanged in {@link Course}
 	 * @param hoursPerWeek         The hours per week for this course, unchanged in {@link Course}
+	 * @param sale                 The current sale for this course, unchanged in {@link Course}
 	 * @param relatedCertification The related certifications for this course,
 	 *                             unchanged in {@link Course}
 	 * @param courseDescription    The course's description, unchanged in {@link Course}
@@ -326,6 +346,7 @@ public final class Course {
 			Date endDate,
 			double courseCredits,
 			int hoursPerWeek,
+			double sale,
 			String relatedCertification,
 			String courseDescription,
 			Set<Integer> categoryIds,
