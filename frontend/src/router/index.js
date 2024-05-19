@@ -15,6 +15,7 @@ import FormsPage from '../pages/FormsPage.vue';
 import SubmitPage from '../pages/SubmitPage';
 import SearchResults from '@/pages/SearchResults.vue';
 import LoginForm from '@/components/LoginForm.vue';
+import ChangePasswordForm from '@/components/ChangePassword.vue';
 
 
 
@@ -33,7 +34,8 @@ const routes = [
   { path: '/forms', component: FormsPage, name: 'Forms' },
   { path: '/search', component: SearchResults, name: 'SearchResults'},
   { path: '/login', component: LoginForm, name: 'Login', meta: { requiresAuth: false } },
-  { path: '/submit', component: SubmitPage, name: 'Submit' }
+  { path: '/submit', component: SubmitPage, name: 'Submit' },
+  { path: '/change-password', component: ChangePasswordForm, name: 'ChangePassword', meta: { requiresAuth: true } }
 
   // Define routes for other pages
 ];
