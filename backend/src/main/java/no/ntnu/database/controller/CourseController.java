@@ -195,4 +195,19 @@ public class CourseController {
 				: courseService.searchCourse(query);
 	}
 
+	/**
+	 * Get the amount of courses in the database.
+	 *
+	 * @return a {@link ResponseEntity} with code 200 and amount of courses.
+	 */
+	@Operation(summary = "Get amount of courses",
+			description = "Get the amount of courses currently in the database")
+	@ApiResponse(responseCode = "200", description = "Retrieved courses")
+	@GetMapping("/count")
+	public ResponseEntity<Long> getCoursesCount() {
+		long count = courseService.countAllCourses();
+		LOGGER.info("Total number of courses: {}", count);
+		return ResponseEntity.ok(count);
+	}
+
 }
