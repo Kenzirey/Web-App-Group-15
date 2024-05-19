@@ -64,7 +64,6 @@ public class SecurityConfiguration {
         // Set up the authorization requests, starting from most restrictive at the top,
         // to least restrictive on the bottom
 
-        //TODO: properly test the search stuff for favorites.
         // Disable CSRF and CORS checks. Without this it will be hard to make automated tests.
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -76,7 +75,9 @@ public class SecurityConfiguration {
 								"/categories", "/categories/{query}",
 								"/courses", "/courses/{id}", "/courses/search/{query}",
 								"/providers", "/providers/{id}", "/providers/search/{query}",
-                                "/images/**"
+                                "/providers/{providerId}/coursePriceListings/**",
+                                "/images/**",
+                                "/exchange", "/exchange/**"
 						).permitAll()
                         .requestMatchers("/favorites/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers("/admin/users/**", "/images/**").hasAuthority("ROLE_ADMIN")

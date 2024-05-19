@@ -1,9 +1,10 @@
 package no.ntnu.database.controller;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import java.util.Map;
-import no.ntnu.currency.ExchangeRateTracker;
-import org.springframework.beans.factory.annotation.Value;
+import java.util.Optional;
+import java.util.Set;
+import no.ntnu.database.service.ExchangeRateService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,39 +17,27 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/exchange-rates")
+@RequestMapping("/exchange")
 public class ExchangeRateController {
-	private final ExchangeRateTracker exchangeRateTracker;
+	private final ExchangeRateService exchangeRateService;
 
-	public ExchangeRateController(@Value("${exchange-rates.api-key}") String apiKey) {
-		this.exchangeRateTracker = new ExchangeRateTracker(apiKey);
-		exchangeRateTracker.startTracking();
+	@Autowired
+	public ExchangeRateController(ExchangeRateService exchangeRateService) {
+		this.exchangeRateService = exchangeRateService;
 	}
 
 	/**
-	 * Gets all available exchange rates.
+	 * Gets all available currencies.
 	 *
-	 * @param fromCurrency The currency to use as the base currency for all the exchange rates
-	 *
-	 * @return A map of all exchange rates
+	 * @return A set of all currencies
 	 */
 	@ApiResponse(
 			responseCode = "200",
-			description = "Exchange rates acquired successfully"
+			description = "Currencies acquired successfully"
 	)
-	@ApiResponse(
-			responseCode = "400",
-			description = "The provided base currency was not recognized"
-	)
-	@GetMapping(value = "/{fromCurrency}", produces = {"application/json"})
-	public ResponseEntity<Map<String, Double>> getExchangeRates(@PathVariable String fromCurrency) {
-		ResponseEntity<Map<String, Double>> response;
-		try {
-			response = ResponseEntity.ok(exchangeRateTracker.getRates(fromCurrency));
-		} catch (IllegalArgumentException iae) {
-			response = ResponseEntity.badRequest().build();
-		}
-		return response;
+	@GetMapping(produces = {"application/json"})
+	public Set<String> getExchangeRates() {
+		return exchangeRateService.getCurrencies();
 
 	}
 
@@ -68,14 +57,17 @@ public class ExchangeRateController {
 			responseCode = "400",
 			description = "Any of the provided currencies was not recognized"
 	)
-	@GetMapping(value = "/{fromCurrency}/{toCurrency}", produces = {"application/json"})
-	public ResponseEntity<Double> getExchangeRate(
+	@GetMapping(value = "/{fromCurrency}/{toCurrency}/{amount}", produces = {"application/json"})
+	public ResponseEntity<Double> exchange(
 			@PathVariable String fromCurrency,
-			@PathVariable String toCurrency
+			@PathVariable String toCurrency,
+			@PathVariable(required = false) Optional<Double> amount
 	) {
 		ResponseEntity<Double> response;
 		try {
-			response = ResponseEntity.ok(exchangeRateTracker.getRate(fromCurrency, toCurrency));
+			response = ResponseEntity.ok(exchangeRateService
+					.exchangeAmount(amount.orElse(1d), fromCurrency, toCurrency)
+			);
 		} catch (IllegalArgumentException iae) {
 			response = ResponseEntity.badRequest().build();
 		}
