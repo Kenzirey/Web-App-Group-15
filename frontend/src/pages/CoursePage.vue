@@ -8,70 +8,70 @@
     <h1>(404 - Course not found)</h1>
   </div>
   <div v-else>
-  <!--Content wrapper-->
-  <div class="course-container" v-if="course != null">
-    <h2 class="course-title">{{ course.courseName }}</h2>
-    <!-- Info Container for all course details -->
-    <section class="info-container">
-      <div class="info-item">
-        <em class="key">Course Session:</em>
-        <span class="value">{{
-            new Date(course.startDate).toLocaleDateString()
-          }} - {{ new Date(course.endDate).toLocaleDateString() }}</span>
+    <!--Content wrapper-->
+    <div class="course-container" v-if="course != null">
+      <h2 class="course-title">{{ course.courseName }}</h2>
+      <!-- Info Container for all course details -->
+      <section class="info-container">
+        <div class="info-item">
+          <em class="key">Course Session:</em>
+          <span class="value">{{
+              new Date(course.startDate).toLocaleDateString()
+            }} - {{ new Date(course.endDate).toLocaleDateString() }}</span>
+        </div>
+        <div class="info-item">
+          <em class="key">Difficulty Level:</em>
+          <span class="value">{{ course.difficultyLevel }}</span>
+        </div>
+        <div class="info-item">
+          <em class="key">Course Size:</em>
+          <span class="value">{{ course.courseCredits }}</span>
+        </div>
+        <div class="info-item">
+          <em class="key">Hours per week:</em>
+          <span class="value">{{ course.hoursPerWeek }}</span>
+        </div>
+        <div class="info-item">
+          <em class="key">Related Certifications:</em>
+          <span class="value">{{ course.relatedCertification }}</span>
+        </div>
+        <!-- Provider and Cost -->
+        <div v-for="(provider, index) in course.courseProviders" :key="index" class="info-item">
+          <em class="key">Provider:</em>
+          <span class="value">{{ provider.providerName }}</span>
+          <em class="key">Cost:</em>
+          <span class="value">$N/A (We don't have this in our database yet)</span>
+        </div>
+        <div class="info-item" v-if="course.courseProviders.length === 0">
+          <em class="key">Note:</em>
+          <span class="value">This course is currently unavailable<br/>Please check again later</span>
+        </div>
+      </section>
+      <div class="info-buttons">
+        <nav>
+          <v-btn
+            aria-label="Order Course"
+            prepend-icon="mdi-cart-check"
+            text="Order Course"
+            @click="orderCourse"
+          ></v-btn>
+        </nav>
+        <v-btn aria-label="Add to Favorites" @click="toggleFavorite" :disabled="waitingForFavoriteToggle"
+               :prepend-icon="isFavorite ? 'mdi-heart-off-outline' : 'mdi-heart'">
+          {{ isFavorite ? 'Remove Favorite' : 'Add to Favorites' }}
+        </v-btn>
       </div>
-      <div class="info-item">
-        <em class="key">Difficulty Level:</em>
-        <span class="value">{{ course.difficultyLevel }}</span>
+      <figure v-if="course.image != null && imageUrl != null">
+        <img class="course-image" :src=imageUrl :alt="course.image.altText">
+        <figcaption>{{ course.image.altText }}</figcaption>
+      </figure>
+      <div id="no-image" class="course-image" v-else>
+        <h1>(No image)</h1>
       </div>
-      <div class="info-item">
-        <em class="key">Course Size:</em>
-        <span class="value">{{ course.courseCredits }}</span>
-      </div>
-      <div class="info-item">
-        <em class="key">Hours per week:</em>
-        <span class="value">{{ course.hoursPerWeek }}</span>
-      </div>
-      <div class="info-item">
-        <em class="key">Related Certifications:</em>
-        <span class="value">{{ course.relatedCertification }}</span>
-      </div>
-      <!-- Provider and Cost -->
-      <div v-for="(provider, index) in course.courseProviders" :key="index" class="info-item">
-        <em class="key">Provider:</em>
-        <span class="value">{{ provider.providerName }}</span>
-        <em class="key">Cost:</em>
-        <span class="value">$N/A (We don't have this in our database yet)</span>
-      </div>
-          <div class="info-item" v-if="course.courseProviders.length === 0">
-        <em class="key">Note:</em>
-        <span class="value">This course is currently unavailable<br/>Please check again later</span>
-      </div>
-    </section>
-    <div class="info-buttons">
-      <nav>
-        <v-btn
-          aria-label="Order Course"
-          prepend-icon="mdi-cart-check"
-          text="Order Course"
-          @click="orderCourse"
-        ></v-btn>
-      </nav>
-      <v-btn aria-label="Add to Favorites" @click="toggleFavorite" :disabled="waitingForFavoriteToggle"
-             :prepend-icon="isFavorite ? 'mdi-heart-off-outline' : 'mdi-heart'">
-        {{ isFavorite ? 'Remove Favorite' : 'Add to Favorites' }}
-      </v-btn>
+      <p class="course-description">
+        {{ course.courseDescription }}
+      </p>
     </div>
-    <figure v-if="course.image != null && imageUrl != null">
-      <img class="course-image" :src=imageUrl :alt="course.image.altText">
-      <figcaption>{{ course.image.altText }}</figcaption>
-    </figure>
-    <div id="no-image" class="course-image" v-else>
-      <h1>(No image)</h1>
-    </div>
-    <p class="course-description">
-      {{ course.courseDescription }}
-    </p>
-  </div>
 
 
     <div class="no-course" v-else-if="!course">
@@ -91,7 +91,7 @@ import CoursePageSkeleton from "@/components/CoursePageSkeleton.vue";
 
 export default {
   name: 'CoursePage',
-  components: { CoursePageSkeleton },
+  components: {CoursePageSkeleton},
   data() {
     return {
       course: null,
