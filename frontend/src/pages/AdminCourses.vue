@@ -123,68 +123,78 @@ export default {
       this.course.image = event.target.files[0];
     },
     async handleSubmit() {
-      if (!this.$refs.form.validate()) {
-        this.snackbarText = 'Please fill all required fields.';
-        this.snackbar = true;
-        return;
-      }
+  if (!this.$refs.form.validate()) {
+    this.snackbarText = 'Please fill all required fields.';
+    this.snackbar = true;
+    return;
+  }
 
-      let payload;
-      const headers = {
-        Authorization: `Bearer ${getCookie('authToken')}`,
-      };
+  let payload;
+  const headers = {
+    Authorization: `Bearer ${getCookie('authToken')}`,
+  };
 
-      if (this.course.image) {
-        payload = new FormData();
-        payload.append('course', JSON.stringify({
-          courseName: this.course.courseName,
-          difficultyLevel: this.course.difficultyLevel,
-          startDate: this.course.startDate,
-          endDate: this.course.endDate,
-          courseCredits: this.course.courseCredits,
-          hoursPerWeek: this.course.hoursPerWeek,
-          relatedCertification: this.course.relatedCertification,
-          courseDescription: this.course.courseDescription,
-          categoryIds: this.course.categoryIds,
-        }));
-        payload.append('image', this.course.image);
-        headers['Content-Type'] = 'multipart/form-data';
-      } else {
-        payload = {
-          courseName: this.course.courseName,
-          difficultyLevel: this.course.difficultyLevel,
-          startDate: this.course.startDate,
-          endDate: this.course.endDate,
-          courseCredits: this.course.courseCredits,
-          hoursPerWeek: this.course.hoursPerWeek,
-          relatedCertification: this.course.relatedCertification,
-          courseDescription: this.course.courseDescription,
-          categoryIds: this.course.categoryIds,
-        };
-        headers['Content-Type'] = 'application/json';
-      }
+  const isAddingCourse = this.course.courseId === null;
+  let url = `${this.$backendUrl}courses`;
+  let method = 'post';
 
-      const url = `${this.$backendUrl}courses/${this.course.courseId ? this.course.courseId : 'create'}`;
-      const method = this.course.courseId ? 'put' : 'post';
+  if (this.course.image) {
+    payload = new FormData();
+    payload.append('course', JSON.stringify({
+      courseName: this.course.courseName,
+      difficultyLevel: this.course.difficultyLevel,
+      startDate: this.course.startDate,
+      endDate: this.course.endDate,
+      courseCredits: this.course.courseCredits,
+      hoursPerWeek: this.course.hoursPerWeek,
+      relatedCertification: this.course.relatedCertification,
+      courseDescription: this.course.courseDescription,
+      categoryIds: this.course.categoryIds,
+    }));
+    payload.append('image', this.course.image);
 
-      try {
-        await axios({
-          method,
-          url,
-          data: payload,
-          headers: headers,
-        });
-        this.snackbarText = 'Course updated/created successfully.';
-        this.snackbar = true;
-        this.fetchCourses();
-        this.$refs.form.reset();
-        this.resetForm();
-      } catch (error) {
-        console.error('Failed to add/update course:', error);
-        this.snackbarText = `Failed to add/update course: ${error.response ? error.response.data.message : error.message}`;
-        this.snackbar = true;
-      }
-    },
+    url = `${this.$backendUrl}courses/create`;
+
+  } else {
+    payload = {
+      courseName: this.course.courseName,
+      difficultyLevel: this.course.difficultyLevel,
+      startDate: this.course.startDate,
+      endDate: this.course.endDate,
+      courseCredits: this.course.courseCredits,
+      hoursPerWeek: this.course.hoursPerWeek,
+      relatedCertification: this.course.relatedCertification,
+      courseDescription: this.course.courseDescription,
+      categoryIds: this.course.categoryIds,
+    };
+
+    if (!isAddingCourse) {
+      url = `${this.$backendUrl}courses/${this.course.courseId}`;
+      method = 'put';
+    }
+  }
+
+  try {
+    const response = await axios({
+      method: method,
+      url: url,
+      data: payload,
+      headers: headers
+    });
+    this.snackbarText = isAddingCourse ? 'Course added successfully.' : 'Course updated successfully.';
+    this.snackbar = true;
+    this.fetchCourses();
+    this.$refs.form.reset();
+    this.resetForm();
+  } catch (error) {
+    console.error('Failed to submit course:', error);
+    this.snackbarText = `Failed to submit course: ${error.response ? error.response.data.message : error.message}`;
+    this.snackbar = true;
+  }
+},
+
+
+
     async handleCategorySubmit() {
       if (!this.newCategoryName) return;
       const authToken = getCookie('authToken');
@@ -243,6 +253,7 @@ export default {
     },
     prepareCourseForEdit(course) {
       this.course = { ...course };
+      this.course.courseId = course.courseId;
       if (course.startDate) {
         this.course.startDate = course.startDate.split('T')[0];
       }
