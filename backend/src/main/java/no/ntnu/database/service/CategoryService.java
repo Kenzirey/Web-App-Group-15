@@ -53,6 +53,10 @@ public class CategoryService {
 		return repository.findAll();
 	}
 
+	public Optional<Category> findById(int id) {
+		return repository.findById(id);
+	}
+
 	/**
 	 * Updates the category.
 	 *
@@ -85,18 +89,4 @@ public class CategoryService {
 		}
 		return category.isPresent();
 	}
-
-	/**
-	 * Searches for a specific category.
-	 *
-	 * @param query The search query to use when searching for categories.
-	 *
-	 * @return Any categories that match the search query
-	 */
-	public Iterable<Category> searchCategory(String query) {
-		return repository.searchCategory(query);
-	}
-
-
-
 }
