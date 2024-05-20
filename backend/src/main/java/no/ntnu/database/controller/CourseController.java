@@ -3,7 +3,11 @@ package no.ntnu.database.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.ntnu.database.model.Course;
+import no.ntnu.database.model.Image;
 import no.ntnu.database.service.CourseService;
+
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +21,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
+
 
 /**
  * REST API controller for course collection.
@@ -210,4 +218,20 @@ public class CourseController {
 		return ResponseEntity.ok(count);
 	}
 
+	
+
+	
+	@PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> createCourseWithImage(
+            @RequestParam("course") String courseJson,
+            @RequestParam("image") MultipartFile imageFile) {
+        try {
+            int courseId = courseService.addCourseWithImage(courseJson, imageFile);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Course created successfully with ID: " + courseId);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error parsing course data: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating course: " + e.getMessage());
+        }
+    }
 }

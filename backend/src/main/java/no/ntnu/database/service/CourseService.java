@@ -1,11 +1,13 @@
 package no.ntnu.database.service;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import no.ntnu.database.model.Course;
 import no.ntnu.database.model.CourseProvider;
 import no.ntnu.database.model.CourseProviderLink;
+import no.ntnu.database.model.Image;
 import no.ntnu.database.repository.CategoryRepository;
 import no.ntnu.database.repository.CourseProviderLinkRepository;
 import no.ntnu.database.repository.CourseProviderRepository;
@@ -16,6 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 /**
@@ -29,6 +34,7 @@ public class CourseService {
 	private final CourseRepository repository;
 	private final CategoryRepository categoryRepository;
 	private final ImageRepository imageRepository;
+	private final ImageService imageService;
 
 	/**
 	 * Makes the course service.
@@ -39,11 +45,13 @@ public class CourseService {
 	public CourseService(
 			CourseRepository courseRepository,
 			CategoryRepository categoryRepository,
-			ImageRepository imageRepository
+			ImageRepository imageRepository,
+			ImageService imageService
 	) {
 		this.repository = courseRepository;
 		this.categoryRepository = categoryRepository;
 		this.imageRepository = imageRepository;
+		this.imageService = imageService;
 	}
 
 	private <T, I> Set<T> findAllAsSet(Iterable<I> ids, CrudRepository<T, I> repository) {
@@ -159,4 +167,30 @@ public class CourseService {
 	public Iterable<Course> searchCourse(String query) {
 		return repository.searchCourse(query);
 	}
+
+	public int addCourseWithImage(String courseJson, MultipartFile imageFile) throws IOException {
+        Course.Dto courseDto = new ObjectMapper().readValue(courseJson, Course.Dto.class);
+        Image image = null;
+
+        if (!imageFile.isEmpty()) {
+            image = imageService.addImage(imageFile);
+        }
+
+        if (image != null) {
+            courseDto = new Course.Dto(
+                courseDto.courseName(),
+                courseDto.difficultyLevel(),
+                courseDto.startDate(),
+                courseDto.endDate(),
+                courseDto.courseCredits(),
+                courseDto.hoursPerWeek(),
+                courseDto.relatedCertification(),
+                courseDto.courseDescription(),
+                courseDto.categoryIds(),
+                image.getImageId()
+            );
+        }
+
+        return this.add(courseDto);
+    }
 }
