@@ -30,7 +30,6 @@ public final class CourseProvider {
 	private String url;
 
 	@OneToMany(mappedBy = "courseProvider", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnore
 	@Schema(description = "A set of course-provider links associated with this course provider.")
 	private Set<CourseProviderLink> courseProviderLinks = new HashSet<>();
 
@@ -49,11 +48,7 @@ public final class CourseProvider {
 	 */
 	@JsonIgnore
 	public boolean isValid() {
-		boolean valid = false;
-		if (courseProviderId > 0 && providerName != null && !providerName.isBlank()) {
-			valid = true;
-		}
-		return valid;
+		return providerName != null && !providerName.isBlank();
 	}
 
 	public String getProviderName() {
