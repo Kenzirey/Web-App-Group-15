@@ -100,7 +100,7 @@
             <v-text-field
               v-model="cityName"
               label="City"
-              rules="InputRules"
+              :rules="InputRules"
               required
             ></v-text-field>
           </v-col>
@@ -161,7 +161,7 @@
 
       <v-textarea
         v-model="additionalInfo"
-        placeholder="If there are any more additional information the schools should know write here"
+        placeholder="If there are any more additional information the schools should know, please write here"
       ></v-textarea>
     </fieldset>
 
@@ -267,6 +267,8 @@ export default {
       university: "",
       additionalInfo: "",
 
+
+      // Validation rules for form fields
       InputRules: [
         (value) => {
           if (value) return true;
@@ -312,9 +314,6 @@ export default {
       }
     },
   },
-
-
-
 };
 
 
