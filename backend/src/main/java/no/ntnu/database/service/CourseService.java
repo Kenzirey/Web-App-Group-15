@@ -67,6 +67,7 @@ public class CourseService {
 		course.setHoursPerWeek(courseDto.hoursPerWeek());
 		course.setRelatedCertification(courseDto.relatedCertification());
 		course.setCourseDescription(courseDto.courseDescription());
+		course.setSale(courseDto.sale());
 		if (courseDto.categoryIds() != null) {
 			course.setCategories(findAllAsSet(courseDto.categoryIds(), categoryRepository));
 		}

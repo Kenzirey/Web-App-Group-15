@@ -1,15 +1,16 @@
 <template>
 
-	<footer class="footer-container">
-		<div class="footer-links">
-			<v-btn id="about-us-button" @click="navigateToAboutUs" variant="text" size="large">About Us</v-btn>
-			<v-btn id="contact-us-button" @click="navigateToContactUs" variant="text" size="large">Contact Us</v-btn>
-			<v-select :items="currencies" variant="outlined" :model-value="$currency"></v-select>
-		</div>
-		<p>This website is a result of a university group project performed in the course IDATA2301 Web technologies at
-			NTNU. All the information provided here is a result of imagination. Any resemblance with real companies or
-			products is a coincidence.</p>
-	</footer>
+  <footer class="footer-container">
+    <div class="footer-links">
+      <v-btn id="about-us-button" @click="navigateToAboutUs" variant="text" size="large">About Us</v-btn>
+      <v-btn id="contact-us-button" @click="navigateToContactUs" variant="text" size="large">Contact Us</v-btn>
+      <v-btn id="disclaimer-button" @click="navigateDisclaimer" variant="text" size="large">Disclaimer</v-btn>
+      <v-select :items="currencies" variant="outlined" :model-value="$currency"></v-select>
+    </div>
+    <p>This website is a result of a university group project performed in the course IDATA2301 Web technologies at
+      NTNU. All the information provided here is a result of imagination. Any resemblance with real companies or
+      products is a coincidence.</p>
+  </footer>
 
 </template>
 
@@ -26,11 +27,17 @@ export default {
 	},
 	methods: {
 		navigateToAboutUs() {
-			this.$router.push('/about')
-		},
-		navigateToContactUs() {
-			this.$router.push('/contact')
-		},
+      this.$router.push('/about')
+      window.scrollTo({top:0});
+    },
+    navigateToContactUs() {
+      this.$router.push('/contact')
+      window.scrollTo({top:0});
+    },
+    navigateDisclaimer() {
+      this.$router.push('/disclaimer')
+      window.scrollTo({top:0});
+    },
 		checkLang(langSubstring) {
 			return navigator.language.replace(/-/g, "_").toUpperCase().includes(`_${langSubstring.toUpperCase()}`);
 		},
@@ -111,7 +118,7 @@ export default {
 
 .footer-links {
 	display: grid;
-	grid-template-columns: 1fr auto auto 1fr;
+	grid-template-columns: 1fr auto auto auto 1fr;
 	width: 100%;
 	justify-content: center;
 	gap: 15px;
@@ -127,19 +134,37 @@ export default {
 	grid-column-end: 4;
 }
 
-.footer-links .v-select {
-	justify-self: end;
-	grid-column-start: 4;
-	grid-column-end: 5;
+#disclaimer-button {
+  grid-column-start: 4;
+  grid-column-end: 5;
 }
 
-@media screen and (max-width: 600px) {
+.footer-links .v-select {
+	justify-self: end;
+	grid-column-start: 5;
+	grid-column-end: 6;
+}
+
+@media screen and (max-width: 768px) {
 	.footer-links .v-select {
 		justify-self: center;
 		grid-column-start: 1;
-		grid-column-end: 5;
+		grid-column-end: 6;
 		grid-row-start: 2;
 		grid-row-end: 3;
 	}
 }
+
+@media screen and (max-width: 480px) {
+	.footer-links {
+		justify-content: center;
+		display: flex;
+    flex-direction: column;
+	}
+
+  .v-btn {
+      padding: 6px 8px;
+    }
+}
+
 </style>
