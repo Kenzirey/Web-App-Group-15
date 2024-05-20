@@ -1,4 +1,10 @@
 <template>
+
+
+  <div v-if="isLoading">
+    <CoursePageSkeleton></CoursePageSkeleton>
+  </div>
+  <div v-else>
 	<!--Content wrapper-->
 	<div class="course-container" v-if="course != null">
 		<h2 class="course-title">{{ course.courseName }}</h2>
@@ -58,17 +64,23 @@
 			{{ course.courseDescription }}
 		</p>
 	</div>
-	<div id="no-course" v-if="!course">
-		<h1>(404 - Course not found)</h1>
-	</div>
+    <div id="no-course" v-if="!course">
+      <h1>(404 - Course not found)</h1>
+    </div>
+  </div>
+
+
+
 </template>
 
 
 <script>
 import { watch } from 'vue';
+import CoursePageSkeleton from "@/components/CourseSkeletonLoader.vue";
 
 export default {
 	name: 'CoursePage',
+  components: {CoursePageSkeleton},
 	data() {
 		return {
 			course: null,
@@ -76,6 +88,7 @@ export default {
 			providers: [],
 			isFavorite: false,
 			waitingForFavoriteToggle: false,
+      isLoading: true
 		};
 	},
 	methods: {
@@ -105,6 +118,7 @@ export default {
 			}
 		},
 		async fetchData() {
+      await new Promise(resolve => setTimeout(resolve, 2000));
 			const favoriteResponse = await this.$authFetch(this.$backendUrl + "favorites/" + this.$route.params.id);
 			if (favoriteResponse != null && favoriteResponse.ok) {
 				this.isFavorite = true;
@@ -143,7 +157,7 @@ export default {
 						originalCurrency: link.currency
 					}));
 				}
-			}
+			} this.isLoading = false
 		},
     orderCourse() {
       this.$router.push({
