@@ -4,6 +4,7 @@
     <div class="footer-links">
       <v-btn @click="navigateToAboutUs" variant="text" size="large">About Us</v-btn>
       <v-btn @click="navigateToContactUs" variant="text" size="large">Contact Us</v-btn>
+      <v-btn @click="navigateDisclaimer" variant="text" size="large">Disclaimer</v-btn>
     </div>
     <p>This website is a result of a university group project performed in the course IDATA2301 Web technologies at
       NTNU. All the information provided here is a result of imagination. Any resemblance with real companies or
@@ -18,9 +19,15 @@ export default {
   methods: {
     navigateToAboutUs() {
       this.$router.push('/about')
+      window.scrollTo({top:0});
     },
     navigateToContactUs() {
       this.$router.push('/contact')
+      window.scrollTo({top:0});
+    },
+    navigateDisclaimer() {
+      this.$router.push('/disclaimer')
+      window.scrollTo({top:0});
     }
   }
 }
