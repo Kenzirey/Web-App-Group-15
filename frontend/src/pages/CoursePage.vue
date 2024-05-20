@@ -36,7 +36,6 @@
         <span class="value">{{ course.relatedCertification }}</span>
       </div>
       <!-- Provider and Cost -->
-      <!--
       <div v-for="(provider, index) in course.courseProviders" :key="index" class="info-item">
         <em class="key">Provider:</em>
         <span class="value">{{ provider.providerName }}</span>
@@ -47,7 +46,6 @@
         <em class="key">Note:</em>
         <span class="value">This course is currently unavailable<br/>Please check again later</span>
       </div>
-      -->
     </section>
     <div class="info-buttons">
       <nav>
