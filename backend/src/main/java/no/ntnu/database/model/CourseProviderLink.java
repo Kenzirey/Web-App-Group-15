@@ -1,5 +1,6 @@
 package no.ntnu.database.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -7,6 +8,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,35 +21,49 @@ public final class CourseProviderLink {
 	@EmbeddedId
 	private CourseProviderLinkId id;
 
+	@JsonIgnore
 	@Schema(description = "A course connected to the course provider")
 	@ManyToOne
 	@JoinColumn(name = "course_id", insertable = false, updatable = false)
 	private Course course;
 
+	@JsonIgnore
 	@Schema(description = "A course provider connected to a specific course")
 	@ManyToOne
 	@JoinColumn(name = "course_provider_id", insertable = false, updatable = false)
 	private CourseProvider courseProvider;
 
+	@NotNull
 	@Column(name = "price")
 	private double price;
 
-	public CourseProviderLink() {}
+	@NotNull
+	@Column(name = "currency")
+	private String currency;
+
+	public CourseProviderLink() {
+	}
 
 	/**
 	 * Creates a {@link CourseProviderLink} given the specific {@link Course},
-	 * 									{@link CourseProvider} and the price.
+	 * {@link CourseProvider} and the price.
 	 *
-	 * @param course 			the {@link Course} connected to the {@link CourseProvider}.
-	 * @param courseProvider	the {@link CourseProvider} linked to a specific {@link Course}.
-	 * @param price				the price for the {@link Course} from the {@link CourseProvider}
+	 * @param course         the {@link Course} connected to the {@link CourseProvider}.
+	 * @param courseProvider the {@link CourseProvider} linked to a specific {@link Course}.
+	 * @param price          the price for the {@link Course} from the {@link CourseProvider}
+	 * @param currency       The currency that the price is in
 	 */
-	public CourseProviderLink(Course course, CourseProvider courseProvider, double price) {
-		this.id = new CourseProviderLinkId(course.getCourseId(),
-				courseProvider.getCourseProviderId());
-		this.course = course;
-		this.courseProvider = courseProvider;
-		this.price = price;
+	public CourseProviderLink(
+			Course course,
+			CourseProvider courseProvider,
+			double price,
+			String currency
+	) {
+		setId(new CourseProviderLinkId(course.getCourseId(), courseProvider.getCourseProviderId()));
+		setCourse(course);
+		setCourseProvider(courseProvider);
+		setPrice(price);
+		setCurrency(currency);
 	}
 
 	public CourseProviderLinkId getId() {
@@ -82,6 +98,14 @@ public final class CourseProviderLink {
 		this.price = price;
 	}
 
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
 	/**
 	 * Composite primary key containing {@code course_id} and {@code course_provider_id}.
 	 */
@@ -93,7 +117,8 @@ public final class CourseProviderLink {
 		@Column(name = "course_provider_id")
 		private int courseProviderId;
 
-		public CourseProviderLinkId() {}
+		public CourseProviderLinkId() {
+		}
 
 		public CourseProviderLinkId(int courseId, int courseProviderId) {
 			this.courseId = courseId;
@@ -121,7 +146,7 @@ public final class CourseProviderLink {
 			if (this == o) {
 				return true;
 			}
-			if (o == null || getClass() != o.getClass())  {
+			if (o == null || getClass() != o.getClass()) {
 				return false;
 			}
 			CourseProviderLinkId that = (CourseProviderLinkId) o;
@@ -137,13 +162,14 @@ public final class CourseProviderLink {
 	/**
 	 * A DTO for {@link CourseProvider}.
 	 *
-	 * @param courseId 	the {@link Course}'s id to connect the {@link CourseProvider} to.
-	 * @param price 	the price related to the specific
-	 * 					{@link CourseProvider} on the specific {@link Course}.
+	 * @param courseId the {@link Course}'s id to connect the {@link CourseProvider} to.
+	 * @param price    the price related to the specific
+	 *                 {@link CourseProvider} on the specific {@link Course}.
 	 */
 	public record CourseProviderLinkDto(
 			int courseId,
 			double price
-	) {}
+	) {
+	}
 }
 

@@ -1,6 +1,7 @@
 package no.ntnu.database.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.util.Arrays;
 import java.util.Optional;
 import no.ntnu.database.model.Course;
 import no.ntnu.database.model.CourseProvider;
@@ -25,55 +26,81 @@ public class CourseProviderLinkService {
 	private final CourseProviderLinkRepository courseProviderLinkRepository;
 	private final CourseRepository courseRepository;
 	private final CourseProviderRepository courseProviderRepository;
+	private final ExchangeRateService exchangeRateService;
 
 	/**
 	 * Creates the course provider link via autowired.
 	 *
-	 * @param courseProviderLinkRepository 	the repository for managing course provider links.
-	 * @param courseRepository				the repository for managing courses.
-	 * @param courseProviderRepository		the repository for managing course providers.
+	 * @param courseProviderLinkRepository The repository for managing course provider links.
+	 * @param courseRepository             The repository for managing courses.
+	 * @param courseProviderRepository     The repository for managing course providers.
+	 * @param exchangeRateService          The service class for converting prices.
 	 */
 	@Autowired
-	public CourseProviderLinkService(CourseProviderLinkRepository courseProviderLinkRepository,
-									 CourseRepository courseRepository,
-									 CourseProviderRepository courseProviderRepository) {
+	public CourseProviderLinkService(
+			CourseProviderLinkRepository courseProviderLinkRepository,
+			CourseRepository courseRepository,
+			CourseProviderRepository courseProviderRepository,
+			ExchangeRateService exchangeRateService
+	) {
 		this.courseProviderLinkRepository = courseProviderLinkRepository;
 		this.courseRepository = courseRepository;
 		this.courseProviderRepository = courseProviderRepository;
+		this.exchangeRateService = exchangeRateService;
+	}
+
+	/**
+	 * Converts the currency of one or more links. Conversion is done in-place.
+	 *
+	 * @param currency The currency to convert all links to
+	 * @param links    The links to convert the currency of
+	 */
+	public void convertCurrencies(String currency, CourseProviderLink... links) {
+		Arrays.stream(links).forEach(link -> {
+			if (!link.getCurrency().equalsIgnoreCase(currency)) {
+				link.setPrice(exchangeRateService.exchangeAmount(
+						link.getPrice(),
+						link.getCurrency(),
+						currency
+				));
+				link.setCurrency(currency);
+			}
+		});
 	}
 
 	/**
 	 * Adds a course listing for a specific course provider.
 	 * ChatGPT v 4o helped with this specific method.
 	 *
-	 * @param providerId 	the ID of the {@link CourseProvider}
-	 * @param dto 			the data transfer object that contains
-	 *                         the {@link Course} and price information.
+	 * @param providerId The ID of the {@link CourseProvider}
+	 * @param dto        The data transfer object that contains
+	 *                   The {@link Course} and price information.
+	 * @param currency   The currency the price of the DTO is in
 	 * @throws EntityNotFoundException if either the course or course provider is not found.
 	 */
-	public void addCourseListing(int providerId, CourseProviderLink.CourseProviderLinkDto dto) {
-		CourseProviderLinkId id = new CourseProviderLinkId(dto.courseId(), providerId);
-		CourseProviderLink courseProviderLink = new CourseProviderLink();
-		courseProviderLink.setId(id);
-		courseProviderLink.setPrice(dto.price());
-
+	public void addCourseListing(
+			int providerId,
+			CourseProviderLink.CourseProviderLinkDto dto,
+			String currency
+	) {
 		Course course = courseRepository.findById(dto.courseId())
 				.orElseThrow(EntityNotFoundException::new);
 		CourseProvider courseProvider = courseProviderRepository.findById(providerId)
 				.orElseThrow(EntityNotFoundException::new);
 
-		courseProviderLink.setCourse(course);
-		courseProviderLink.setCourseProvider(courseProvider);
-
-		courseProviderLinkRepository.save(courseProviderLink);
+		courseProviderLinkRepository.save(new CourseProviderLink(
+				course,
+				courseProvider,
+				dto.price(),
+				currency
+		));
 	}
 
 	/**
 	 * Deletes a course listing for a specific {@link CourseProvider}.
 	 *
-	 * @param providerId 	the id of the {@link CourseProvider}
-	 * @param courseId		the id of the {@link Course}.
-	 *
+	 * @param providerId the id of the {@link CourseProvider}
+	 * @param courseId   the id of the {@link Course}.
 	 * @return Returns true if deleted. False if the doesn't exist.
 	 */
 	public boolean deleteCourseListing(int providerId, int courseId) {
@@ -96,36 +123,48 @@ public class CourseProviderLinkService {
 	/**
 	 * Retrieves a course provider link by provider and course ID.
 	 *
-	 * @param providerId    the ID of the {@link CourseProvider}
-	 * @param courseId      the ID of the {@link Course}
-	 *
-	 * @return              {@link Optional} containing the found {@link CourseProviderLink}
-	 * 						or empty if not found.
+	 * @param providerId The ID of the {@link CourseProvider}
+	 * @param courseId   The ID of the {@link Course}
+	 * @param currency   The currency to convert the {@link Course} price to, if the link is found
+	 * @return {@link Optional} containing the found {@link CourseProviderLink}
+	 *     or empty if not found.
 	 */
-	public Optional<CourseProviderLink> findCourseProviderLink(int providerId, int courseId) {
+	public Optional<CourseProviderLink> findCourseProviderLink(
+			int providerId,
+			int courseId,
+			String currency
+	) {
 		//Create key to look for it in the repository.
 		CourseProviderLinkId id = new CourseProviderLinkId(courseId, providerId);
-		return courseProviderLinkRepository.findById(id);
+		return courseProviderLinkRepository
+				.findById(id)
+				.map(link -> {
+					convertCurrencies(currency, link);
+					return link;
+				});
 	}
 
 	/**
 	 * Updates an existing course provider link with new pricing.
 	 *
-	 * @param providerId 	the ID of the {@link CourseProvider}
-	 * @param courseId 		the ID of the {@link Course}
-	 * @param updatedLink   the updated {@link CourseProviderLink} information
-	 *
-	 * @throws EntityNotFoundException if the {@link CourseProviderLink}, {@link CourseProvider},
-	 * 									or {@link CourseProvider} is not found.
+	 * @param providerId The ID of the {@link CourseProvider}
+	 * @param courseId   The ID of the {@link Course}
+	 * @param price      The updated price of the {@link Course}
+	 * @param currency   The currency that the price is specified in
+	 * @throws EntityNotFoundException If the {@link CourseProviderLink}, {@link CourseProvider},
+	 *                                 or {@link CourseProvider} is not found.
 	 */
-	public void updateCourseProviderLink(int providerId, int courseId,
-										 CourseProviderLink updatedLink) {
+	public void updateCourseProviderLink(
+			int providerId,
+			int courseId,
+			double price,
+			String currency
+	) {
 		CourseProviderLinkId id = new CourseProviderLinkId(courseId, providerId);
-		CourseProviderLink existingLink = courseProviderLinkRepository.findById(id)
+		CourseProviderLink link = courseProviderLinkRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Course provider link not found"));
-
-		existingLink.setPrice(updatedLink.getPrice());
-
-		courseProviderLinkRepository.save(existingLink);
+		link.setPrice(price);
+		link.setCurrency(currency);
+		courseProviderLinkRepository.save(link);
 	}
 }

@@ -51,7 +51,6 @@ public final class Course {
 			"This course teaches the basics of SQL.")
 	private String courseDescription;
 
-	@JsonIgnore
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
 	@Schema(description = "A set of course-provider links associated with this course.")
 	private Set<CourseProviderLink> courseProviderLinks = new HashSet<>();

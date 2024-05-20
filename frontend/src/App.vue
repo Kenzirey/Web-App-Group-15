@@ -6,7 +6,7 @@
     
       <main class="course-content">
         <!-- The main content of the page, replaced based on the current route -->
-        <router-view id="content"></router-view>
+        <router-view></router-view>
       </main>
 
     <!--Footer component-->
