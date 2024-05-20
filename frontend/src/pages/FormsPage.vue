@@ -1,17 +1,20 @@
 <!-- src/pages/FormsPage.vue -->
 
 <template>
-  <form class="formBox">
-    <fieldset class="fieldBox">
-      <h1 class="formSections">Personal information</h1>
 
-      <v-form v-model="valid">
+  <h1 class="title"> Place Order </h1>
+  <v-form v-model="valid" class="formBox margin-bottom" ref="form">
+    <fieldset class="fieldBox">
+      <h2 class="formSections">Personal information</h2>
+
+      <!-- First name, Last name, Email, Phone number, Gender -->
+
         <v-container>
           <v-row>
             <v-col cols="12" md="6">
               <v-text-field
                 v-model="firstName"
-                :rules="nameRules"
+                :rules="InputRules"
                 label="First name"
                 required
               ></v-text-field>
@@ -20,18 +23,14 @@
             <v-col cols="12" md="6">
               <v-text-field
                 v-model="lastName"
-                :rules="nameRules"
+                :rules="InputRules"
                 label="Last name"
                 required
               ></v-text-field>
             </v-col>
           </v-row>
         </v-container>
-      </v-form>
 
-      <!-- Email, Phone number -->
-
-      <v-form v-model="valid">
         <v-container>
           <v-row>
             <v-col cols="12" md="15">
@@ -45,22 +44,26 @@
 
             <v-col cols="12" md="15">
               <v-text-field
-                v-model.number="age"
+                v-model="phoneNumber"
+                @keypress="filter(event)"
                 :counter="8"
+                :rules="InputRules"
                 label="Phone number"
                 required
               ></v-text-field>
             </v-col>
           </v-row>
         </v-container>
-      </v-form>
+
 
       <v-col cols="12" md="15">
         <v-select
           v-model="selectGender"
           :items="genders"
+          :rules="[(v) => !!v || 'Please select a gender']"
           label="Gender:"
           required
+          placeholder="Select Gender"
         ></v-select>
       </v-col>
 
@@ -69,14 +72,14 @@
           <v-date-picker
             title="Select birth date"
             show-adjacent-months
-            color="primary"
-            width="500"
+            width="500px"
           ></v-date-picker>
         </v-row>
       </v-container>
+
     </fieldset>
 
-    <!-- Address og by-->
+    <!-- Address, city postcode, country-->
 
     <fieldset class="fieldBox">
       <h1 class="formSections">Address</h1>
@@ -84,49 +87,48 @@
       <v-col cols="12" md="15">
         <v-text-field
           v-model="address"
-          :counter="10"
           label="Address"
+          rules="InputRules"
           hide-details
           required
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" md="4"> </v-col>
+      <v-container>
+        <v-row>
+          <v-col cols="15" md="6">
+            <v-text-field
+              v-model="cityName"
+              label="City"
+              :rules="InputRules"
+              required
+            ></v-text-field>
+          </v-col>
 
-      <v-row>
-        <v-col cols="15" md="6">
-          <v-text-field
-            v-model="cityName"
-            :counter="10"
-            label="City"
-            required
-          ></v-text-field>
-        </v-col>
+          <v-col cols="12" md="6">
+            <v-text-field
+              v-model="postCode"
+              @keypress = "filter(event)"
+              label="Postcode"
+              required
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-container>
 
-        <v-col cols="12" md="6">
-          <v-text-field
-            v-model="postCode"
-            :counter="10"
-            label="Postcode"
-            required
-          ></v-text-field>
-        </v-col>
 
-        <v-col cols="12" md="4"> </v-col>
-      </v-row>
-
-      <!-- TODO legg til land der brukeren bor-->
-      <v-select
-        class="selectFormat"
-        v-model="selectCountry"
-        :items="Country"
+      <v-col cols="12" md="15">
+      <v-text-field
+        v-model="country"
         label="Country"
+        :rules="InputRules"
+        hide-details
         required
-      ></v-select>
+      ></v-text-field>
+      </v-col>
     </fieldset>
 
     <!-- Application Details -->
-    <!--Temporary name finner på noe senere enn Application Details-->
     <fieldset class="fieldBox">
       <h3 class="formSections">Application Details</h3>
       <p class="labelParagraph">
@@ -135,8 +137,9 @@
 
       <v-col cols="12" md="15">
         <v-text-field
-          v-model="courseName"
+          v-model="title"
           label="Course Name"
+          :rules="InputRules"
           required
         ></v-text-field>
       </v-col>
@@ -145,76 +148,78 @@
         <v-text-field
           v-model="university"
           label="University:"
+          :rules="InputRules"
           required
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" md="15">
-        <v-text-field
-          v-model="courseProivder"
-          label="Course provider:"
-          required
-        ></v-text-field>
-      </v-col>
     </fieldset>
 
+    <!-- Additional information -->
     <fieldset class="fieldBox">
       <h4 class="formSections">Additional information</h4>
 
       <v-textarea
         v-model="additionalInfo"
-        placeholder="If there are any more additional information the schools should know write here"
+        placeholder="If there are any more additional information the schools should know, please write here"
       ></v-textarea>
     </fieldset>
 
-    <!--TODO: Action-->
-    <v-btn text="submit" type="submit" href="/submit" />
-  </form>
+    
+    <v-btn text="submit" type="submit" @click.prevent="validate" class="mr-3">
+      Submit
+    </v-btn>
 
-  <!-- Vue card med generel info om course, knapp går til forms der brukeren kan fylle ut info-->
-  <v-card title="SQL for beginners" variant="outlined">
-    <v-card-text>
-      <!-- Fyll in  text her med info om course-->
+    <v-btn @click="clearForm">Clear</v-btn>
 
-      <div class="info-item">
-        <span class="key">Course Providers:</span>
-        <span class="value">NTNU</span>
-      </div>
-      <div class="info-item">
-        <span class="key">Difficulty Level:</span>
-        <span class="value">Beginner</span>
-      </div>
-      <div class="info-item">
-        <span class="key">Course Size:</span>
-        <span class="value">ECTs Credits</span>
-      </div>
-    </v-card-text>
-
-    <v-card-actions>
-      <v-btn text="Apply to course" type="apply" href="/forms"></v-btn>
-    </v-card-actions>
-  </v-card>
+  </v-form>
 </template>
 
 <style lang="scss" scoped>
+
+::v-deep .v-date-picker-header{
+  background: linear-gradient(
+    to right,
+    rgb(var(--v-theme-gradiantOne)),
+    rgb(var(--v-theme-gradiantTwo))
+  ) !important;
+  color: white;
+}
+::v-deep .v-picker-title {
+  background: linear-gradient(
+    to right,
+    rgb(var(--v-theme-gradiantOne)),
+    rgb(var(--v-theme-gradiantTwo))
+  );
+  color: white;
+}
+
 .formBox {
-  max-width: 1049px;
+  max-width: fit-content;
   margin: auto;
-  background: rgb(var(--v-theme-primary));
+  margin-bottom: 20px;
+  background: linear-gradient(
+    to right,
+    rgb(var(--v-theme-gradiantOne)),
+    rgb(var(--v-theme-gradiantTwo))
+  );
   padding: 40px;
-  border-radius: 4px;
-  border-style: solid;
+}
+
+.title {
+  margin-bottom: 20px;
 }
 
 .fieldBox {
   background: white;
+  margin-inline: auto;
 }
 
 .labelParagraph {
   color: Black;
   padding: 10px;
   display: block;
-  margin: 25px 5 15px;
+  margin: 10px 0;
   text-align: left;
   font-size: 15px;
   letter-spacing: 1px;
@@ -225,71 +230,92 @@
   color: Black;
   padding: 10px;
   display: block;
-  margin: 25px 5 15px;
+  margin: 10px 0;
   text-align: left;
   font-size: x-large;
   letter-spacing: 1px;
   font-weight: bold;
+  max-width: fit-content;
 }
 
-.flex {
-  display: flex;
-  justify-content: space-between;
+.margin-bottom {
+  margin-bottom: 20px;
 }
 </style>
 
 <script>
 export default {
+  props: ["courseId", "title"],
   data() {
     return {
       firstName: "",
       lastName: "",
-      nameRules: [
-        (value) => {
-          if (value) return true;
-
-          return "Name is required.";
-        },
-      ],
-
-      emailRules: [
-        (value) => {
-          if (value) return true;
-
-          return "E-mail is requred.";
-        },
-        (value) => {
-          if (/.+@.+\..+/.test(value)) return true;
-
-          return "E-mail must be valid.";
-        },
-      ],
-
       email: "",
       phoneNumber: "",
-      selectGender: "Select gender",
-      selectCountry: "Select country",
-
       genders: [
         "Male",
         "Female",
-        "Third other thing",
         "Other",
         "Prefer not to say",
       ],
 
-      highSchoolAddress: "",
-      dateGraduated: "",
+      address: "",
       cityName: "",
       postCode: "",
-
-      courseName: "",
+      country: "",
+      title: this.title,
       university: "",
-      courseProivder: "",
-      courseId: "",
-
       additionalInfo: "",
+
+
+      // Validation rules for form fields
+      InputRules: [
+        (value) => {
+          if (value) return true;
+
+          return "Input is required.";
+        },
+      ],
+      emailRules: [
+        (value) => !!value || "E-mail is required.",
+        (value) => /.+@.+\..+/.test(value) || "E-mail must be valid. example: john@something.com",
+      ],
     };
   },
+  methods: {
+    filter: function (evt) {
+      evt = evt ? evt : window.event;
+      let expect = evt.target.value.toString() + evt.key.toString();
+
+      if (!/^[-+]?[0-9]*\.?[0-9]*$/.test(expect)) {
+        evt.preventDefault();
+      } else {
+        return true;
+      }
+    },
+    clearForm() {
+      this.firstName = "";
+      this.lastName = "";
+      this.email = "";
+      this.phoneNumber = "";
+      this.selectGender = "";
+      this.address = "";
+      this.cityName = "";
+      this.postCode = "";
+      this.country = "";
+      this.title = "";
+      this.university = "";
+      this.additionalInfo = "";
+    },
+    async validate() {
+      const { valid } = await this.$refs.form.validate();
+      if (valid) {
+        this.$router.push("/submit");
+      }
+    },
+  },
 };
+
+
+
 </script>

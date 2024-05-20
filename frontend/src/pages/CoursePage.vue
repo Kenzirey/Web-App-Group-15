@@ -38,8 +38,9 @@
 		</section>
 		<div class="info-buttons">
 			<nav>
-				<v-btn aria-label="Order Course" prepend-icon="mdi-cart-check" text="Order Course" type="apply"
-					href="/forms" variant="outlined"></v-btn>
+        <v-btn aria-label="Order Course" prepend-icon="mdi-cart-check"
+               text="Order Course" @click="orderCourse"
+        ></v-btn>
 			</nav>
 			<v-btn aria-label="Add to Favorites" @click="toggleFavorite" :disabled="waitingForFavoriteToggle"
 				:prepend-icon="isFavorite ? 'mdi-heart-off-outline' : 'mdi-heart'">
@@ -143,7 +144,13 @@ export default {
 					}));
 				}
 			}
-		}
+		},
+    orderCourse() {
+      this.$router.push({
+        name: "Forms",
+        params: {courseId: this.course.courseId, title: this.course.courseName},
+      });
+    },
 	},
 	created() {
 		this.fetchData();
