@@ -1,9 +1,11 @@
 <template>
+
+
   <v-app @click="lastClick = $event" id="courseApp">
     <!--The header is the v-app-bar from the toolbar-->
     <TopToolbar class="toolbar" :lastGlobalClick="lastClick" />
 
-    
+
       <main class="course-content">
         <!-- The main content of the page, replaced based on the current route -->
         <router-view id="content"></router-view>
@@ -12,6 +14,7 @@
     <!--Footer component-->
     <Footer></Footer>
   </v-app>
+
 </template>
 
 <script>

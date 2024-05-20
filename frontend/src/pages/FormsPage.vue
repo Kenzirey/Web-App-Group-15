@@ -1,8 +1,9 @@
 <!-- src/pages/FormsPage.vue -->
 
 <template>
-  <h1>Place Order</h1>
-  <v-form v-model="valid" class="formBox" ref="form">
+
+  <h1 class="title">Place Order</h1>
+  <v-form v-model="valid" class="formBox margin-bottom" ref="form">
     <fieldset class="fieldBox">
       <h2 class="formSections">Personal information</h2>
 
@@ -93,7 +94,6 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" md="4"> </v-col>
       <v-container>
         <v-row>
           <v-col cols="15" md="6">
@@ -117,7 +117,6 @@
         </v-row>
       </v-container>
 
-      <v-col cols="12" md="4"> </v-col>
 
       <v-col cols="12" md="15">
         <v-text-field
@@ -172,7 +171,6 @@
     <v-btn @click="clearForm">Clear</v-btn>
   </v-form>
 
-  <v-col cols="12" md="4"> </v-col>
 
 </template>
 
@@ -196,56 +194,64 @@
 }
 
 .formBox {
-  max-width: 1049px;
+  max-width: fit-content;
   margin: auto;
+  padding: 40px;
+  margin-bottom: 20px;
   background: linear-gradient(
     to right,
     rgb(var(--v-theme-gradiantOne)),
     rgb(var(--v-theme-gradiantTwo))
   );
-  padding: 40px;
+}
 
+.title {
+  margin-bottom: 20px;
 }
 
 
 .fieldBox {
   background: white;
+  margin-inline: auto;
+
 }
 
-.labelParagraph {
+.labelParagraph  {
   color: Black;
   padding: 10px;
   display: block;
-  margin: 25px 5 15px;
+  margin: 10px 0;
   text-align: left;
   font-size: 15px;
   letter-spacing: 1px;
   font-weight: bold;
+
 }
 
 .formSections {
   color: Black;
   padding: 10px;
   display: block;
-  margin: 25px 5 15px;
+  margin: 10px 0;
   text-align: left;
   font-size: x-large;
   letter-spacing: 1px;
   font-weight: bold;
-}
-
-.flex {
-  display: flex;
-  justify-content: space-between;
+  max-width: fit-content;
 }
 
 
+.margin-bottom {
+  margin-bottom: 20px;
+}
 
 </style>
 
 
 <script>
+
 export default {
+
   props: ["courseId", "title"],
   data() {
     return {
@@ -315,5 +321,9 @@ export default {
         this.$router.push("/submit");
       }
     },
-  }};
+  },
+
+
+
+};
 </script>
