@@ -161,5 +161,10 @@ export default {
 		display: flex;
     flex-direction: column;
 	}
+
+  .v-btn {
+      padding: 6px 8px;
+    }
 }
+
 </style>
