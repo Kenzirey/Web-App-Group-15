@@ -56,12 +56,21 @@ export default {
   /* Top&bottom, left&right. Now we avoid multiple padding declarations*/
   padding: 24px 16px;
   color: rgb(var(--v-theme-background));
+
+  @media (max-width: 479px) {
+    /* To solve the weird mobile scaling issue, the buttons needed to be made smaller*/
+    .v-btn {
+      padding: 6px 8px;
+      font-size: 12px;
+    }
+  }
 }
 
 .footer-links {
   display: flex;
   width: 100%;
   justify-content: center;
-  gap: 15px;
+  gap: 8px;
 }
+
 </style>
