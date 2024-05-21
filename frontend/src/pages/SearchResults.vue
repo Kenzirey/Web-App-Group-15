@@ -4,7 +4,7 @@
 		<v-select label="Difficulty" :items="['Any', ...this.$difficulties]" v-model="difficulty" @update:model-value="filterResults"
 			:disabled="!['all results', 'course'].includes(type.toLowerCase())"></v-select>
 		<v-select label="Category" :items="[{categoryName: 'Any'}, ...categories]" v-model="category" item-title="categoryName" @update:model-value="filterResults"
-			:disabled="!['all results', 'course'].includes(type.toLowerCase())"></v-select>
+			:disabled="!['all results', 'course'].includes(type.toLowerCase())" return-object></v-select>
 	</div>
 	<hr>
 	<h1>Results:</h1>
@@ -61,8 +61,9 @@ export default {
 		formatResult(result) {
 			if (result.type === "course") {
 				return {
-					title: result.name,
-					subtitle: `Difficulty: ${result.difficulty}`,
+					title: `${result.name} (${result.difficulty})`,
+					subtitle: result.categories.length === 0 ? null
+						: `Categories: ${result.categories.map(category => category.categoryName).join(", ")}`,
 					text: result.description,
 				}
 			} else if (result.type === "provider") {
@@ -136,7 +137,7 @@ export default {
 			filteredResults: [],
 			query: "",
 			type: "All results",
-			category: "Any",
+			category: {categoryName: "Any"},
 			difficulty: "Any"
 		};
 	},
