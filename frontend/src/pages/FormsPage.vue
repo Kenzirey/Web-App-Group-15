@@ -111,8 +111,7 @@
 		<v-btn prepend-icon="mdi-check-underline" text="submit" type="submit" @click.prevent="validate" class="mr-3">
 			Submit
 		</v-btn>
-
-		<v-btn prepend-icon="mdi-delete" @click="clearForm">Clear</v-btn>
+      
     </v-col>
 
 	</v-form>
