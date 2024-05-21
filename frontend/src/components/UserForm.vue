@@ -38,7 +38,7 @@
 
         <v-btn color="success" type="submit" class="mt-3">Submit</v-btn>
       </v-form>
-    </div> 
+    </div>
   </v-container>
 </template>
 
@@ -120,12 +120,12 @@ export default {
       try {
         const method = this.user.id ? 'put' : 'post';
         const url = this.user.id ? `${this.$backendUrl}users/${this.user.id}` : `${this.$backendUrl}users/register`;
-        
+
         const response = await axios[method](url, this.user);
         console.log(response.data);
-        
-        this.$emit('user-submitted', response.data); 
-        
+
+        this.$emit('user-submitted', response.data);
+
         this.resetForm();
       } catch (error) {
         console.error('Error submitting form:', error);
