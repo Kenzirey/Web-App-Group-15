@@ -72,7 +72,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/authenticate", "/h2-console/**", "/users/register", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll() // Permit all for authenticate and H2 console
 						.requestMatchers(HttpMethod.GET,
-								"/categories", "/categories/{query}",
+								"/categories", "/categories/**",
 								"/courses", "/courses/{id}", "/courses/search/{query}",
 								"/providers", "/providers/{id}", "/providers/search/{query}",
                                 "/providers/{providerId}/coursePriceListings/**",

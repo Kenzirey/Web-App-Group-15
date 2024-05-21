@@ -7,6 +7,7 @@ import { getCookie } from './utility/cookieHelper';
 
 const courseApp = createApp(App)
 courseApp.config.globalProperties.$backendUrl = "http://localhost:8080/";
+courseApp.config.globalProperties.$difficulties = ["Beginner", "Advanced", "Expert"];
 courseApp.config.globalProperties.$currency = ref("");
 courseApp.config.globalProperties.$authFetch = async function (endpoint, requestData) {
     const jwt = getCookie("authToken");

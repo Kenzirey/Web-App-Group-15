@@ -203,7 +203,7 @@ export default {
 #no-image {
 	aspect-ratio: 16 / 9;
 	width: 80%;
-  max-width: 80%;
+	max-width: 80%;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;

@@ -56,21 +56,19 @@ public class CategoryController {
 	}
 
 	/**
-	 * Endpoint to search for categories.
+	 * Endpoint to find a category.
 	 *
-	 * @param query The query to use when searching for categories.
-	 *
-	 * @return Categories that match the search queries
+	 * @param id The ID of the category
+	 * @return 200 with a category if found, 404 otherwise
 	 */
-	@Operation(summary = "Search for categories",
-			description = "Search for categories based on a database query string")
-	//TODO: Improve swagger here with api responses.
-	@ApiResponse(responseCode = "200", description = "Successfully searched")
-	@GetMapping(value = "{query}", produces = {"application/json"})
-	public Iterable<Category> searchCategory(@PathVariable String query) {
-		return query == null || query.isBlank()
-				? service.getAllCategories()
-				: service.searchCategory(query);
+	@Operation(summary = "Get a category", description = "Get a category from the database")
+	@ApiResponse(responseCode = "200", description = "A category was found")
+	@ApiResponse(responseCode = "404", description = "No category was found")
+	@GetMapping(value = "{id}", produces = {"application/json"})
+	public ResponseEntity<Category> getCategory(@PathVariable int id) {
+		return service.findById(id)
+				.map(ResponseEntity::ok)
+				.orElse(ResponseEntity.notFound().build());
 	}
 
 	/**
