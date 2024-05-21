@@ -30,7 +30,7 @@
 				</v-col>
 				<v-col cols="12" sm="4">
 					<v-select label="Difficulty Level" v-model="course.difficultyLevel"
-						:items="['Beginner', 'Intermediate', 'Advanced']" required></v-select>
+						:items="this.$difficulties" required></v-select>
 				</v-col>
 				<v-col cols="12" md="6">
 					<v-text-field label="Related Certification" v-model="course.relatedCertification"></v-text-field>
