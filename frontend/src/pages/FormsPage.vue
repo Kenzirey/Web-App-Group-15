@@ -1,295 +1,255 @@
 <!-- src/pages/FormsPage.vue -->
 
 <template>
-  <form class="formBox">
-    <fieldset class="fieldBox">
-      <h1 class="formSections">Personal information</h1>
 
-      <v-form v-model="valid">
-        <v-container>
-          <v-row>
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="firstName"
-                :rules="nameRules"
-                label="First name"
-                required
-              ></v-text-field>
-            </v-col>
+	<h1 class="title"> Place Order </h1>
+	<v-form v-model="valid" class="formBox margin-bottom" ref="form">
+		<fieldset class="fieldBox">
+			<h2 class="formSections">Personal information</h2>
 
-            <v-col cols="12" md="6">
-              <v-text-field
-                v-model="lastName"
-                :rules="nameRules"
-                label="Last name"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-form>
+			<!-- First name, Last name, Email, Phone number, Gender -->
 
-      <!-- Email, Phone number -->
+			<v-container>
+				<v-row>
+					<v-col cols="12" md="6">
+						<v-text-field v-model="firstName" :rules="InputRules" label="First name" required
+							persistent-hint hint="Enter your first name"></v-text-field>
+					</v-col>
 
-      <v-form v-model="valid">
-        <v-container>
-          <v-row>
-            <v-col cols="12" md="15">
-              <v-text-field
-                v-model="email"
-                :rules="emailRules"
-                label="E-mail"
-                required
-              ></v-text-field>
-            </v-col>
+					<v-col cols="12" md="6">
+						<v-text-field v-model="lastName" :rules="InputRules" label="Last name" required persistent-hint
+							hint="Enter your last name"></v-text-field>
+					</v-col>
+				</v-row>
+			</v-container>
 
-            <v-col cols="12" md="15">
-              <v-text-field
-                v-model.number="age"
-                :counter="8"
-                label="Phone number"
-                required
-              ></v-text-field>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-form>
+			<v-container>
+				<v-row>
+					<v-col cols="12" md="15">
+						<v-text-field v-model="email" :rules="emailRules" label="E-mail" required></v-text-field>
+					</v-col>
 
-      <v-col cols="12" md="15">
-        <v-select
-          v-model="selectGender"
-          :items="genders"
-          label="Gender:"
-          required
-        ></v-select>
-      </v-col>
+					<v-col cols="12" md="15">
+						<v-text-field v-model="phoneNumber" @keypress="filter(event)" :rules="InputRules"
+							label="Phone number" required persistent-hint hint="Enter your phone number"></v-text-field>
+					</v-col>
+				</v-row>
+			</v-container>
 
-      <v-container>
-        <v-row justify="start">
-          <v-date-picker
-            title="Select birth date"
-            show-adjacent-months
-            color="primary"
-            width="500"
-          ></v-date-picker>
-        </v-row>
-      </v-container>
-    </fieldset>
 
-    <!-- Address og by-->
+			<v-col cols="12" md="15">
+				<v-select v-model="selectGender" :items="genders" :rules="[(v) => !!v || 'Please select a gender']"
+					label="Gender:" required placeholder="Select Gender"></v-select>
+			</v-col>
 
-    <fieldset class="fieldBox">
-      <h1 class="formSections">Address</h1>
+			<v-container>
+				<v-row justify="start">
+					<v-date-picker title="Select birth date" show-adjacent-months width="500px"></v-date-picker>
+				</v-row>
+			</v-container>
 
-      <v-col cols="12" md="15">
-        <v-text-field
-          v-model="address"
-          :counter="10"
-          label="Address"
-          hide-details
-          required
-        ></v-text-field>
-      </v-col>
+		</fieldset>
 
-      <v-col cols="12" md="4"> </v-col>
+		<!-- Address, city postcode, country-->
 
-      <v-row>
-        <v-col cols="15" md="6">
-          <v-text-field
-            v-model="cityName"
-            :counter="10"
-            label="City"
-            required
-          ></v-text-field>
-        </v-col>
+		<fieldset class="fieldBox">
+			<h1 class="formSections">Address</h1>
 
-        <v-col cols="12" md="6">
-          <v-text-field
-            v-model="postCode"
-            :counter="10"
-            label="Postcode"
-            required
-          ></v-text-field>
-        </v-col>
+			<v-col cols="12" md="15">
+				<v-text-field v-model="address" label="Address" rules="InputRules" hide-details required></v-text-field>
+			</v-col>
 
-        <v-col cols="12" md="4"> </v-col>
-      </v-row>
+			<v-container>
+				<v-row>
+					<v-col cols="15" md="6">
+						<v-text-field v-model="cityName" label="City" :rules="InputRules" required></v-text-field>
+					</v-col>
 
-      <!-- TODO legg til land der brukeren bor-->
-      <v-select
-        class="selectFormat"
-        v-model="selectCountry"
-        :items="Country"
-        label="Country"
-        required
-      ></v-select>
-    </fieldset>
+					<v-col cols="12" md="6">
+						<v-text-field v-model="postCode" @keypress="filter(event)" label="Postcode"
+							required></v-text-field>
+					</v-col>
+				</v-row>
+			</v-container>
 
-    <!-- Application Details -->
-    <!--Temporary name finner på noe senere enn Application Details-->
-    <fieldset class="fieldBox">
-      <h3 class="formSections">Application Details</h3>
-      <p class="labelParagraph">
-        Information about the course you are attending
-      </p>
 
-      <v-col cols="12" md="15">
-        <v-text-field
-          v-model="courseName"
-          label="Course Name"
-          required
-        ></v-text-field>
-      </v-col>
+			<v-col cols="12" md="15">
+				<v-text-field v-model="country" label="Country" :rules="InputRules" hide-details
+					required></v-text-field>
+			</v-col>
+		</fieldset>
 
-      <v-col cols="12" md="15">
-        <v-text-field
-          v-model="university"
-          label="University:"
-          required
-        ></v-text-field>
-      </v-col>
+		<!-- Application Details -->
+		<fieldset class="fieldBox">
+			<h3 class="formSections">Application Details</h3>
+			<p class="labelParagraph">
+				Information about the course you are attending
+			</p>
 
-      <v-col cols="12" md="15">
-        <v-text-field
-          v-model="courseProivder"
-          label="Course provider:"
-          required
-        ></v-text-field>
-      </v-col>
-    </fieldset>
+			<v-col cols="12" md="15">
+				<v-text-field v-model="title" label="Course Name" :rules="InputRules" required></v-text-field>
+			</v-col>
 
-    <fieldset class="fieldBox">
-      <h4 class="formSections">Additional information</h4>
+			<v-col cols="12" md="15">
+				<v-text-field v-model="university" label="University:" :rules="InputRules" required></v-text-field>
+			</v-col>
 
-      <v-textarea
-        v-model="additionalInfo"
-        placeholder="If there are any more additional information the schools should know write here"
-      ></v-textarea>
-    </fieldset>
+		</fieldset>
 
-    <!--TODO: Action-->
-    <v-btn text="submit" type="submit" href="/submit" />
-  </form>
+		<!-- Additional information -->
+		<fieldset class="fieldBox">
+			<h4 class="formSections">Additional information</h4>
 
-  <!-- Vue card med generel info om course, knapp går til forms der brukeren kan fylle ut info-->
-  <v-card title="SQL for beginners" variant="outlined">
-    <v-card-text>
-      <!-- Fyll in  text her med info om course-->
+			<v-textarea v-model="additionalInfo"
+				placeholder="If there are any more additional information the schools should know, please write here"></v-textarea>
+		</fieldset>
 
-      <div class="info-item">
-        <span class="key">Course Providers:</span>
-        <span class="value">NTNU</span>
-      </div>
-      <div class="info-item">
-        <span class="key">Difficulty Level:</span>
-        <span class="value">Beginner</span>
-      </div>
-      <div class="info-item">
-        <span class="key">Course Size:</span>
-        <span class="value">ECTs Credits</span>
-      </div>
-    </v-card-text>
 
-    <v-card-actions>
-      <v-btn text="Apply to course" type="apply" href="/forms"></v-btn>
-    </v-card-actions>
-  </v-card>
+		<v-btn text="submit" type="submit" @click.prevent="validate" class="mr-3">
+			Submit
+		</v-btn>
+
+		<v-btn @click="clearForm">Clear</v-btn>
+
+	</v-form>
 </template>
-
-<style lang="scss" scoped>
-.formBox {
-  max-width: 1049px;
-  margin: auto;
-  background: rgb(var(--v-theme-primary));
-  padding: 40px;
-  border-radius: 4px;
-  border-style: solid;
-}
-
-.fieldBox {
-  background: white;
-}
-
-.labelParagraph {
-  color: Black;
-  padding: 10px;
-  display: block;
-  margin: 25px 5 15px;
-  text-align: left;
-  font-size: 15px;
-  letter-spacing: 1px;
-  font-weight: bold;
-}
-
-.formSections {
-  color: Black;
-  padding: 10px;
-  display: block;
-  margin: 25px 5 15px;
-  text-align: left;
-  font-size: x-large;
-  letter-spacing: 1px;
-  font-weight: bold;
-}
-
-.flex {
-  display: flex;
-  justify-content: space-between;
-}
-</style>
 
 <script>
 export default {
-  data() {
-    return {
-      firstName: "",
-      lastName: "",
-      nameRules: [
-        (value) => {
-          if (value) return true;
+	props: ["courseId", "title"],
+	data() {
+		return {
+			firstName: "",
+			lastName: "",
+			email: "",
+			phoneNumber: "",
+			genders: [
+				"Male",
+				"Female",
+				"Other",
+				"Prefer not to say",
+			],
 
-          return "Name is required.";
-        },
-      ],
+			address: "",
+			cityName: "",
+			postCode: "",
+			country: "",
+			title: this.title,
+			university: "",
+			additionalInfo: "",
 
-      emailRules: [
-        (value) => {
-          if (value) return true;
 
-          return "E-mail is requred.";
-        },
-        (value) => {
-          if (/.+@.+\..+/.test(value)) return true;
+			// Validation rules for form fields
+			InputRules: [
+				(value) => {
+					if (value) return true;
 
-          return "E-mail must be valid.";
-        },
-      ],
+					return "Input is required.";
+				},
+			],
+			emailRules: [
+				(value) => !!value || "E-mail is required.",
+				(value) => /.+@.+\..+/.test(value) || "example: john@something.com",
+			],
+		};
+	},
+	methods: {
+		filter: function (evt) {
+			evt = evt ? evt : window.event;
+			let expect = evt.target.value.toString() + evt.key.toString();
 
-      email: "",
-      phoneNumber: "",
-      selectGender: "Select gender",
-      selectCountry: "Select country",
-
-      genders: [
-        "Male",
-        "Female",
-        "Third other thing",
-        "Other",
-        "Prefer not to say",
-      ],
-
-      highSchoolAddress: "",
-      dateGraduated: "",
-      cityName: "",
-      postCode: "",
-
-      courseName: "",
-      university: "",
-      courseProivder: "",
-      courseId: "",
-
-      additionalInfo: "",
-    };
-  },
+			if (!/^[-+]?[0-9]*\.?[0-9]*$/.test(expect)) {
+				evt.preventDefault();
+			} else {
+				return true;
+			}
+		},
+		clearForm() {
+			this.firstName = "";
+			this.lastName = "";
+			this.email = "";
+			this.phoneNumber = "";
+			this.selectGender = "";
+			this.address = "";
+			this.cityName = "";
+			this.postCode = "";
+			this.country = "";
+			this.title = "";
+			this.university = "";
+			this.additionalInfo = "";
+		},
+		async validate() {
+			const { valid } = await this.$refs.form.validate();
+			if (valid) {
+				this.$router.push("/submit");
+			}
+		},
+	},
 };
+
+
+
 </script>
+
+<style lang="scss" scoped>
+/* Updated as ::v-deep is deprecated */
+:deep(.v-date-picker-header) {
+	background: linear-gradient(to right,
+			rgb(var(--v-theme-gradiantOne)),
+			rgb(var(--v-theme-gradiantTwo))) !important;
+	color: white;
+}
+
+:deep(.v-picker-title) {
+	background: linear-gradient(to right,
+			rgb(var(--v-theme-gradiantOne)),
+			rgb(var(--v-theme-gradiantTwo)));
+	color: white;
+}
+
+.formBox {
+	max-width: fit-content;
+	margin: auto;
+	margin-bottom: 20px;
+	background: linear-gradient(to right,
+			rgb(var(--v-theme-gradiantOne)),
+			rgb(var(--v-theme-gradiantTwo)));
+	padding: 40px;
+}
+
+.title {
+	margin-bottom: 20px;
+}
+
+.fieldBox {
+	background: white;
+	margin-inline: auto;
+}
+
+.labelParagraph {
+	color: Black;
+	padding: 10px;
+	display: block;
+	margin: 10px 0;
+	text-align: left;
+	font-size: 15px;
+	letter-spacing: 1px;
+	font-weight: bold;
+}
+
+.formSections {
+	color: Black;
+	padding: 10px;
+	display: block;
+	margin: 10px 0;
+	text-align: left;
+	font-size: x-large;
+	letter-spacing: 1px;
+	font-weight: bold;
+	max-width: fit-content;
+}
+
+.margin-bottom {
+	margin-bottom: 20px;
+}
+</style>

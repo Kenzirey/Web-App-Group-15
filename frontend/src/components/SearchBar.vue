@@ -7,7 +7,7 @@
 			placeholder="Search..." required autocomplete="off" hide-details></v-text-field>
 		<div v-if="showSuggestions" id="search-suggestions">
 			<v-chip-group v-model="difficultyIndex" id="difficulties" class="suggestion-box">
-				<v-chip v-for="difficulty in difficulties" :key="difficulty">{{ difficulty }}</v-chip>
+				<v-chip v-for="difficulty in $difficulties" :key="difficulty">{{ difficulty }}</v-chip>
 			</v-chip-group>
 			<div id="courses-suggestions" class="suggestion-box">
 				<h2>Courses:</h2>
@@ -34,11 +34,11 @@
 				<h2>All Results:</h2>
 				<ul>
 					<li v-for="suggestion in allSuggestionsFiltered" :key="suggestion.name">
-						<a v-if="suggestion.type == 'provider'" :href="suggestion.url">
+						<a v-if="suggestion.type === 'provider'" :href="suggestion.url">
 							{{ suggestion.name }} [{{ suggestion.type }}]
 						</a>
-						<router-link @click="showSuggestions = false" v-if="suggestion.type != 'provider'"
-							:to="suggestion.type == 'course' ? '/course/' + suggestion.id : suggestion.type == 'category' ? { path: '/search', query: getQuery('course', suggestion.id, false) } : null">
+						<router-link @click="showSuggestions = false" v-if="suggestion.type !== 'provider'"
+							:to="suggestion.type === 'course' ? '/course/' + suggestion.id : suggestion.type === 'category' ? { path: '/search', query: getQuery('course', suggestion.id, false) } : null">
 							{{ suggestion.name }} [{{ suggestion.type }}]
 						</router-link>
 					</li>
@@ -71,17 +71,17 @@ export default {
 		filterResults(results, query, difficulty) {
 			return results.filter(result =>
 				this.searchify(result.name).includes(this.searchify(query))
-				&& (!difficulty || result.type.toLowerCase() != "course" || result.difficulty.toLowerCase() == difficulty.toLowerCase()));
+				&& (!difficulty || result.type.toLowerCase() !== "course" || result.difficulty.toLowerCase() === difficulty.toLowerCase()));
 		},
 		getQuery(type, category, includeSearchQuery = true) {
 			const query = {};
 			if (type) {
 				query.type = type.toLowerCase();
 			}
-			if (category && (!query.type || query.type == "course")) {
+			if (category && (!query.type || query.type === "course")) {
 				query.category = category;
 			}
-			if (this.selectedDifficulty && (!query.type || query.type == "course")) {
+			if (this.selectedDifficulty && (!query.type || query.type === "course")) {
 				query.difficulty = this.selectedDifficulty.toLowerCase();
 			}
 			const searchQuery = this.searchify(this.search);
@@ -116,7 +116,8 @@ export default {
 					id: course.courseId,
 					name: course.courseName,
 					description: course.courseDescription,
-					difficulty: course.difficultyLevel
+					difficulty: course.difficultyLevel,
+					categories: course.categories
 				}
 			})
 		},
@@ -165,7 +166,7 @@ export default {
 			this.updateFilteredResults(query, this.selectedDifficulty);
 		},
 		difficultyIndex(index) {
-			this.selectedDifficulty = this.difficulties[index];
+			this.selectedDifficulty = this.$difficulties[index];
 		},
 		selectedDifficulty(difficulty) {
 			this.updateFilteredResults(this.search, difficulty);
@@ -185,7 +186,6 @@ export default {
 		return {
 			appendIconJustClicked: false,
 			showSuggestions: false,
-			difficulties: ["Beginner", "Advanced", "Expert"],
 			selectedDifficulty: null,
 			courses: [],
 			providers: [],

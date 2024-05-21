@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, ref } from 'vue'
 import { registerPlugins } from '@/plugins'
 import App from './App.vue'
 import router from './router';
@@ -7,6 +7,8 @@ import { getCookie } from './utility/cookieHelper';
 
 const courseApp = createApp(App)
 courseApp.config.globalProperties.$backendUrl = "http://localhost:8080/";
+courseApp.config.globalProperties.$difficulties = ["Beginner", "Advanced", "Expert"];
+courseApp.config.globalProperties.$currency = ref("");
 courseApp.config.globalProperties.$authFetch = async function (endpoint, requestData) {
     const jwt = getCookie("authToken");
     let response;
@@ -25,7 +27,7 @@ courseApp.config.globalProperties.$authFetch = async function (endpoint, request
 }
 courseApp.config.globalProperties.$authFetchOrPromptLogin = async function (endpoint, requestData) {
     const response = await this.$authFetch(endpoint, requestData);
-    if (response == null || response.status == 403) {
+    if (response == null || response.status === 403) {
         store.logout();
         this.$router.push("/login");
     }

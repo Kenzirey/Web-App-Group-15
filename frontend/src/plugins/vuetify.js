@@ -28,7 +28,8 @@ const lightTheme = {
     info: '#03a9f4',
     success: '#8bc34A',
     text: '#000000',
-    weakText: "aaaaaa"
+    weakText: "aaaaaa",
+    separator: "eeeeee"
   },
   variables: {
     'border-color': '#000000',

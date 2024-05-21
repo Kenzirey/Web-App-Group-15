@@ -1,4 +1,10 @@
 <template>
+
+  <div v-if="isLoading">
+    <CourseSkeletonLoader></CourseSkeletonLoader>
+  </div>
+  <div v-else>
+
 	<!--Content wrapper-->
 	<div class="course-container" v-if="course != null">
 		<h2 class="course-title">{{ course.courseName }}</h2>
@@ -25,21 +31,22 @@
 				<span class="value">{{ course.relatedCertification }}</span>
 			</div>
 			<!-- Provider and Cost -->
-			<div v-for="(provider, index) in course.courseProviders" :key="index" class="info-item">
+			<div v-for="(provider, index) in this.providers" :key="index" class="info-item">
 				<em class="key">Provider:</em>
-				<span class="value">{{ provider.providerName }}</span>
+				<span class="value">{{ provider.name }}</span>
 				<em class="key">Cost:</em>
-				<span class="value">$N/A (We don't have this in our database yet)</span>
+				<span class="value">{{ provider.price }}</span>
 			</div>
-      		<div class="info-item" v-if="course.courseProviders.length === 0">
+      		<div class="info-item" v-if="course.courseProviderLinks.length === 0">
 				<em class="key">Note:</em>
 				<span class="value">This course is currently unavailable<br/>Please check again later</span>
 			</div>
 		</section>
 		<div class="info-buttons">
 			<nav>
-				<v-btn aria-label="Order Course" prepend-icon="mdi-cart-check" text="Order Course" type="apply"
-					href="/forms" variant="outlined"></v-btn>
+        <v-btn aria-label="Order Course" prepend-icon="mdi-cart-check"
+               text="Order Course" @click="orderCourse"
+        ></v-btn>
 			</nav>
 			<v-btn aria-label="Add to Favorites" @click="toggleFavorite" :disabled="waitingForFavoriteToggle"
 				:prepend-icon="isFavorite ? 'mdi-heart-off-outline' : 'mdi-heart'">
@@ -60,20 +67,26 @@
 	<div id="no-course" v-if="!course">
 		<h1>(404 - Course not found)</h1>
 	</div>
+  </div>
+
 </template>
 
 
 <script>
 import { watch } from 'vue';
+import CourseSkeletonLoader from "@/components/CourseSkeletonLoader.vue";
 
 export default {
 	name: 'CoursePage',
+  components: {CourseSkeletonLoader},
 	data() {
 		return {
 			course: null,
 			imageUrl: null,
+			providers: [],
 			isFavorite: false,
 			waitingForFavoriteToggle: false,
+      isLoading: true,
 		};
 	},
 	methods: {
@@ -89,7 +102,21 @@ export default {
 				this.waitingForFavoriteToggle = false;
 			});
 		},
+		formatPriceString(price) {
+			return `${(Math.round(price * 100) / 100).toFixed(2)} ${this.$currency.value}`
+		},
+		updatePrices() {
+			for (const provider of this.providers) {
+				fetch(`${this.$backendUrl}exchange/${provider.originalCurrency}/${this.$currency.value}/${provider.originalPrice}`)
+					.then(response => response.json())
+					.then(price => {
+						provider.price = this.formatPriceString(price);
+						provider.currency = this.$currency;
+					});
+			}
+		},
 		async fetchData() {
+/*Artificial delay is not good to keep on our main branch. */
 			const favoriteResponse = await this.$authFetch(this.$backendUrl + "favorites/" + this.$route.params.id);
 			if (favoriteResponse != null && favoriteResponse.ok) {
 				this.isFavorite = true;
@@ -103,20 +130,45 @@ export default {
 					this.course = null;
 				}
 			}
-			if (this.course != null && this.course.image != null) {
-				const response = await fetch(this.$backendUrl + "images/" + this.course.image.imageId);
-				if (response.ok) {
-					if (this.imageUrl != null) {
-						URL.revokeObjectURL(this.imageUrl);
+			this.providers = [];
+			if (this.course != null) {
+				if (this.course.image != null) {
+					const response = await fetch(this.$backendUrl + "images/" + this.course.image.imageId);
+					if (response.ok) {
+						if (this.imageUrl != null) {
+							URL.revokeObjectURL(this.imageUrl);
+						}
+						this.imageUrl = URL.createObjectURL(await response.blob());
 					}
-					this.imageUrl = URL.createObjectURL(await response.blob());
+				}
+				for (const link of this.course.courseProviderLinks) {
+					Promise.all([
+						fetch(this.$backendUrl + "providers/" + link.id.courseProviderId)
+							.then(response => response.json()),
+						fetch(`${this.$backendUrl}exchange/${link.currency}/${this.$currency.value}/${link.price}`)
+							.then(response => response.json())
+					]).then(values => this.providers.push({
+						name: values[0].providerName,
+						price: this.formatPriceString(values[1]),
+						currency: this.$currency.value,
+						originalPrice: link.price,
+						originalCurrency: link.currency
+					}));
 				}
 			}
-		}
+      this.isLoading = false
+		},
+    orderCourse() {
+      this.$router.push({
+        name: "Forms",
+        params: {courseId: this.course.courseId, title: this.course.courseName},
+      });
+    },
 	},
 	created() {
 		this.fetchData();
 		watch(() => this.$route.params.id, this.fetchData);
+		watch(() => this.$currency.value, this.updatePrices);
 	},
 	unmounted() {
 		URL.revokeObjectURL(this.imageUrl);
@@ -151,7 +203,7 @@ export default {
 #no-image {
 	aspect-ratio: 16 / 9;
 	width: 80%;
-  max-width: 80%;
+	max-width: 80%;
 	display: flex;
 	justify-content: center;
 	flex-direction: column;

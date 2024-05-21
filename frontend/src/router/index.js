@@ -16,6 +16,7 @@ import SubmitPage from '../pages/SubmitPage';
 import SearchResults from '@/pages/SearchResults.vue';
 import LoginForm from '@/components/LoginForm.vue';
 import ChangePasswordForm from '@/components/ChangePassword.vue';
+import DisclaimerPage from '@/pages/DisclaimerPage.vue';
 
 
 
@@ -28,15 +29,16 @@ const routes = [
   { path: '/about', component: AboutPage, name: 'About' },
   { path: '/account', component: AccountPage, name: 'Account', meta: { requiresAuth: true } },
   { path: '/favorites', component: CourseFavoriteListPage, name: 'Favorites', meta: { requiresAuth: true } },
-  { path: '/admin', component: AdminDashboard, name: 'AdminDashboard', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },
-  { path: '/admin/courses', component: AdminCourses, name: 'AdminCourses', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },
-  { path: '/admin/users', component: AdminUsers, name: 'AdminUsers', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },
-  { path: '/forms', component: FormsPage, name: 'Forms' },
   { path: '/search', component: SearchResults, name: 'SearchResults'},
   { path: '/login', component: LoginForm, name: 'Login', meta: { requiresAuth: false } },
   { path: '/submit', component: SubmitPage, name: 'Submit' },
+  { path: '/forms/:courseId/:title', component: FormsPage, name: 'Forms', props: true },
+  { path: '/forms', component: FormsPage, name: 'FormsNoCourse' },  
+  { path: '/admin', component: AdminDashboard, name: 'AdminDashboard', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },
+  { path: '/admin/courses', component: AdminCourses, name: 'AdminCourses', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },
+  { path: '/admin/users', component: AdminUsers, name: 'AdminUsers', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },  
   { path: '/change-password', component: ChangePasswordForm, name: 'ChangePassword', meta: { requiresAuth: true } }
-
+  { path: '/disclaimer', component: DisclaimerPage, name: 'Disclaimer' }
   // Define routes for other pages
 ];
 

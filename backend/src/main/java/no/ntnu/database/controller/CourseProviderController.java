@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/providers")
 public class CourseProviderController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CourseProviderController.class);
+	private static final String DEFAULT_CURRENCY = "USD";
 
 	private final CourseProviderService service;
 	private final CourseProviderLinkService linkService;
@@ -88,11 +90,9 @@ public class CourseProviderController {
 	public ResponseEntity<CourseProvider> getProvider(@PathVariable int id) {
 		ResponseEntity<CourseProvider> response;
 		Optional<CourseProvider> provider = service.findById(id);
-		if (provider.isPresent()) {
-			response = ResponseEntity.ok(provider.get());
-		} else {
-			response = ResponseEntity.notFound().build();
-		}
+		response = provider
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 		return response;
 	}
 
@@ -227,10 +227,13 @@ public class CourseProviderController {
 	@ApiResponse(responseCode = "200", description = "Successfully retrieved")
 	@ApiResponse(responseCode = "404", description = "Course provider link not found")
 	@GetMapping("{providerId}/coursePriceListings/{courseId}")
-	public ResponseEntity<CourseProviderLink> getCourseProviderLink(@PathVariable int providerId,
-																	@PathVariable int courseId) {
+	public ResponseEntity<CourseProviderLink> getCourseProviderLink(
+			@PathVariable int providerId,
+			@PathVariable int courseId,
+			@RequestHeader(name = "currency", defaultValue = DEFAULT_CURRENCY) String currency
+	) {
 		Optional<CourseProviderLink> link =
-				linkService.findCourseProviderLink(providerId, courseId);
+				linkService.findCourseProviderLink(providerId, courseId, currency);
 		return link.map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
@@ -238,9 +241,9 @@ public class CourseProviderController {
 	/**
 	 * Updates a course provider link.
 	 *
-	 * @param providerId 	the linked {@link CourseProvider}'s id.
-	 * @param courseId		the linked course's id.
-	 * @param updatedLink	the updated link with new price.
+	 * @param providerId The linked {@link CourseProvider}'s id.
+	 * @param courseId	 The linked course's id.
+	 * @param price      The course's new price.
 	 *
 	 * @return 		<p>a {@link ResponseEntity} with code 204 on success.</p>
 	 * 				<p>a {@link ResponseEntity} with code 400 if illegal argument is provided.</p>
@@ -254,17 +257,20 @@ public class CourseProviderController {
 	@ApiResponse(responseCode = "400", description = "Invalid data provided")
 	@ApiResponse(responseCode = "404", description = "Course provider link not found")
 	@PutMapping("{providerId}/coursePriceListings/{courseId}")
-	public ResponseEntity<String> updateCourseProviderLink(@PathVariable int providerId,
-														   @PathVariable int courseId,
-														   @RequestBody
-															   CourseProviderLink updatedLink) {
+	public ResponseEntity<String> updateCourseProviderLink(
+			@PathVariable int providerId,
+			@PathVariable int courseId,
+			@RequestBody double price,
+			@RequestHeader(name = "currency", defaultValue = DEFAULT_CURRENCY) String currency
+	) {
 		try {
-			linkService.updateCourseProviderLink(providerId, courseId, updatedLink);
+			linkService.updateCourseProviderLink(providerId, courseId, price, currency);
 			return ResponseEntity.noContent().build();
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body("Bad request: " + e.getMessage());
 		} catch (EntityNotFoundException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Course provider link not found.");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("Course provider link not found.");
 		}
 	}
 
@@ -287,11 +293,13 @@ public class CourseProviderController {
 	@ApiResponse(responseCode = "403", description = "Forbidden, incorrect authorization")
 	@ApiResponse(responseCode = "404", description = "Entity not found")
 	@PostMapping("/{providerId}/coursePriceListings")
-	public ResponseEntity<String> addCoursePriceListing(@PathVariable int providerId,
-														@RequestBody CourseProviderLink
-																.CourseProviderLinkDto dto) {
+	public ResponseEntity<String> addCoursePriceListing(
+			@PathVariable int providerId,
+			@RequestBody CourseProviderLink.CourseProviderLinkDto dto,
+			@RequestHeader(name = "currency", defaultValue = DEFAULT_CURRENCY) String currency
+	) {
 		try {
-			linkService.addCourseListing(providerId, dto);
+			linkService.addCourseListing(providerId, dto, currency);
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body("Course's price listing added successfully");
 		} catch (EntityNotFoundException e) {

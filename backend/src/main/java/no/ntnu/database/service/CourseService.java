@@ -5,12 +5,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import no.ntnu.database.model.Course;
-import no.ntnu.database.model.CourseProvider;
-import no.ntnu.database.model.CourseProviderLink;
 import no.ntnu.database.model.Image;
 import no.ntnu.database.repository.CategoryRepository;
-import no.ntnu.database.repository.CourseProviderLinkRepository;
-import no.ntnu.database.repository.CourseProviderRepository;
 import no.ntnu.database.repository.CourseRepository;
 import no.ntnu.database.repository.ImageRepository;
 import org.slf4j.Logger;
@@ -75,6 +71,7 @@ public class CourseService {
 		course.setHoursPerWeek(courseDto.hoursPerWeek());
 		course.setRelatedCertification(courseDto.relatedCertification());
 		course.setCourseDescription(courseDto.courseDescription());
+		course.setSale(courseDto.sale());
 		if (courseDto.categoryIds() != null) {
 			course.setCategories(findAllAsSet(courseDto.categoryIds(), categoryRepository));
 		}
@@ -172,30 +169,4 @@ public class CourseService {
 	public Iterable<Course> searchCourse(String query) {
 		return repository.searchCourse(query);
 	}
-
-	public int addCourseWithImage(String courseJson, MultipartFile imageFile) throws IOException {
-        Course.Dto courseDto = new ObjectMapper().readValue(courseJson, Course.Dto.class);
-        Image image = null;
-
-        if (!imageFile.isEmpty()) {
-            image = imageService.addImage(imageFile);
-        }
-
-        if (image != null) {
-            courseDto = new Course.Dto(
-                courseDto.courseName(),
-                courseDto.difficultyLevel(),
-                courseDto.startDate(),
-                courseDto.endDate(),
-                courseDto.courseCredits(),
-                courseDto.hoursPerWeek(),
-                courseDto.relatedCertification(),
-                courseDto.courseDescription(),
-                courseDto.categoryIds(),
-                image.getImageId()
-            );
-        }
-
-        return this.add(courseDto);
-    }
 }

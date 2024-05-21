@@ -64,7 +64,6 @@ public class SecurityConfiguration {
         // Set up the authorization requests, starting from most restrictive at the top,
         // to least restrictive on the bottom
 
-        //TODO: properly test the search stuff for favorites.
         // Disable CSRF and CORS checks. Without this it will be hard to make automated tests.
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -73,10 +72,12 @@ public class SecurityConfiguration {
                         .requestMatchers("/authenticate", "/h2-console/**", "/users/register", "/swagger-ui/**", "/v3/api-docs/**")
                         .permitAll() // Permit all for authenticate and H2 console
 						.requestMatchers(HttpMethod.GET,
-								"/categories", "/categories/{query}",
+								"/categories", "/categories/**",
 								"/courses", "/courses/{id}", "/courses/search/{query}",
 								"/providers", "/providers/{id}", "/providers/search/{query}",
-                                "/images/**"
+                                "/providers/{providerId}/coursePriceListings/**",
+                                "/images/**",
+                                "/exchange", "/exchange/**"
 						).permitAll()
                         .requestMatchers("/favorites/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                         .requestMatchers("/users/{id}/change-password").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
@@ -136,7 +137,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://group15.web-tek.ninja"));
         configuration.setAllowedMethods(Arrays.asList(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList(
