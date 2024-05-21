@@ -62,7 +62,8 @@ export default {
 			if (result.type === "course") {
 				return {
 					title: `${result.name} (${result.difficulty})`,
-					subtitle: `Categories: ${result.categories.map(category => category.categoryName).join(", ")}`,
+					subtitle: result.categories.length === 0 ? null
+						: `Categories: ${result.categories.map(category => category.categoryName).join(", ")}`,
 					text: result.description,
 				}
 			} else if (result.type === "provider") {
