@@ -113,4 +113,11 @@ export default {
 .favorite-course-card {
 	margin-bottom: 20px;
 }
+
+@media screen and (max-width: 767px) {
+	h1 {
+		font-size:1.6em;
+	}
+}
+
 </style>
