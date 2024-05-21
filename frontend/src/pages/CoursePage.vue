@@ -116,9 +116,7 @@ export default {
 			}
 		},
 		async fetchData() {
-
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+/*Artificial delay is not good to keep on our main branch. */
 			const favoriteResponse = await this.$authFetch(this.$backendUrl + "favorites/" + this.$route.params.id);
 			if (favoriteResponse != null && favoriteResponse.ok) {
 				this.isFavorite = true;
