@@ -108,10 +108,10 @@
 		</fieldset>
 
     <v-col class="button-margin">
-		<v-btn prepend-icon="mdi-check-underline" text="submit" type="submit" @click.prevent="validate" class="mr-3">
+		<v-btn prepend-icon="mdi-check-underline" text="submit" type="submit" @click.prevent="validate" class="mr-3 submit-button">
 			Submit
 		</v-btn>
-      
+
     </v-col>
 
 	</v-form>
@@ -213,6 +213,14 @@ export default {
 :deep(.v-label) {
   color: rgb(79, 79, 79);
   opacity: 1;
+}
+
+.submit-button {
+  background-color: transparent;
+}
+
+.v-btn {
+  color: rgb(var(--v-theme-background));
 }
 
 
