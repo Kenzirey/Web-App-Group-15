@@ -61,12 +61,11 @@ public class CategoryController {
 	 * @param id The ID of the category
 	 * @return 200 with a category if found, 404 otherwise
 	 */
-	@Operation(summary = "Get a category",
-			description = "Get a category from the database")
-	//TODO: Improve swagger here with api responses.
-	@ApiResponse(responseCode = "200", description = "Found category")
+	@Operation(summary = "Get a category", description = "Get a category from the database")
+	@ApiResponse(responseCode = "200", description = "A category was found")
+	@ApiResponse(responseCode = "404", description = "No category was found")
 	@GetMapping(value = "{id}", produces = {"application/json"})
-	public ResponseEntity<Category> searchCategory(@PathVariable int id) {
+	public ResponseEntity<Category> getCategory(@PathVariable int id) {
 		return service.findById(id)
 				.map(ResponseEntity::ok)
 				.orElse(ResponseEntity.notFound().build());
