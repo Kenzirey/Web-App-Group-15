@@ -4,7 +4,7 @@
 			<v-col cols="12">
 				<h1 class="text-h4 my-4">Course Management</h1>
 				<h2 class="text-h5 my-5" v-if="course.courseId !== null">Editing course with ID: {{ course.courseId }}</h2>
-				<v-btn @click="resetForm">Cancel edit</v-btn>
+				<v-btn @click="resetForm" v-if="course.courseId !== null">Cancel edit</v-btn>
 			</v-col>
 		</v-row>
 		<v-form ref="form" @submit.prevent="handleSubmit">
