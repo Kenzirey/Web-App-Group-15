@@ -170,10 +170,10 @@ public class CourseController {
 	@ApiResponse(responseCode = "403", description = "Forbidden, not authorized")
 	@ApiResponse(responseCode = "404", description = "Course was not found")
 	@PutMapping("/{id}")
-	public ResponseEntity<String> update(@PathVariable int id, @RequestBody Course course) {
+	public ResponseEntity<String> update(@PathVariable int id, @RequestBody Course.Dto courseDto) {
 		ResponseEntity<String> response;
 		try {
-			courseService.updateCourse(id, course);
+			courseService.updateCourse(id, courseDto);
 			//Because there's no response to client/us when this method is called.
 			response = ResponseEntity.noContent().build();
 		} catch (IllegalArgumentException e) {
