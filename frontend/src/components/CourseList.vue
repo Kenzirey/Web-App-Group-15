@@ -1,30 +1,36 @@
 <template>
   <div class="course-list">
     <div class="search-container">
-      <input
-        type="text"
-        v-model="searchQuery"
-        @input="filterList"
-        placeholder="Search"
-        class="search-input"
-      />
+      <input type="text" v-model="searchQuery" @input="filterList" placeholder="Search" class="search-input" />
     </div>
     <h2>Courses</h2>
     <table class="course-table">
       <thead>
         <tr>
-          <th>Name</th>
+          <th>Course Name</th>
           <th>Description</th>
+          <th>Difficulty</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Credits</th>
+          <th>Hours/Week</th>
+          <th>Certification</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="course in filteredCourses" :key="course.id">
-          <td>{{ course.name }}</td>
-          <td>{{ course.description }}</td>
+        <tr v-for="course in filteredCourses" :key="course.courseId">
+          <td>{{ course.courseName }}</td>
+          <td>{{ course.courseDescription }}</td>
+          <td>{{ course.difficultyLevel }}</td>
+          <td>{{ formatDate(course.startDate) }}</td>
+          <td>{{ formatDate(course.endDate) }}</td>
+          <td>{{ course.courseCredits }}</td>
+          <td>{{ course.hoursPerWeek }}</td>
+          <td>{{ course.relatedCertification }}</td>
           <td>
-            <button @click="onEditCourse(course)" class="btn-edit">Edit</button>
-            <button @click="onDeleteCourse(course.id)" class="btn-delete">Delete</button>
+            <v-btn color="primary" @click="onEditCourse(course)">Edit</v-btn>
+            <v-btn color="error" @click="onDeleteCourse(course.courseId)">Delete</v-btn>
           </td>
         </tr>
       </tbody>
@@ -46,11 +52,14 @@ export default {
   computed: {
     filteredCourses() {
       return this.courses.filter(course =>
-        course.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+        course.courseName.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
   },
   methods: {
+    formatDate(date) {
+      return new Date(date).toLocaleDateString();
+    },
     onEditCourse(course) {
       this.$emit('edit-course', course);
     },
@@ -58,7 +67,6 @@ export default {
       this.$emit('delete-course', courseId);
     },
     filterList() {
-
       this.$emit('filter-courses', this.searchQuery);
     },
   },
@@ -67,10 +75,6 @@ export default {
 
 <style scoped>
 :root {
-  --btn-primary-bg: #007bff;
-  --btn-primary-bg-hover: #0056b3;
-  --btn-danger-bg: #dc3545;
-  --btn-danger-bg-hover: #bd2130;
   --border-color: #ddd;
 }
 
@@ -103,26 +107,12 @@ th, td {
   font-size: 16px;
 }
 
-.btn-edit, .btn-delete {
+.v-btn {
   padding: 8px 16px;
   margin-right: 10px;
   border: none;
   border-radius: 4px;
-  background-color: var(--btn-primary-bg);
-  color: #fff;
   cursor: pointer;
   transition: background-color 0.2s;
-}
-
-.btn-delete {
-  background-color: var(--btn-danger-bg);
-}
-
-.btn-edit:hover, .btn-delete:hover {
-  background-color: var(--btn-primary-bg-hover);
-}
-
-.btn-delete:hover {
-  background-color: var(--btn-danger-bg-hover);
 }
 </style>

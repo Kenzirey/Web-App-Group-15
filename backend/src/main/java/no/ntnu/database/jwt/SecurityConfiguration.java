@@ -80,11 +80,13 @@ public class SecurityConfiguration {
                                 "/exchange", "/exchange/**"
 						).permitAll()
                         .requestMatchers("/favorites/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                        .requestMatchers("/admin/users/**", "/images/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/users/{id}/change-password").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers("/courses/{id}").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/users/**", "/images/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/categories").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/providers/**").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/providers/{providerId}/coursePriceListings").hasAuthority("ROLE_ADMIN")
                         .requestMatchers("/providers/{providerId}/coursePriceListings/{courseId}").hasAuthority("ROLE_ADMIN")
-
 
 
                         // The default URL is accessible to everyone

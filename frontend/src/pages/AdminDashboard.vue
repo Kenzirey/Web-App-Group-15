@@ -124,9 +124,9 @@ export default {
 
       try {
         const responses = await Promise.all([
-          axios.get(this.$backendUrl + 'admin/courses/count', authConfig),
-          axios.get(this.$backendUrl + 'admin/users/count', authConfig),
-          axios.get(this.$backendUrl + 'admin/users/count/2fa', authConfig)
+          axios.get(this.$backendUrl + 'courses/count', authConfig),
+          axios.get(this.$backendUrl + 'users/count', authConfig),
+          axios.get(this.$backendUrl + 'users/count/2fa', authConfig)
         ]);
 
         this.totalCourses = responses[0].data;
@@ -177,13 +177,13 @@ export default {
       });
     },
     goToDashboard() {
-      this.$router.push('/dashboard');
+      this.$router.push('/admin');
     },
     goToCourses() {
-      this.$router.push('/courses');
+      this.$router.push('/admin/courses');
     },
     goToUsers() {
-      this.$router.push('/users');
+      this.$router.push('/admin/users');
     },
     goToSettings() {
       this.$router.push('/settings');
