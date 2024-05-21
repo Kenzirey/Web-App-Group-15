@@ -37,7 +37,7 @@ const routes = [
   { path: '/admin', component: AdminDashboard, name: 'AdminDashboard', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },
   { path: '/admin/courses', component: AdminCourses, name: 'AdminCourses', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },
   { path: '/admin/users', component: AdminUsers, name: 'AdminUsers', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },  
-  { path: '/change-password', component: ChangePasswordForm, name: 'ChangePassword', meta: { requiresAuth: true } }
+  { path: '/change-password', component: ChangePasswordForm, name: 'ChangePassword', meta: { requiresAuth: true } },
   { path: '/disclaimer', component: DisclaimerPage, name: 'Disclaimer' }
   // Define routes for other pages
 ];

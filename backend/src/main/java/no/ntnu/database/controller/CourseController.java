@@ -155,11 +155,11 @@ public class CourseController {
 	 * Updates an existing course in the repository.
 	 *
 	 * @param id 		the id of the course to be updated.
-	 * @param course 	the new course information to be stored from the {@link RequestBody}.
-	 * @return 		<p>a {@link ResponseEntity} with code 204 on success.</p>
-	 * 				<p>a {@link ResponseEntity} with code 400 if illegal argument is provided.</p>
-	 * 				<p>a {@link ResponseEntity} with code 403 if unauthorized user.</p>
-	 * 				<p>a {@link ResponseEntity} with code 404 if course to update is not found.</p>
+	 * @param courseDto The new course information to be stored from the {@link RequestBody}.
+	 * @return <p>a {@link ResponseEntity} with code 204 on success.</p>
+	 *     <p>a {@link ResponseEntity} with code 400 if illegal argument is provided.</p>
+	 * 	   <p>a {@link ResponseEntity} with code 403 if unauthorized user.</p>
+	 * 	   <p>a {@link ResponseEntity} with code 404 if course to update is not found.</p>
 	 */
 	@Operation(
 			summary = "Update an existing course",
@@ -217,21 +217,4 @@ public class CourseController {
 		LOGGER.info("Total number of courses: {}", count);
 		return ResponseEntity.ok(count);
 	}
-
-	
-
-	
-	@PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> createCourseWithImage(
-            @RequestParam("course") String courseJson,
-            @RequestParam("image") MultipartFile imageFile) {
-        try {
-            int courseId = courseService.addCourseWithImage(courseJson, imageFile);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Course created successfully with ID: " + courseId);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error parsing course data: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error creating course: " + e.getMessage());
-        }
-    }
 }
