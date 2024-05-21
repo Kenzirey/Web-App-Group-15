@@ -30,6 +30,8 @@ public class JwtUtil {
 	 * Key inside JWT token where roles are stored.
 	 */
 	private static final String ROLE_KEY = "roles";
+	private static final String NAME_KEY = "name";
+	private static final String EMAIL_KEY = "email";
 	private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
 
@@ -47,10 +49,17 @@ public class JwtUtil {
 		List<String> roles = userDetails.getAuthorities().stream()
                                         .map(GrantedAuthority::getAuthority)
                                         .collect(Collectors.toList());
+		Long userId = null;
+        if (userDetails instanceof AccessUserDetails) {
+            userId = ((AccessUserDetails) userDetails).getUserId();
+        }
 
 		return Jwts.builder()
 				.subject(userDetails.getUsername())
 				.claim(ROLE_KEY, roles)
+				.claim(NAME_KEY, userDetails.getUsername())
+				.claim(EMAIL_KEY, userDetails.getUsername())
+				.claim("userId", userId)
 				.issuedAt(new Date(timeNow))
 				.expiration(new Date(timeAfterOneHour))
 				.signWith(getSigningKey())

@@ -3,7 +3,11 @@ package no.ntnu.database.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import no.ntnu.database.model.Course;
+import no.ntnu.database.model.Image;
 import no.ntnu.database.service.CourseService;
+
+import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +21,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
+
 
 /**
  * REST API controller for course collection.
@@ -147,11 +155,11 @@ public class CourseController {
 	 * Updates an existing course in the repository.
 	 *
 	 * @param id 		the id of the course to be updated.
-	 * @param course 	the new course information to be stored from the {@link RequestBody}.
-	 * @return 		<p>a {@link ResponseEntity} with code 204 on success.</p>
-	 * 				<p>a {@link ResponseEntity} with code 400 if illegal argument is provided.</p>
-	 * 				<p>a {@link ResponseEntity} with code 403 if unauthorized user.</p>
-	 * 				<p>a {@link ResponseEntity} with code 404 if course to update is not found.</p>
+	 * @param courseDto The new course information to be stored from the {@link RequestBody}.
+	 * @return <p>a {@link ResponseEntity} with code 204 on success.</p>
+	 *     <p>a {@link ResponseEntity} with code 400 if illegal argument is provided.</p>
+	 * 	   <p>a {@link ResponseEntity} with code 403 if unauthorized user.</p>
+	 * 	   <p>a {@link ResponseEntity} with code 404 if course to update is not found.</p>
 	 */
 	@Operation(
 			summary = "Update an existing course",
@@ -162,10 +170,10 @@ public class CourseController {
 	@ApiResponse(responseCode = "403", description = "Forbidden, not authorized")
 	@ApiResponse(responseCode = "404", description = "Course was not found")
 	@PutMapping("/{id}")
-	public ResponseEntity<String> update(@PathVariable int id, @RequestBody Course course) {
+	public ResponseEntity<String> update(@PathVariable int id, @RequestBody Course.Dto courseDto) {
 		ResponseEntity<String> response;
 		try {
-			courseService.updateCourse(id, course);
+			courseService.updateCourse(id, courseDto);
 			//Because there's no response to client/us when this method is called.
 			response = ResponseEntity.noContent().build();
 		} catch (IllegalArgumentException e) {
@@ -195,4 +203,18 @@ public class CourseController {
 				: courseService.searchCourse(query);
 	}
 
+	/**
+	 * Get the amount of courses in the database.
+	 *
+	 * @return a {@link ResponseEntity} with code 200 and amount of courses.
+	 */
+	@Operation(summary = "Get amount of courses",
+			description = "Get the amount of courses currently in the database")
+	@ApiResponse(responseCode = "200", description = "Retrieved courses")
+	@GetMapping("/count")
+	public ResponseEntity<Long> getCoursesCount() {
+		long count = courseService.countAllCourses();
+		LOGGER.info("Total number of courses: {}", count);
+		return ResponseEntity.ok(count);
+	}
 }

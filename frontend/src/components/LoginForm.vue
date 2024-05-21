@@ -34,7 +34,6 @@
 
 <script>
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
 import { store } from '../utility/store';
 
 export default {

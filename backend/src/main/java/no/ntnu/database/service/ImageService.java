@@ -1,5 +1,6 @@
 package no.ntnu.database.service;
 
+import java.io.IOException;
 import java.util.Optional;
 import no.ntnu.database.model.Image;
 import no.ntnu.database.repository.ImageRepository;
@@ -7,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -85,5 +87,13 @@ public class ImageService {
 		return imageRepository.findById(id);
 	}
 
+
+	public Image addImage(MultipartFile file) throws IOException {
+    	if (file.isEmpty()) {
+        	throw new IllegalArgumentException("Cannot save empty image.");
+    	}
+    	Image image = new Image(file.getBytes(), file.getContentType().split("/")[1], "Some default alt text");
+    	return imageRepository.save(image);
+	}
 
 }

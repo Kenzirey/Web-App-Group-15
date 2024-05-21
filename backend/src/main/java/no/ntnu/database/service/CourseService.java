@@ -1,9 +1,11 @@
 package no.ntnu.database.service;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import no.ntnu.database.model.Course;
+import no.ntnu.database.model.Image;
 import no.ntnu.database.repository.CategoryRepository;
 import no.ntnu.database.repository.CourseRepository;
 import no.ntnu.database.repository.ImageRepository;
@@ -12,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 /**
@@ -25,6 +30,7 @@ public class CourseService {
 	private final CourseRepository repository;
 	private final CategoryRepository categoryRepository;
 	private final ImageRepository imageRepository;
+	private final ImageService imageService;
 
 	/**
 	 * Makes the course service.
@@ -35,11 +41,13 @@ public class CourseService {
 	public CourseService(
 			CourseRepository courseRepository,
 			CategoryRepository categoryRepository,
-			ImageRepository imageRepository
+			ImageRepository imageRepository,
+			ImageService imageService
 	) {
 		this.repository = courseRepository;
 		this.categoryRepository = categoryRepository;
 		this.imageRepository = imageRepository;
+		this.imageService = imageService;
 	}
 
 	private <T, I> Set<T> findAllAsSet(Iterable<I> ids, CrudRepository<T, I> repository) {
@@ -50,15 +58,11 @@ public class CourseService {
 		return objs;
 	}
 
-	/**
-	 * Adds a course to the database.
-	 *
-	 * @param courseDto A {@link Course.Dto Dto} representing a
-	 *                  {@link Course} to add to the database
-	 * @return the added {@link Course}'s id.
-	 */
-	public int add(Course.Dto courseDto) {
-		Course course = new Course();
+	private Course makeCourseFromDto(Course.Dto courseDto) {
+		return makeCourseFromDto(courseDto, new Course());
+	}
+
+	private Course makeCourseFromDto(Course.Dto courseDto, Course course) {
 		course.setCourseName(courseDto.courseName());
 		course.setDifficultyLevel(courseDto.difficultyLevel());
 		course.setStartDate(courseDto.startDate());
@@ -72,6 +76,18 @@ public class CourseService {
 			course.setCategories(findAllAsSet(courseDto.categoryIds(), categoryRepository));
 		}
 		course.setImage(imageRepository.findById(courseDto.imageId()).orElse(null));
+		return course;
+	}
+
+	/**
+	 * Adds a course to the database.
+	 *
+	 * @param courseDto A {@link Course.Dto Dto} representing a
+	 *                  {@link Course} to add to the database
+	 * @return the added {@link Course}'s id.
+	 */
+	public int add(Course.Dto courseDto) {
+		Course course = makeCourseFromDto(courseDto);
 
 		if (!course.isValid()) {
 			LOGGER.warn("Course is invalid");
@@ -101,21 +117,18 @@ public class CourseService {
 	/**
 	 * Updates a course in the database corresponding to its ID.
 	 *
-	 * @param id     the ID of the course to update.
-	 * @param course the updated {@link Course} data.
+	 * @param id        The ID of the course to update.
+	 * @param courseDto A {@link Course.Dto} containing updated data.
 	 */
-	public void updateCourse(int id, Course course) {
-		Optional<Course> existingCourse = repository.findById(id);
+	public void updateCourse(int id, Course.Dto courseDto) {
+		Course course = makeCourseFromDto(courseDto, repository.findById(id).orElseThrow(() ->
+				new IllegalStateException(String.format("Course with ID %s not found ", id))
+		));
 
-		if (existingCourse.isEmpty()) {
-			throw new IllegalStateException(String.format("Course with ID %s not found ", id));
-		} else if (!course.isValid()) {
-			throw new IllegalArgumentException("Course is invalid");
-		} else {
-			//Before the setCourseId, JPA did not have enough info to link this new "updated object"
-			//So it just added it as a new object, without deleting the old. I.e. did not update.
-			course.setCourseId(id); //Important.
+		if (course.isValid()) {
 			repository.save(course);
+		} else {
+			throw new IllegalArgumentException("Course is invalid");
 		}
 	}
 

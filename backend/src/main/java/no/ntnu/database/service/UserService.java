@@ -28,6 +28,8 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    
+
     /**
      * Constructs a UserService via Autowired.
      *
@@ -131,17 +133,6 @@ public class UserService {
     }
 
     /**
-     * Finds a {@link User} via the provided id.
-     *
-     * @param id the id of the {@link User}.
-     *
-     * @return an {@link Optional} of {@link User}.
-     */
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    /**
      * Toggles the active status of a {@link User}.
      *
      * @param id the id of the {@link User} to toggle.
@@ -158,5 +149,54 @@ public class UserService {
 		return userOptional.isPresent();
     }
 
+    /**
+     * Counts the number of users with two-factor authentication enabled.
+     *
+     * @return the count of users with 2FA enabled.
+     */
+    public long countUsersWithTwoFactorEnabled() {
+        return userRepository.countByTwoFactorEnabledTrue();
+    }
+
+    /**
+     * Counts the total number of users.
+     *
+     * @return the total count of users.
+     */
+    public long countAllUsers() {
+        return userRepository.count();
+    }
+
+    /**
+     * Finds a {@link User} via the provided id.
+     *
+     * @param id the id of the {@link User}.
+     *
+     * @return an {@link Optional} of {@link User}.
+     */
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    /**
+     * Changes the password for a specific user identified by their ID.
+     *
+     * @param userId The ID of the user whose password is to be changed.
+     * @param currentPassword The current password of the user.
+     * @param newPassword The new password to set.
+     * @return true if the password was successfully changed, false otherwise.
+     */
+    public boolean changeUserPassword(Long userId, String currentPassword, String newPassword) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (passwordEncoder.matches(currentPassword, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(newPassword));
+                userRepository.save(user);
+                return true;
+            }
+        }
+        return false;
+    }
     
 }

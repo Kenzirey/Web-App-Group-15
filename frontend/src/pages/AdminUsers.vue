@@ -12,12 +12,12 @@
         <user-form 
           v-if="!currentUser"
           :initial-user="newUser"
-          :api-endpoint="this.$backendUrl + 'admin/users'"
+          :api-endpoint="this.$backendUrl + 'users'"
           @user-submitted="handleUserSubmitted" />
         <edit-user-form
           v-else
           :initial-user="currentUser"
-          :api-endpoint="this.$backendUrl + 'admin/users/' + currentUser.id"
+          :api-endpoint="this.$backendUrl + 'users/' + currentUser.id"
           @user-updated="handleUserUpdated"
           @close-form="stopEditing" />
       </v-col>
@@ -74,7 +74,7 @@ export default {
     async fetchUsers() {
       const authToken = getCookie('authToken');
       try {
-        const response = await axios.get(this.$backendUrl + 'admin/users', {
+        const response = await axios.get(this.$backendUrl + 'users', {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         this.users = response.data.map(user => ({
@@ -117,7 +117,7 @@ export default {
     async deleteUser(userId) {
       const authToken = getCookie('authToken');
       try {
-        await axios.delete(`${this.$backendUrl}admin/users/${userId}`, {
+        await axios.delete(`${this.$backendUrl}users/${userId}`, {
           headers: { 'Authorization': `Bearer ${authToken}` }
         });
         this.users = this.users.filter(user => user.id !== userId);
