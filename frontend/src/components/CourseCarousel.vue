@@ -45,7 +45,7 @@ export default {
 			if (this.difficulty && this.difficulty.toLowerCase() === "sale") {
 				filtered = this.courses.filter(course => course.sale);
 				filtered.sort((a, b) => b.sale - a.sale);
-			} else if (this.$difficulties.includes(this.difficulty.toLowerCase())) {
+			} else if (this.$difficulties.map(d => d.toLowerCase()).includes(this.difficulty.toLowerCase())) {
 				filtered = this.courses.filter(course => {
 					return course.difficultyLevel
 						&& course.difficultyLevel.toLowerCase() === this.difficulty.toLowerCase();
@@ -88,7 +88,7 @@ export default {
 			course.image.url = url;
 		},
 		shuffle(array) {
-			//Fisher-Yates algorithm 
+			//Fisher-Yates algorithm
 			let i = array.length;
 			while (i != 0) {
 				let randomIndex = Math.floor(Math.random() * i);
@@ -130,6 +130,8 @@ swiper-slide {
 	padding-left: 10px;
 	padding-right: 10px;
 	box-sizing: border-box;
+	border-left: 2px solid #ccc;
+	border-right: 2px solid #ccc;
 }
 
 .bullet-positioning-box {

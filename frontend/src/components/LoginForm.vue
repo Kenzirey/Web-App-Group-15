@@ -48,14 +48,12 @@ export default {
   methods: {
     async login() {
       this.clearErrors();
-      console.log("Logging in with:", this.email, this.password);
       try {
         const response = await axios.post(this.$backendUrl + 'authenticate', {
           username: this.email,
           password: this.password
         });
         const decoded = store.login(response.data.jwt);
-        console.log('Decoded JWT:', decoded);
         this.$emit('login-success', { user: decoded.sub, roles: decoded.roles });
 
         if (decoded.roles && decoded.roles.includes('ROLE_ADMIN')) {

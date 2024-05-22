@@ -3,9 +3,7 @@
 
 	<div class="home-page-container">
 		<section id="introduction">
-			<h2>Welcome to Learniverse Connect</h2>
-			<p>Placeholder text for introduction. This section will give an overview of what Learniverse Connect
-				offers.</p>
+			<h1>Welcome to Learniverse Connect</h1>
 		</section>
 
 		<!-- Any other sections we want on the homepage -->

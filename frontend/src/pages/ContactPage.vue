@@ -3,9 +3,8 @@
 <template>
 	<div>
 		<section id="contactUsOverHead">
-			<h1 class="space">Contact us!</h1>
-			<p class="title-paragraph"> If there is anything you are wondering about
-				,or have any input on our website, we would love to hear from you!</p>
+			<h1 class="space">Contact Us</h1>
+			<p class="title-paragraph"> If there is anything you are wondering about, or have any input on our website, we would love to hear from you!</p>
 		</section>
 
 
@@ -23,7 +22,7 @@
 		<section id="adresses">
 			<section class="box">
 				<h1 class="paragraphHeader">
-					Contact us!
+					Our headquarters
 				</h1>
 				<p class="pContact"> Address: Larsgårdsvegen 2, 6009 Ålesund <br>
 
@@ -69,6 +68,10 @@
 
 .space {
 	padding: 15px 0;
+}
+
+p {
+	margin-top: 8px;
 }
 
 </style>

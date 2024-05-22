@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class JwtAuthenticationController {
 
-	//TODO: Fix Autowired and beans bug.
 	@Autowired
 	private AuthenticationManager authenticationManager;
 

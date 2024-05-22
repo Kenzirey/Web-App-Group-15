@@ -46,6 +46,7 @@ export default {
 	.disclaimer-page {
 		max-width: 65vh;
 	}
+
 	h1 {
 		font-size: 1.9em;
 	}

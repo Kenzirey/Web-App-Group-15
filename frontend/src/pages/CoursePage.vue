@@ -159,7 +159,7 @@ export default {
     orderCourse() {
       this.$router.push({
         name: "Forms",
-        params: {courseId: this.course.courseId, title: this.course.courseName},
+        params: {courseId: this.course.courseId, title: this.course.courseName },
       });
     },
 	},
@@ -236,6 +236,11 @@ export default {
 	}
 	.info-buttons {
 		flex-wrap: wrap;
+	}
+	.course-description {
+		max-width: 60vw;
+		text-align: left;
+		display: inline-block;
 	}
 }
 

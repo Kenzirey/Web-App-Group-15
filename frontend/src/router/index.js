@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import { store} from '../utility/store';
+import {createRouter, createWebHistory} from 'vue-router';
+import {store} from '../utility/store';
 
 //Import the pages as we create them.
 import HomePage from '../pages/HomePage.vue';
@@ -20,60 +20,78 @@ import DisclaimerPage from '@/pages/DisclaimerPage.vue';
 import AdminProviders from '@/pages/AdminProviders.vue';
 
 
-
-
 //Add the routes / paths to the "pages" here.
 const routes = [
-  { path: '/', component: HomePage, name: 'Home' },
-  { path: '/course/:id', component: CoursePage, name: 'Course' },
-  { path: '/contact', component: ContactPage, name: 'Contact'},
-  { path: '/about', component: AboutPage, name: 'About' },
-  { path: '/account', component: AccountPage, name: 'Account', meta: { requiresAuth: true } },
-  { path: '/favorites', component: CourseFavoriteListPage, name: 'Favorites', meta: { requiresAuth: true } },
-  { path: '/search', component: SearchResults, name: 'SearchResults'},
-  { path: '/login', component: LoginForm, name: 'Login', meta: { requiresAuth: false } },
-  { path: '/submit', component: SubmitPage, name: 'Submit' },
-  { path: '/forms/:courseId/:title', component: FormsPage, name: 'Forms', props: true },
-  { path: '/forms', component: FormsPage, name: 'FormsNoCourse' },  
-  { path: '/admin', component: AdminDashboard, name: 'AdminDashboard', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },
-  { path: '/admin/courses', component: AdminCourses, name: 'AdminCourses', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },
-  { path: '/admin/providers', component: AdminProviders, name: 'AdminProviders', meta: {requiresAuth: true, roles: ['ROLE_ADMIN']}},
-  { path: '/admin/users', component: AdminUsers, name: 'AdminUsers', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },  
-  { path: '/change-password', component: ChangePasswordForm, name: 'ChangePassword', meta: { requiresAuth: true } },
-  { path: '/disclaimer', component: DisclaimerPage, name: 'Disclaimer' }
-  // Define routes for other pages
+	{path: '/', component: HomePage, name: 'Home'},
+	{path: '/course/:id', component: CoursePage, name: 'Course'},
+	{path: '/contact', component: ContactPage, name: 'Contact'},
+	{path: '/about', component: AboutPage, name: 'About'},
+	{path: '/account', component: AccountPage, name: 'Account', meta: {requiresAuth: true}},
+	{path: '/favorites', component: CourseFavoriteListPage, name: 'Favorites', meta: {requiresAuth: true}},
+	{path: '/search', component: SearchResults, name: 'SearchResults'},
+	{path: '/login', component: LoginForm, name: 'Login', meta: {requiresAuth: false}},
+	{path: '/submit', component: SubmitPage, name: 'Submit'},
+	{path: '/forms/:courseId/:title', component: FormsPage, name: 'Forms', props: true},
+	{path: '/forms', component: FormsPage, name: 'FormsNoCourse'},
+	{
+		path: '/admin',
+		component: AdminDashboard,
+		name: 'AdminDashboard',
+		meta: {requiresAuth: true, roles: ['ROLE_ADMIN']}
+	},
+	{
+		path: '/admin/courses',
+		component: AdminCourses,
+		name: 'AdminCourses',
+		meta: {requiresAuth: true, roles: ['ROLE_ADMIN']}
+	},
+	{
+		path: '/admin/providers',
+		component: AdminProviders,
+		name: 'AdminProviders',
+		meta: {requiresAuth: true, roles: ['ROLE_ADMIN']}
+	},
+	{
+		path: '/admin/users',
+		component: AdminUsers,
+		name: 'AdminUsers',
+		meta: {requiresAuth: true, roles: ['ROLE_ADMIN']}
+	},
+	{path: '/change-password', component: ChangePasswordForm, name: 'ChangePassword', meta: {requiresAuth: true}},
+	{path: '/disclaimer', component: DisclaimerPage, name: 'Disclaimer'}
+	// Define routes for other pages
 ];
 
 /**
- * Creates a router instance, to navigate the Vue application.  
+ * Creates a router instance, to navigate the Vue application.
  */
 const router = createRouter({
-  history: createWebHistory(),
-  routes,
+	history: createWebHistory(),
+	routes,
 });
 
 // Navigation guard
 router.beforeEach((to, from, next) => {
-  const isLoggedIn = store.user.isLoggedIn;
-  const userRoles = store.user.roles;
+	window.scrollTo({top: 0});
+	const isLoggedIn = store.user.isLoggedIn;
+	const userRoles = store.user.roles;
 
-  if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
-    next({ name: 'Login' });
-  } else if (isLoggedIn) {
-    if (to.matched.some(record => record.meta.roles && record.meta.roles.includes('ROLE_ADMIN'))) {
-      if (userRoles.includes('ROLE_ADMIN')) {
-        next();
-      } else {
-        next({ path: '/' });
-      }
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
+	if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
+		next({name: 'Login'});
+	} else if (isLoggedIn) {
+		if (to.matched.some(record => record.meta.roles && record.meta.roles.includes('ROLE_ADMIN'))) {
+			if (userRoles.includes('ROLE_ADMIN')) {
+				next();
+			} else {
+				next({path: '/'});
+			}
+		} else {
+			next();
+		}
+	} else {
+		next();
+	}
 });
-
 
 
 export default router;
