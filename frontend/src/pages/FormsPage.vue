@@ -102,7 +102,9 @@
 			<h2 class="formSections">Additional information</h2>
 
 			<v-textarea v-model="additionalInfo"
-						placeholder="If there are any more additional information the schools should know, please write here"></v-textarea>
+						placeholder="If there are any more additional information the schools should know, please write here"
+						hide-details="auto"
+			></v-textarea>
 		</fieldset>
 
 		<v-col class="button-margin">
