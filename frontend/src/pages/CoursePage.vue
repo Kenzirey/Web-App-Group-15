@@ -237,6 +237,11 @@ export default {
 	.info-buttons {
 		flex-wrap: wrap;
 	}
+	.course-description {
+		max-width: 60vw;
+		text-align: left;
+		display: inline-block;
+	}
 }
 
 .info-buttons {
