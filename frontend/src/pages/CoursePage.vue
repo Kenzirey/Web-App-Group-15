@@ -55,7 +55,6 @@
 		</div>
 		<figure v-if="course.image != null && imageUrl != null">
 			<img class="course-image" :src=imageUrl :alt="course.image.altText">
-			<figcaption>{{ course.image.altText }}</figcaption>
 		</figure>
 		<div id="no-image" class="course-image" v-else>
 			<h1>(No image)</h1>
@@ -192,11 +191,11 @@ export default {
 
 .course-image {
 	/* To reduce the size of the image */
-	max-width: 60%;
-	max-height: 120vh;
+	max-width: 60vw;
+	max-height: 40vh;
 	height: auto;
 	display: block;
-	margin: 8px auto;
+	margin: 20px auto;
 }
 
 #no-image {
@@ -254,6 +253,12 @@ export default {
 	text-align: center;
 	font-size: 1.7em;
 	margin-bottom: 10px;
+}
+
+.course-description {
+	margin: 20px;
+	max-width: 60vw;
+	text-align: left;
 }
 
 .info-container {
