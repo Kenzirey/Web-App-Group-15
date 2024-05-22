@@ -3,9 +3,9 @@
 <template>
 
 	<h1 class="title"> Place Order </h1>
-	<v-form v-model="valid" class="formBox margin-bottom" ref="form">
-		<fieldset class="fieldBox">
-			<section class="formSections">Personal information</section>
+	<v-form class="formBox margin-bottom" ref="form">
+		<section class="fieldBox">
+			<h2 class="formTitle">Personal information</h2>
 
 			<!-- First name, Last name, Email, Phone number, Gender -->
 
@@ -49,12 +49,12 @@
 				</v-row>
 			</v-container>
 
-		</fieldset>
+		</section>
 
 		<!-- Address, city postcode, country-->
 
-		<fieldset class="fieldBox">
-			<h1 class="formSections">Address</h1>
+		<section class="fieldBox">
+			<h2 class="formTitle">Address</h2>
 
 			<v-col cols="12" md="15">
 				<v-text-field v-model="address" label="Address" :rules="InputRules" required></v-text-field>
@@ -78,11 +78,11 @@
 				<v-text-field v-model="country" label="Country" :rules="InputRules"
 							  required></v-text-field>
 			</v-col>
-		</fieldset>
+		</section>
 
 		<!-- Application Details -->
-		<fieldset class="fieldBox">
-			<h2 class="formSections">Application Details</h2>
+		<section class="fieldBox">
+			<h2 class="formTitle">Application Details</h2>
 			<p class="labelParagraph">
 				Information about the course you are attending
 			</p>
@@ -92,20 +92,20 @@
 			</v-col>
 
 			<v-col cols="12" md="15">
-				<v-text-field v-model="university" label="University:" :rules="InputRules" required></v-text-field>
+				<v-text-field v-model="provider" label="Provider" :rules="InputRules" required></v-text-field>
 			</v-col>
 
-		</fieldset>
+		</section>
 
 		<!-- Additional information -->
-		<fieldset class="fieldBox">
-			<h2 class="formSections">Additional information</h2>
+		<section class="fieldBox">
+			<h2 class="formTitle">Additional information</h2>
 
 			<v-textarea v-model="additionalInfo"
 						placeholder="If there are any more additional information the schools should know, please write here"
 						hide-details="auto"
 			></v-textarea>
-		</fieldset>
+		</section>
 
 		<v-col class="button-margin">
 			<v-btn prepend-icon="mdi-check-underline" text="submit" type="submit" @click.prevent="validate"
@@ -140,17 +140,13 @@ export default {
 			postCode: "",
 			country: "",
 			title: this.title,
-			university: "",
+			provider: "",
 			additionalInfo: "",
 
 
 			// Validation rules for form fields
 			InputRules: [
-				(value) => {
-					if (value) return true;
-
-					return "Input is required.";
-				},
+				(value) => !!value || 'Input is required.'
 			],
 			emailRules: [
 				(value) => !!value || "E-mail is required.",
@@ -162,8 +158,7 @@ export default {
 		filter: function (evt) {
 			evt = evt ? evt : window.event;
 			let expect = evt.target.value.toString() + evt.key.toString();
-
-			if (!/^[-+]?[0-9]*\.?[0-9]*$/.test(expect)) {
+			if (!/^[-+]?\d*\.?\d*$/.test(expect)) {
 				evt.preventDefault();
 			} else {
 				return true;
@@ -227,8 +222,6 @@ export default {
 
 .formBox {
 	max-width: fit-content;
-	margin: auto;
-	margin-bottom: 20px;
 	background: linear-gradient(to right,
 		rgb(var(--v-theme-gradiantOne)),
 		rgb(var(--v-theme-gradiantTwo)));
@@ -241,6 +234,11 @@ export default {
 
 .fieldBox {
 	background: white;
+	border: 2px groove ButtonFace;
+	border-top-width: 0;
+	padding: .35em .625em .75em;
+	position: relative;
+	margin: 0;
 }
 
 .labelParagraph {
@@ -253,14 +251,12 @@ export default {
 	font-weight: bold;
 }
 
-.formSections {
+.formTitle {
 	padding: 10px;
 	margin: 10px 0;
 	text-align: left;
 	font-size: x-large;
 	letter-spacing: 1px;
-	font-weight: bold;
-	max-width: fit-content;
 }
 
 
