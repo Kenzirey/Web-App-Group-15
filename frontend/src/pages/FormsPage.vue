@@ -92,7 +92,7 @@
 			</v-col>
 
 			<v-col cols="12" md="15">
-				<v-text-field v-model="university" label="University:" :rules="InputRules" required></v-text-field>
+				<v-text-field v-model="provider" label="Provider" :rules="InputRules" required></v-text-field>
 			</v-col>
 
 		</section>
@@ -140,7 +140,7 @@ export default {
 			postCode: "",
 			country: "",
 			title: this.title,
-			university: "",
+			provider: "",
 			additionalInfo: "",
 
 
