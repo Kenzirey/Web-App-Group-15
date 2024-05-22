@@ -22,7 +22,7 @@ The backend part can be found via a directory named "backend".
 9. server.port=8080
    <p>Replace or keep the 8080 port with the localhost port you wish to use.</p>
 10. jwt_secret_key=PasteInWhatYouGetFromBelow
-    <p>Use this website to generate a JWT key to use: https://jwt.io/#debugger ./p>
+    <p>Use this website to generate a JWT key to use: https://jwt.io/#debugger </p>
 
 
 # Instructions for running the frontend application
