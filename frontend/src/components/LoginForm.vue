@@ -11,6 +11,7 @@
             autocomplete="username"
             :error-messages="emailErrors"
             class="login-input"
+						aria-label="Email-field"
           ></v-text-field>
           <v-text-field
             label="Password"
@@ -20,14 +21,12 @@
             autocomplete="current-password"
             :error-messages="passwordErrors"
             class="login-input"
+						aria-label="Current-password-field"
           ></v-text-field>
-          <v-btn type="submit" class="login-button">Sign In</v-btn>
+          <v-btn type="submit" class="login-button" aria-label="login-button">Sign In</v-btn>
           <v-alert type="error" v-if="errorMessage" class="login-alert">{{ errorMessage }}</v-alert>
         </v-form>
       </v-card-text>
-      <v-card-actions class="login-actions">
-        <v-btn text class="login-clear" @click="clear">Clear</v-btn>
-      </v-card-actions>
     </v-card>
   </v-container>
 </template>
