@@ -44,6 +44,7 @@ export default {
   },
   methods: {
     checkLang(langSubstring) {
+      console.log(`${navigator} || ${navigator.language}`);
 			return navigator.language.replace(/-/g, "_").toUpperCase().includes(`_${langSubstring.toUpperCase()}`);
 		},
 		checkLangAny(...langSubstrings) {
@@ -52,7 +53,7 @@ export default {
 		getFirstCurrency(...currencies) {
 			let i = 0;
 			let next = null;
-			while (i < currencies.length && !this.currencies.includes(next)) {
+			while (i < currencies.length && !this.$currencies.value.includes(next)) {
 				next = currencies[i].toUpperCase();
 				i++;
 			}
