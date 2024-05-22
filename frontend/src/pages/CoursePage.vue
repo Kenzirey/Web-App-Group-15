@@ -86,7 +86,7 @@ export default {
 			providers: [],
 			isFavorite: false,
 			waitingForFavoriteToggle: false,
-      isLoading: true,
+      		isLoading: true,
 		};
 	},
 	methods: {
@@ -116,7 +116,6 @@ export default {
 			}
 		},
 		async fetchData() {
-/*Artificial delay is not good to keep on our main branch. */
 			const favoriteResponse = await this.$authFetch(this.$backendUrl + "favorites/" + this.$route.params.id);
 			if (favoriteResponse != null && favoriteResponse.ok) {
 				this.isFavorite = true;
