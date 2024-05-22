@@ -17,6 +17,7 @@ import SearchResults from '@/pages/SearchResults.vue';
 import LoginForm from '@/components/LoginForm.vue';
 import ChangePasswordForm from '@/components/ChangePassword.vue';
 import DisclaimerPage from '@/pages/DisclaimerPage.vue';
+import AdminProviders from '@/pages/AdminProviders.vue';
 
 
 
@@ -36,6 +37,7 @@ const routes = [
   { path: '/forms', component: FormsPage, name: 'FormsNoCourse' },  
   { path: '/admin', component: AdminDashboard, name: 'AdminDashboard', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },
   { path: '/admin/courses', component: AdminCourses, name: 'AdminCourses', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },
+  { path: '/admin/providers', component: AdminProviders, name: 'AdminProviders', meta: {requiresAuth: true, roles: ['ROLE_ADMIN']}},
   { path: '/admin/users', component: AdminUsers, name: 'AdminUsers', meta: { requiresAuth: true, roles: ['ROLE_ADMIN'] } },  
   { path: '/change-password', component: ChangePasswordForm, name: 'ChangePassword', meta: { requiresAuth: true } },
   { path: '/disclaimer', component: DisclaimerPage, name: 'Disclaimer' }
