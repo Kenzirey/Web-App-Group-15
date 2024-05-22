@@ -26,7 +26,7 @@
 			<v-container>
 				<v-row>
 					<v-col cols="12" md="15">
-						<v-text-field v-model="email" :rules="emailRules" label="E-mail" required></v-text-field>
+						<v-text-field v-model="email" :rules="[...InputRules, ...emailRules]" label="E-mail" required></v-text-field>
 					</v-col>
 
 					<v-col cols="12" md="15">
@@ -146,10 +146,14 @@ export default {
 
 			// Validation rules for form fields
 			InputRules: [
-				(value) => !!value || 'Input is required.'
+				(value) => {
+					if (value) return true;
+
+					return "Input is required.";
+				},
 			],
 			emailRules: [
-				(value) => !!value || "E-mail is required.",
+
 				(value) => /.+@.+\..+/.test(value) || "example: john@something.com",
 			],
 		};
