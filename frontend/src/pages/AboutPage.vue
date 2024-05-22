@@ -1,6 +1,6 @@
 <template>
 	<section>
-		<h2>About Us</h2>
+		<h1>About Us</h1>
 		<section id="members-container">
 			<figure>
 				<h3>Henrik</h3>
@@ -86,5 +86,9 @@ p {
 }
 figcaption {
 	margin-top: 8px;
+}
+
+h1 {
+	margin-bottom: 10px;
 }
 </style>
