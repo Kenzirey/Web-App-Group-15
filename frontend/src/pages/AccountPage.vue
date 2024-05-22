@@ -34,7 +34,9 @@
 								</v-card-text>
 								<v-card-actions class="card-actions">
 									<v-btn class="action-button" @click="changePassword"
-												 aria-label="Change Password Button">Change Password</v-btn>
+										 aria-label="Change Password Button">Change Password</v-btn>
+									 <v-btn class="action-button" @click="() => this.$router.push('/admin')"
+										v-if="user.roles.includes('ROLE_ADMIN')">Admin Dashboard</v-btn>
 								</v-card-actions>
 							</v-card>
 						</v-col>

@@ -73,17 +73,17 @@ public class CourseProviderLinkService {
 	 * ChatGPT v 4o helped with this specific method.
 	 *
 	 * @param providerId The ID of the {@link CourseProvider}
+	 * @param courseId   The ID of the {@link Course}
 	 * @param dto        The data transfer object that contains
 	 *                   The {@link Course} and price information.
-	 * @param currency   The currency the price of the DTO is in
 	 * @throws EntityNotFoundException if either the course or course provider is not found.
 	 */
 	public void addCourseListing(
 			int providerId,
-			CourseProviderLink.CourseProviderLinkDto dto,
-			String currency
+			int courseId,
+			CourseProviderLink.CourseProviderLinkDto dto
 	) {
-		Course course = courseRepository.findById(dto.courseId())
+		Course course = courseRepository.findById(courseId)
 				.orElseThrow(EntityNotFoundException::new);
 		CourseProvider courseProvider = courseProviderRepository.findById(providerId)
 				.orElseThrow(EntityNotFoundException::new);
@@ -92,7 +92,7 @@ public class CourseProviderLinkService {
 				course,
 				courseProvider,
 				dto.price(),
-				currency
+				dto.currency()
 		));
 	}
 
@@ -149,22 +149,20 @@ public class CourseProviderLinkService {
 	 *
 	 * @param providerId The ID of the {@link CourseProvider}
 	 * @param courseId   The ID of the {@link Course}
-	 * @param price      The updated price of the {@link Course}
-	 * @param currency   The currency that the price is specified in
+	 * @param dto        the data transfer object containing price and currency information.
 	 * @throws EntityNotFoundException If the {@link CourseProviderLink}, {@link CourseProvider},
 	 *                                 or {@link CourseProvider} is not found.
 	 */
 	public void updateCourseProviderLink(
 			int providerId,
 			int courseId,
-			double price,
-			String currency
+			CourseProviderLink.CourseProviderLinkDto dto
 	) {
 		CourseProviderLinkId id = new CourseProviderLinkId(courseId, providerId);
 		CourseProviderLink link = courseProviderLinkRepository.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("Course provider link not found"));
-		link.setPrice(price);
-		link.setCurrency(currency);
+		link.setPrice(dto.price());
+		link.setCurrency(dto.currency());
 		courseProviderLinkRepository.save(link);
 	}
 }
