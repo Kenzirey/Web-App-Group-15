@@ -28,8 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/images")
 public class ImageController {
-	//TODO: Tony, Swagger.
-
 	/**
 	 * 1MB is spring's default max file size, if not otherwise specified.
 	 */

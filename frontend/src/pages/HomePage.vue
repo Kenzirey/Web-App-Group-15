@@ -9,10 +9,10 @@
 
 		<!-- Any other sections we want on the homepage -->
 		<section class="Carousel test">
-			<CourseCarousel :courses="testCourses" difficulty="Sale"/>
-			<CourseCarousel :courses="testCourses" difficulty="Beginner"/>
-			<CourseCarousel :courses="testCourses" difficulty="Advanced"/>
-			<CourseCarousel :courses="testCourses" difficulty="Expert"/>
+			<CourseCarousel :courses="courses" difficulty="Sale"/>
+			<CourseCarousel :courses="courses" difficulty="Beginner"/>
+			<CourseCarousel :courses="courses" difficulty="Advanced"/>
+			<CourseCarousel :courses="courses" difficulty="Expert"/>
 		</section>
 	</div>
 </template>
@@ -32,39 +32,22 @@ export default {
 	},
 	data() {
 		return {
-			/**
-			 * These are purely for testing the carousel component.
-			 */
-			testCourses: [
-				{
-					name: 'Microsoft SQL',
-					difficulty: 'Beginner',
-					category: [{id: 1, name: "SQL"}, {id: 2, name: "Java"}, {id: 3, name: "JPA"}],
-					sale: 0.1,
-					image: '/images/AWS.png', // Directly reference images from the public/images folder for testing!
-					alt: 'Amazon Web Service Image',
-					id: 1
-				}, {
-					name: 'Advanced SQL',
-					difficulty: 'Advanced',
-					category: [{id: 1, name: "SQL"}, {id: 2, name: "Java"}, {id: 4, name: "JDBC"}],
-					sale: 0.3,
-					image: '/images/machine-learning.jpg',
-					alt: 'Machine-Learning',
-					id: 2
-				}, {
-					name: 'SQL Basics',
-					difficulty: 'Beginner',
-					category: [{id: 1, name: "SQL"}],
-					sale: 0,
-					image: '/images/SQL-image.jpg',
-					alt: 'SQL Basics Image',
-					id: 3
-				}
-			]
+			courses: []
 		}
+	},
+	methods:{
+		async fetchData() {
+			const courseResponse = await fetch(this.$backendUrl + "courses")
+			if (courseResponse.ok) {
+				this.courses = await courseResponse.json();
+			}
+		}
+
+	},
+	created() {
+		this.fetchData();
 	}
-};
+}
 </script>
 
 <style scoped>

@@ -1,18 +1,22 @@
 <template>
 	<v-card>
 		<v-card-title>
-			<router-link :to="{path: 'search', query: {type: 'course', difficulty: difficulty.toLowerCase() == 'sale' ? 'featured' : difficulty.toLowerCase()}}">
+			<router-link
+				:to="{path: 'search', query: {type: 'course', difficulty: difficulty.toLowerCase() == 'sale' ? 'featured' : difficulty.toLowerCase()}}">
 				{{ difficulty.toLowerCase() == "sale" ? "Featured" : difficulty }} courses
 			</router-link>
 		</v-card-title>
 
 		<swiper-container @swipernavigationprev="resetSlideTimer" @swipernavigationnext="resetSlideTimer" ref="carousel"
-			:slides-per-view="slidesPerView" :loop="loopMode" css-mode="true" navigation="true" pagination="true">
+						  :slides-per-view="slidesPerView" :loop="loopMode" css-mode="true" navigation="true"
+						  pagination="true">
 			<swiper-slide v-for="course in filteredCourses">
 				<div class="bullet-positioning-box">
-					<router-link :to="'/course/' + course.id">
-						<v-img alt="course.alt":src="course.image" :aspect-ratio="aspectRatio" cover></v-img>
-						{{ course.name }}
+					<router-link :to="'/course/' + course.courseId">
+						<v-img v-if="course.image" alt="course.alt" :src="course.image.url" :aspect-ratio="aspectRatio"
+							   cover></v-img>
+						<div v-else class="no-image"><h3>(No image)</h3></div>
+						{{ course.courseName }}
 					</router-link>
 				</div>
 			</swiper-slide>
@@ -33,20 +37,30 @@ export default {
 	 */
 	props: {
 		courses: Array,
-		difficulty: String
+		difficulty: String,
 	},
 	computed: {
 		filteredCourses() {
 			let filtered;
-			if (this.difficulty && this.difficulty.toLowerCase() == "sale") {
+			if (this.difficulty && this.difficulty.toLowerCase() === "sale") {
 				filtered = this.courses.filter(course => course.sale);
 				filtered.sort((a, b) => b.sale - a.sale);
 			} else if (["beginner", "advanced", "expert"].includes(this.difficulty.toLowerCase())) {
-				filtered = this.courses.filter(course => course.difficulty == this.difficulty); 
+				filtered = this.courses.filter(course => {
+					return course.difficultyLevel
+						&& course.difficultyLevel.toLowerCase() === this.difficulty.toLowerCase();
+				});
 			} else {
 				filtered = this.courses;
 			}
-			return [...filtered, ...filtered];
+			this.shuffle(filtered);
+			filtered = filtered.slice(0, 6);
+			for (const course of filtered) {
+				if (course.image) {
+					this.fetchImage(course);
+				}
+			}
+			return filtered;
 		},
 		loopMode() {
 			return this.filteredCourses.length > 3;
@@ -65,12 +79,30 @@ export default {
 		resetSlideTimer() {
 			clearInterval(this.interval);
 			this.interval = setInterval(this.intervalFunction, this.autoSlideInterval);
+		},
+		async fetchImage(course) {
+			const imageResponse = await fetch(this.$backendUrl + "images/" + course.image.imageId);
+
+			const url = URL.createObjectURL(await imageResponse.blob());
+			this.imageUrls.push(url);
+			course.image.url = url;
+		},
+		shuffle(array) {
+			//Fisher-Yates algorithm
+			let i = array.length;
+			while (i != 0) {
+				let randomIndex = Math.floor(Math.random() * i);
+				i--;
+				[array[i], array[randomIndex]] = [array[randomIndex], array[i]]
+
+			}
 		}
 	},
 	data() {
 		return {
 			autoSlideInterval: 5000,
-			interval: null
+			interval: null,
+			imageUrls: []
 		}
 	},
 	mounted() {
@@ -78,27 +110,43 @@ export default {
 	},
 	unmounted() {
 		clearInterval(this.interval);
-	}
+		for (const url of this.imageUrls) {
+			URL.revokeObjectURL(url);
+		}
+	},
 }
 </script>
 
-<style scoped>
-	.v-card {
-		margin-top: 20px;
-		margin-bottom: 20px;
-	}
+<style scoped lang="scss">
+.v-card {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
 
-	swiper-container {
-		width: calc(50vw + 100px);
-	}
+swiper-container {
+	width: calc(50vw + 100px);
+}
 
-	swiper-slide {
-		padding-left: 10px;
-		padding-right: 10px;
-		box-sizing: border-box;
-	}
+swiper-slide {
+	padding-left: 10px;
+	padding-right: 10px;
+	box-sizing: border-box;
+}
 
-	.bullet-positioning-box {
-		margin-bottom: 30px;
+.bullet-positioning-box {
+	margin-bottom: 30px;
+}
+
+.no-image {
+	aspect-ratio: v-bind(aspectRatio);
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+
+	h3 {
+		color: rgb(var(--v-theme-weakText));
+		font-weight: lighter;
 	}
+}
 </style>
