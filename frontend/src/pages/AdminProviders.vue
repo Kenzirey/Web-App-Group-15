@@ -75,14 +75,7 @@ export default {
 				url: '',
 				courseProviderLinks: []
 			},
-			links: [{
-				course: {
-					courseName: "Test course",
-					courseId: 1
-				},
-				price: 500,
-				currency: "USD"
-			}],
+			links: [],
 			courses: [],
 			newCategoryName: '',
 			snackbar: false,
