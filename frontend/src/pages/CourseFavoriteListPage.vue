@@ -10,8 +10,8 @@
 							density="comfortable" text @click="removeFromFavorites(course.courseId)">
 						</v-btn>
 					</v-card-title>
-					<v-card-text class="course-description">
-						{{ course.courseDescription }}
+					<v-card-text class="course-category">
+						{{ course.difficultyLevel }}
 					</v-card-text>
 				</v-card>
 			</div>
@@ -68,7 +68,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 #no-results {
 	height: 60vh;
 	display: flex;
@@ -82,28 +81,17 @@ export default {
 }
 
 .card-title-container {
-	display: grid;
-	grid-template-columns: 1fr auto;
+	display: flex;
+	justify-content: space-between;
 	align-items: center;
-	position: relative;
-	/* Needed to position the button absolutely within the container */
 }
 
 .course-title {
-	grid-column: 1 / -1;
-	text-align: center;
-	z-index: 1;
-	/* In case of button overlapping, changed z-index */
-}
-
-/* Chatgpt helped with this CSS */
-.remove-favorite-button {
-	position: absolute;
-	right: 0;
-	top: 50%;
-	/* Center vertically */
-	transform: translateY(-50%);
-	z-index: 2;
+	flex-grow: 1;
+	margin-right: 10px;
+	text-align: left;
+	/* Made it left for consistency, in terms of the left-aligned dyslexic thing */
+	white-space: normal;
 }
 
 .favorite-items {
@@ -112,12 +100,29 @@ export default {
 
 .favorite-course-card {
 	margin-bottom: 20px;
+	width: 100%;
+	max-width: 500px;
 }
 
 @media screen and (max-width: 767px) {
-	h1 {
-		font-size:1.6em;
+	.card-title-container {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.course-title {
+		text-align: center;
+	}
+
+	.remove-favorite-button {
+		order: -1;
+		width: 100%;
+		margin-bottom: 5px;
+	}
+
+	.favorite-course-card {
+		max-width: 300px;
+		height: auto;
 	}
 }
-
 </style>
