@@ -130,6 +130,8 @@ swiper-slide {
 	padding-left: 10px;
 	padding-right: 10px;
 	box-sizing: border-box;
+	border-left: 2px solid #ccc;
+	border-right: 2px solid #ccc;
 }
 
 .bullet-positioning-box {
