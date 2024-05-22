@@ -36,8 +36,8 @@
 					<v-text-field label="Related Certification" v-model="course.relatedCertification"></v-text-field>
 				</v-col>
 				<v-col cols="12" md="6">
-					<v-select label="Category" v-model="course.categoryIds" :items="categories" item-text="name"
-						item-value="id" multiple chips small-chips required></v-select>
+					<v-select label="Category" v-model="course.categories" :items="categories" item-text="name"
+						item-title="name" multiple chips small-chips required return-object></v-select>
 				</v-col>
 				<v-col cols="12">
 					<v-file-input label="Upload Image" @change="handleImageUpload" prepend-icon="mdi-camera"
@@ -102,7 +102,7 @@ export default {
 				hoursPerWeek: 0,
 				relatedCertification: '',
 				courseDescription: '',
-				categoryIds: [],
+				categories: [],
 				imageId: null
 			},
 			removeImage: false,
@@ -152,7 +152,7 @@ export default {
 				hoursPerWeek: this.course.hoursPerWeek,
 				relatedCertification: this.course.relatedCertification,
 				courseDescription: this.course.courseDescription,
-				categoryIds: this.course.categoryIds,
+				categoryIds: this.course.categories.map(cat => cat.id || cat.categoryId),
 				imageId: imageId
 			};
 
@@ -168,6 +168,9 @@ export default {
 					data: payload,
 					headers: headers
 				});
+				if (response.code == 403) {
+					this.$router.push("/login");
+				}
 				this.snackbarText = isAddingCourse ? 'Course added successfully.' : 'Course updated successfully.';
 				this.snackbar = true;
 				this.fetchCourses();
@@ -223,7 +226,7 @@ export default {
 				hoursPerWeek: 0,
 				relatedCertification: '',
 				courseDescription: '',
-				categoryIds: [],
+				categories: [],
 				imageId: null,
 			};
 		},
