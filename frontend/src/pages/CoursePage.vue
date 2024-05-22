@@ -159,7 +159,7 @@ export default {
     orderCourse() {
       this.$router.push({
         name: "Forms",
-        params: {courseId: this.course.courseId, title: this.course.courseName},
+        params: {courseId: this.course.courseId, title: this.course.courseName },
       });
     },
 	},
