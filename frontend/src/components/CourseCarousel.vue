@@ -50,11 +50,11 @@ export default {
 					return course.difficultyLevel
 						&& course.difficultyLevel.toLowerCase() === this.difficulty.toLowerCase();
 				});
+				this.shuffle(filtered);
 			} else {
 				filtered = this.courses;
 			}
-			this.shuffle(filtered);
-			filtered = filtered.slice(0, 6);
+			filtered = filtered.slice(0, 5);
 			for (const course of filtered) {
 				if (course.image) {
 					this.fetchImage(course);
@@ -88,13 +88,12 @@ export default {
 			course.image.url = url;
 		},
 		shuffle(array) {
-			//Fisher-Yates algorithm
+			//Fisher-Yates algorithm 
 			let i = array.length;
 			while (i != 0) {
 				let randomIndex = Math.floor(Math.random() * i);
 				i--;
 				[array[i], array[randomIndex]] = [array[randomIndex], array[i]]
-
 			}
 		}
 	},
