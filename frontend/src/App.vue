@@ -54,7 +54,7 @@ export default {
 		getFirstCurrency(...currencies) {
 			let i = 0;
 			let next = null;
-			while (i < currencies.length && !this.currencies.includes(next)) {
+			while (i < currencies.length && !this.$currencies.value.includes(next)) {
 				next = currencies[i].toUpperCase();
 				i++;
 			}

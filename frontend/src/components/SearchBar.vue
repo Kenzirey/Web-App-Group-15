@@ -61,7 +61,7 @@ export default {
 	props: ['lastGlobalClick'],
 	computed: {
 		allSuggestionsFiltered() {
-			return this.filteredCourses.concat(this.filteredProviders).concat(this.filteredCategories);
+			return this.filteredCourses.concat(this.filteredProviders).concat(this.filteredCategories).splice(0, 30);
 		}
 	},
 	methods: {
@@ -143,22 +143,22 @@ export default {
 		async fetchCourses() {
 			const response = await fetch(this.$backendUrl + "courses");
 			this.courses = this.standardizeCourses(await response.json());
-			this.filteredCourses = this.filterResults(this.courses, this.search);
+			this.filteredCourses = this.filterResults(this.courses, this.search).splice(0, 10);
 		},
 		async fetchProviders() {
 			const response = await fetch(this.$backendUrl + "providers")
 			this.providers = this.standardizeProviders(await response.json());
-			this.filteredProviders = this.filterResults(this.providers, this.search);
+			this.filteredProviders = this.filterResults(this.providers, this.search).splice(0, 10);
 		},
 		async fetchCategories() {
 			const response = await fetch(this.$backendUrl + "categories");
 			this.categories = this.standardizeCategories(await response.json())
-			this.filteredCategories = this.filterResults(this.categories, this.search);
+			this.filteredCategories = this.filterResults(this.categories, this.search).splice(0, 10);
 		},
 		updateFilteredResults(query, difficulty) {
-			this.filteredCourses = this.filterResults(this.courses, query, difficulty);
-			this.filteredProviders = this.filterResults(this.providers, query, difficulty);
-			this.filteredCategories = this.filterResults(this.categories, query, difficulty);
+			this.filteredCourses = this.filterResults(this.courses, query, difficulty).splice(0, 10);
+			this.filteredProviders = this.filterResults(this.providers, query, difficulty).splice(0, 10);
+			this.filteredCategories = this.filterResults(this.categories, query, difficulty).splice(0, 10);
 		}
 	},
 	watch: {
