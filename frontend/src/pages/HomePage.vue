@@ -36,7 +36,7 @@ export default {
 			courses: []
 		}
 	},
-	methods:{
+	methods: {
 		async fetchData() {
 			const courseResponse = await fetch(this.$backendUrl + "courses")
 			if (courseResponse.ok) {
@@ -70,11 +70,12 @@ export default {
  */
 /* start of medium tablet styles, if we want it */
 @media screen and (max-width: 767px) {
-  #introduction {
-   margin: auto 4px auto 4px;
-  }
+	#introduction {
+		margin: auto 4px auto 4px;
+	}
+
 	h1 {
-		font-size:1.6em;
+		font-size: 1.6em;
 	}
 
 }

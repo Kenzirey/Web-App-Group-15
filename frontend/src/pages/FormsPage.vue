@@ -12,16 +12,13 @@
 			<v-container>
 				<v-row>
 					<v-col cols="12" md="6">
-						<v-text-field v-model="firstName"
-                          :rules="InputRules"
-                          label="First name"
-                          required
-            ></v-text-field>
+						<v-text-field v-model="firstName" :rules="InputRules" label="First name" required
+						></v-text-field>
 					</v-col>
 
 					<v-col cols="12" md="6">
 						<v-text-field v-model="lastName" :rules="InputRules" label="Last name" required persistent-hint
-            ></v-text-field>
+						></v-text-field>
 					</v-col>
 				</v-row>
 			</v-container>
@@ -34,7 +31,7 @@
 
 					<v-col cols="12" md="15">
 						<v-text-field v-model="phoneNumber" @keypress="filter(event)" :rules="InputRules"
-							label="Phone number" required persistent-hint ></v-text-field>
+									  label="Phone number" required persistent-hint></v-text-field>
 					</v-col>
 				</v-row>
 			</v-container>
@@ -42,12 +39,13 @@
 
 			<v-col cols="12" md="15">
 				<v-select v-model="selectGender" :items="genders" :rules="[(v) => !!v || 'Please select a gender']"
-					label="Gender:" required placeholder="Select Gender"></v-select>
+						  label="Gender:" required placeholder="Select Gender"></v-select>
 			</v-col>
 
 			<v-container>
 				<v-row justify="start">
-					<v-date-picker title="Select birth date" show-adjacent-months width="500px" aria-label="Select birth date"></v-date-picker>
+					<v-date-picker title="Select birth date" show-adjacent-months width="500px"
+								   aria-label="Select birth date"></v-date-picker>
 				</v-row>
 			</v-container>
 
@@ -70,7 +68,7 @@
 
 					<v-col cols="12" md="6">
 						<v-text-field v-model="postCode" @keypress="filter(event)" label="Postcode" :rules="InputRules"
-							required></v-text-field>
+									  required></v-text-field>
 					</v-col>
 				</v-row>
 			</v-container>
@@ -78,7 +76,7 @@
 
 			<v-col cols="12" md="15">
 				<v-text-field v-model="country" label="Country" :rules="InputRules"
-					required></v-text-field>
+							  required></v-text-field>
 			</v-col>
 		</fieldset>
 
@@ -104,15 +102,16 @@
 			<h2 class="formSections">Additional information</h2>
 
 			<v-textarea v-model="additionalInfo"
-				placeholder="If there are any more additional information the schools should know, please write here"></v-textarea>
+						placeholder="If there are any more additional information the schools should know, please write here"></v-textarea>
 		</fieldset>
 
-    <v-col class="button-margin">
-		<v-btn prepend-icon="mdi-check-underline" text="submit" type="submit" @click.prevent="validate" class="mr-3 submit-button">
-			Submit
-		</v-btn>
+		<v-col class="button-margin">
+			<v-btn prepend-icon="mdi-check-underline" text="submit" type="submit" @click.prevent="validate"
+				   class="mr-3 submit-button">
+				Submit
+			</v-btn>
 
-    </v-col>
+		</v-col>
 
 	</v-form>
 </template>
@@ -126,6 +125,7 @@ export default {
 			lastName: "",
 			email: "",
 			phoneNumber: "",
+			selectGender: "",
 			genders: [
 				"Male",
 				"Female",
@@ -182,7 +182,7 @@ export default {
 			this.additionalInfo = "";
 		},
 		async validate() {
-			const { valid } = await this.$refs.form.validate();
+			const {valid} = await this.$refs.form.validate();
 			if (valid) {
 				this.$router.push("/submit");
 			}
@@ -191,39 +191,36 @@ export default {
 };
 
 
-
 </script>
 
 <style lang="scss" scoped>
 /* Updated as ::v-deep is deprecated */
 :deep(.v-date-picker-header) {
 	background: linear-gradient(to right,
-			rgb(var(--v-theme-gradiantOne)),
-			rgb(var(--v-theme-gradiantTwo))) !important;
+		rgb(var(--v-theme-gradiantOne)),
+		rgb(var(--v-theme-gradiantTwo))) !important;
 	color: white;
 }
 
 :deep(.v-picker-title) {
 	background: linear-gradient(to right,
-			rgb(var(--v-theme-gradiantOne)),
-			rgb(var(--v-theme-gradiantTwo)));
+		rgb(var(--v-theme-gradiantOne)),
+		rgb(var(--v-theme-gradiantTwo)));
 	color: white;
 }
 
 :deep(.v-label) {
-  color: rgb(79, 79, 79);
-  opacity: 1;
+	color: rgb(79, 79, 79);
+	opacity: 1;
 }
 
 .submit-button {
-  background-color: transparent;
+	background-color: transparent;
 }
 
 .v-btn {
-  color: rgb(var(--v-theme-background));
+	color: rgb(var(--v-theme-background));
 }
-
-
 
 
 .formBox {
@@ -231,8 +228,8 @@ export default {
 	margin: auto;
 	margin-bottom: 20px;
 	background: linear-gradient(to right,
-			rgb(var(--v-theme-gradiantOne)),
-			rgb(var(--v-theme-gradiantTwo)));
+		rgb(var(--v-theme-gradiantOne)),
+		rgb(var(--v-theme-gradiantTwo)));
 	padding: 40px;
 }
 
@@ -270,6 +267,6 @@ export default {
 }
 
 .button-margin {
-  margin-top: 20px;
+	margin-top: 20px;
 }
 </style>
