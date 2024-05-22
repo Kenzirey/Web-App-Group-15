@@ -5,20 +5,23 @@
 	<h1 class="title"> Place Order </h1>
 	<v-form v-model="valid" class="formBox margin-bottom" ref="form">
 		<fieldset class="fieldBox">
-			<h2 class="formSections">Personal information</h2>
+			<section class="formSections">Personal information</section>
 
 			<!-- First name, Last name, Email, Phone number, Gender -->
 
 			<v-container>
 				<v-row>
 					<v-col cols="12" md="6">
-						<v-text-field v-model="firstName" :rules="InputRules" label="First name" required
-							persistent-hint hint="Enter your first name"></v-text-field>
+						<v-text-field v-model="firstName"
+                          :rules="InputRules"
+                          label="First name"
+                          required
+            ></v-text-field>
 					</v-col>
 
 					<v-col cols="12" md="6">
 						<v-text-field v-model="lastName" :rules="InputRules" label="Last name" required persistent-hint
-							hint="Enter your last name"></v-text-field>
+            ></v-text-field>
 					</v-col>
 				</v-row>
 			</v-container>
@@ -31,7 +34,7 @@
 
 					<v-col cols="12" md="15">
 						<v-text-field v-model="phoneNumber" @keypress="filter(event)" :rules="InputRules"
-							label="Phone number" required persistent-hint hint="Enter your phone number"></v-text-field>
+							label="Phone number" required persistent-hint ></v-text-field>
 					</v-col>
 				</v-row>
 			</v-container>
@@ -44,7 +47,7 @@
 
 			<v-container>
 				<v-row justify="start">
-					<v-date-picker title="Select birth date" show-adjacent-months width="500px"></v-date-picker>
+					<v-date-picker title="Select birth date" show-adjacent-months width="500px" aria-label="Select birth date"></v-date-picker>
 				</v-row>
 			</v-container>
 
@@ -56,7 +59,7 @@
 			<h1 class="formSections">Address</h1>
 
 			<v-col cols="12" md="15">
-				<v-text-field v-model="address" label="Address" rules="InputRules" hide-details required></v-text-field>
+				<v-text-field v-model="address" label="Address" :rules="InputRules" required></v-text-field>
 			</v-col>
 
 			<v-container>
@@ -66,7 +69,7 @@
 					</v-col>
 
 					<v-col cols="12" md="6">
-						<v-text-field v-model="postCode" @keypress="filter(event)" label="Postcode"
+						<v-text-field v-model="postCode" @keypress="filter(event)" label="Postcode" :rules="InputRules"
 							required></v-text-field>
 					</v-col>
 				</v-row>
@@ -74,14 +77,14 @@
 
 
 			<v-col cols="12" md="15">
-				<v-text-field v-model="country" label="Country" :rules="InputRules" hide-details
+				<v-text-field v-model="country" label="Country" :rules="InputRules"
 					required></v-text-field>
 			</v-col>
 		</fieldset>
 
 		<!-- Application Details -->
 		<fieldset class="fieldBox">
-			<h3 class="formSections">Application Details</h3>
+			<h2 class="formSections">Application Details</h2>
 			<p class="labelParagraph">
 				Information about the course you are attending
 			</p>
@@ -98,18 +101,18 @@
 
 		<!-- Additional information -->
 		<fieldset class="fieldBox">
-			<h4 class="formSections">Additional information</h4>
+			<h2 class="formSections">Additional information</h2>
 
 			<v-textarea v-model="additionalInfo"
 				placeholder="If there are any more additional information the schools should know, please write here"></v-textarea>
 		</fieldset>
 
-
-		<v-btn text="submit" type="submit" @click.prevent="validate" class="mr-3">
+    <v-col class="button-margin">
+		<v-btn prepend-icon="mdi-check-underline" text="submit" type="submit" @click.prevent="validate" class="mr-3 submit-button">
 			Submit
 		</v-btn>
 
-		<v-btn @click="clearForm">Clear</v-btn>
+    </v-col>
 
 	</v-form>
 </template>
@@ -207,6 +210,22 @@ export default {
 	color: white;
 }
 
+:deep(.v-label) {
+  color: rgb(79, 79, 79);
+  opacity: 1;
+}
+
+.submit-button {
+  background-color: transparent;
+}
+
+.v-btn {
+  color: rgb(var(--v-theme-background));
+}
+
+
+
+
 .formBox {
 	max-width: fit-content;
 	margin: auto;
@@ -223,11 +242,9 @@ export default {
 
 .fieldBox {
 	background: white;
-	margin-inline: auto;
 }
 
 .labelParagraph {
-	color: Black;
 	padding: 10px;
 	display: block;
 	margin: 10px 0;
@@ -238,9 +255,7 @@ export default {
 }
 
 .formSections {
-	color: Black;
 	padding: 10px;
-	display: block;
 	margin: 10px 0;
 	text-align: left;
 	font-size: x-large;
@@ -249,7 +264,12 @@ export default {
 	max-width: fit-content;
 }
 
+
 .margin-bottom {
 	margin-bottom: 20px;
+}
+
+.button-margin {
+  margin-top: 20px;
 }
 </style>
