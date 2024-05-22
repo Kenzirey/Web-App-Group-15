@@ -3,7 +3,7 @@
     <!--The header is the v-app-bar from the toolbar-->
     <TopToolbar class="toolbar" :lastGlobalClick="lastClick" />
 
-    
+
       <main class="course-content">
         <!-- The main content of the page, replaced based on the current route -->
         <router-view></router-view>
@@ -21,7 +21,8 @@ import Footer from './components/Footer.vue';
 // import function to register Swiper custom elements
 import { register } from 'swiper/element/bundle';
 import { store } from './utility/store';
-import { getCookie } from './utility/cookieHelper';
+import { getCookie, setCookie } from './utility/cookieHelper';
+import { watch } from 'vue';
 // register Swiper custom elements
 register();
 
@@ -40,13 +41,64 @@ export default {
   },
   data() {
     return { lastClick: null }
+  },
+  methods: {
+    checkLang(langSubstring) {
+			return navigator.language.replace(/-/g, "_").toUpperCase().includes(`_${langSubstring.toUpperCase()}`);
+		},
+		checkLangAny(...langSubstrings) {
+			return langSubstrings.some(langSubstring => this.checkLang(langSubstring));
+		},
+		getFirstCurrency(...currencies) {
+			let i = 0;
+			let next = null;
+			while (i < currencies.length && !this.currencies.includes(next)) {
+				next = currencies[i].toUpperCase();
+				i++;
+			}
+			return next || "USD";
+		},
+		getDefaultCurrency() {
+			let currency;
+			if (this.checkLangAny("US", "VG", "EC", "SV", "GU", "TL", "MH", "FM", "PW", "MP", "PR", "TC", "VI", "IO", "BQ", "UM")) {
+				currency = this.getFirstCurrency("USD");
+			} else if (this.checkLang("CA")) {
+				currency = this.getFirstCurrency("CAD", "USD");
+			} else if (this.checkLangAny("AU", "CX", "CC", "NR", "NF")) {
+				currency = this.getFirstCurrency("AUS", "USD");
+			} else if (this.checkLangAny(
+				"NL", "AD", "BE", "ES", "GP", "IE", "AT", "GR", "HR", "CY", "LV", "LT", "LU", "MT", "MQ", "YT", "MC",
+				"PT", "FR", "GF", "RE", "PM", "DE", "SM", "SK", "SI", "FI", "VA", "EE", "ME", "BL", "XK", "AX", "MF"
+			)) {
+				currency = this.getFirstCurrency("EUR");
+			} else if (this.checkLangAny("NO", "SJ")) {
+				currency = this.getFirstCurrency("NOK", "EUR");
+			} else if (this.checkLang("SE")) {
+				currency = this.getFirstCurrency("SEK", "EUR");
+			} else if (this.checkLangAny("DK", "GL", "FO")) {
+				currency = this.getFirstCurrency("DKK", "EUR");
+			} else if (this.checkLang("GB")) {
+				currency = this.getFirstCurrency("GBP", "EUR");
+			} else {
+				currency = this.getFirstCurrency();
+			}
+			return currency;
+		}
+  },
+  created() {
+    watch(this.$currency, newVal => setCookie("currency", newVal));
+		fetch(this.$backendUrl + "exchange").then(response => response.json()).then(currencies => {
+			this.$currencies.value = currencies.map(currency => currency.toUpperCase());
+			this.$currencies.value.sort();
+			this.$currency.value = getCookie("currency") || this.getDefaultCurrency();
+		});
   }
 };
 </script>
 
 <style lang="scss">
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Arial, system-ui, Avenir, Helvetica, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   --swiper-navigation-color: rgb(var(--v-theme-gradiantOne));
@@ -78,7 +130,7 @@ export default {
   That is where app + courseApp comes from. */
   .course-content {
     /* top right bottom left */
-    margin: 80px auto 0 auto;
+    margin: 88px auto 0 auto;
     text-align: center;
   }
 }
@@ -131,7 +183,7 @@ button {
 
 
 h1 {
-  font-size: 3.2em;
+  font-size: 2.4em;
   line-height: 1.1;
 }
 </style>

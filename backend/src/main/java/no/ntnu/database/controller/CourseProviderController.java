@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -230,7 +231,7 @@ public class CourseProviderController {
 	public ResponseEntity<CourseProviderLink> getCourseProviderLink(
 			@PathVariable int providerId,
 			@PathVariable int courseId,
-			@RequestHeader(name = "currency", defaultValue = DEFAULT_CURRENCY) String currency
+			@RequestParam(name = "currency", defaultValue = DEFAULT_CURRENCY) String currency
 	) {
 		Optional<CourseProviderLink> link =
 				linkService.findCourseProviderLink(providerId, courseId, currency);
@@ -242,8 +243,8 @@ public class CourseProviderController {
 	 * Updates a course provider link.
 	 *
 	 * @param providerId The linked {@link CourseProvider}'s id.
-	 * @param courseId	 The linked course's id.
-	 * @param price      The course's new price.
+	 * @param courseId	 The linked {@link no.ntnu.database.model.Course Course}'s id.
+	 * @param dto        the data transfer object containing price and currency information.
 	 *
 	 * @return 		<p>a {@link ResponseEntity} with code 204 on success.</p>
 	 * 				<p>a {@link ResponseEntity} with code 400 if illegal argument is provided.</p>
@@ -260,11 +261,10 @@ public class CourseProviderController {
 	public ResponseEntity<String> updateCourseProviderLink(
 			@PathVariable int providerId,
 			@PathVariable int courseId,
-			@RequestBody double price,
-			@RequestHeader(name = "currency", defaultValue = DEFAULT_CURRENCY) String currency
+			@RequestBody CourseProviderLink.CourseProviderLinkDto dto
 	) {
 		try {
-			linkService.updateCourseProviderLink(providerId, courseId, price, currency);
+			linkService.updateCourseProviderLink(providerId, courseId, dto);
 			return ResponseEntity.noContent().build();
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().body("Bad request: " + e.getMessage());
@@ -278,7 +278,8 @@ public class CourseProviderController {
 	 * Adds a price listing based on which {@link CourseProvider} the course has.
 	 *
 	 * @param providerId the {@link CourseProvider}'s id.
-	 * @param dto        the data transfer object containing course and price information.
+	 * @param courseId   the {@link no.ntnu.database.model.Course Course}'s id
+	 * @param dto        the data transfer object containing price and currency information.
 	 *
 	 * @return 		<p>a {@link ResponseEntity} with code 201 on success.</p>
 	 * 				<p>a {@link ResponseEntity} with code 400 if illegal argument is provided.</p>
@@ -292,14 +293,14 @@ public class CourseProviderController {
 	@ApiResponse(responseCode = "400", description = "Bad request")
 	@ApiResponse(responseCode = "403", description = "Forbidden, incorrect authorization")
 	@ApiResponse(responseCode = "404", description = "Entity not found")
-	@PostMapping("/{providerId}/coursePriceListings")
+	@PostMapping("/{providerId}/coursePriceListings/{courseId}")
 	public ResponseEntity<String> addCoursePriceListing(
 			@PathVariable int providerId,
-			@RequestBody CourseProviderLink.CourseProviderLinkDto dto,
-			@RequestHeader(name = "currency", defaultValue = DEFAULT_CURRENCY) String currency
+			@PathVariable int courseId,
+			@RequestBody CourseProviderLink.CourseProviderLinkDto dto
 	) {
 		try {
-			linkService.addCourseListing(providerId, dto, currency);
+			linkService.addCourseListing(providerId, courseId, dto);
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body("Course's price listing added successfully");
 		} catch (EntityNotFoundException e) {
@@ -345,5 +346,4 @@ public class CourseProviderController {
 					.body("Bad request: " + e.getMessage());
 		}
 	}
-
 }

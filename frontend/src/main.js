@@ -6,8 +6,9 @@ import { store } from './utility/store';
 import { getCookie } from './utility/cookieHelper';
 
 const courseApp = createApp(App)
-courseApp.config.globalProperties.$backendUrl = "https://group15.web-tek.ninja/";
-courseApp.config.globalProperties.$difficulties = ["Beginner", "Advanced", "Expert"];
+courseApp.config.globalProperties.$backendUrl = "http://localhost:8080/";
+courseApp.config.globalProperties.$difficulties = ["Beginner", "Intermediate", "Expert"];
+courseApp.config.globalProperties.$currencies = ref([]);
 courseApp.config.globalProperties.$currency = ref("");
 courseApp.config.globalProperties.$authFetch = async function (endpoint, requestData) {
     const jwt = getCookie("authToken");

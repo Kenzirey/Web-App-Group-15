@@ -1,5 +1,7 @@
 package no.ntnu.database.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.io.IOException;
 import java.util.function.Function;
 import no.ntnu.database.model.Image;
@@ -28,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping("/images")
 public class ImageController {
-	//TODO: Tony, Swagger.
+
 
 	/**
 	 * 1MB is spring's default max file size, if not otherwise specified.
@@ -41,7 +43,8 @@ public class ImageController {
 	/**
 	 * Makes the image controller.
 	 */
-	public ImageController(@Autowired ImageService imageService) {
+	@Autowired
+	public ImageController(ImageService imageService) {
 		this.imageService = imageService;
 	}
 
@@ -84,6 +87,16 @@ public class ImageController {
 	 *         <li>If no match is found, returns status 404.</li>
 	 *     </ul>
 	 */
+	@Operation (
+		summary = "Get Image with id",
+		description = "Returns an image with matching the id"
+	)
+	@ApiResponse(
+		responseCode = "200", description = "Image was found"
+	)
+	@ApiResponse(
+		responseCode = "404", description = "Image with with corresponding id was not found"
+	)
 	@GetMapping("/{id}")
 	public ResponseEntity<byte[]> getImage(@PathVariable Integer id) {
 		ResponseEntity<byte[]> response;
@@ -108,6 +121,13 @@ public class ImageController {
 	 * @param imgFile The image added
 	 * @return 201 CREATED status on success, 400 Bad request on error
 	 */
+	@Operation(
+		summary = "Adds an image",
+		description = "Adds an new image to the database with the image provided"
+	)
+	@ApiResponse(responseCode = "201", description = "An image was added")
+	@ApiResponse(responseCode = "401", description = "Image could not be added")
+	@ApiResponse(responseCode = "403", description = "Forbidden, not authorized")
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Integer> add(
 			@RequestParam("image") MultipartFile imgFile,
@@ -126,6 +146,13 @@ public class ImageController {
 	 * @param id The id of image to be removed.
 	 * @return 200 OK status on success, 404 NOT FOUND on error
 	 */
+	@Operation(
+		summary = "Deletes an image",
+		description = "Deletes the image corresponding with the given id"
+	)
+	@ApiResponse(responseCode = "200", description = "Image deleted")
+	@ApiResponse(responseCode = "404", description = "image was not found")
+	@ApiResponse(responseCode = "403", description = "Forbidden, not authorized")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> delete(@PathVariable int id) {
 		return new ResponseEntity<>(imageService.deleteImage(id)
@@ -141,6 +168,14 @@ public class ImageController {
 	 * @param imgFile New image data to store.
 	 * @return 200 OK status on success, 400 Bad request on error
 	 */
+	@Operation(
+		summary = "Updates an existing image",
+		description = "Updates the image id with an new image data"
+	)
+	@ApiResponse(responseCode = "204", description = "Image updated")
+	@ApiResponse(responseCode = "400", description = "Bad request")
+	@ApiResponse(responseCode = "403", description = "Forbidden, not authorized")
+	@ApiResponse(responseCode = "404", description = "Image not found")
 	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<Object> update(
 			@PathVariable int id,

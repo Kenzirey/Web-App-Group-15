@@ -22,10 +22,10 @@
 					<v-text-field label="End Date" aria-label="End Date" v-model="course.endDate" type="date" required></v-text-field>
 				</v-col>
 				<v-col cols="12" sm="4">
-					<v-text-field label="Credits" aria-label="Credits" v-model="course.courseCredits" type="number" required></v-text-field>
+					<v-text-field label="Credits" aria-label="Credits" v-model="course.courseCredits" type="number" min="0" required></v-text-field>
 				</v-col>
 				<v-col cols="12" sm="4">
-					<v-text-field label="Hours per Week" aria-label="Hours per week" v-model="course.hoursPerWeek" type="number"
+					<v-text-field label="Hours per Week" aria-label="Hours per week" v-model="course.hoursPerWeek" type="number" min="0"
 						required></v-text-field>
 				</v-col>
 				<v-col cols="12" sm="4">
