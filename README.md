@@ -34,31 +34,31 @@ The backend part can be found via a directory named "backend".
 ##### To run the frontend, in the "frontend" directory, run the command "npm run dev". In this project, "http://localhost:3000/" is used to run the frontend locally. This comes from vite.config.js, you can alter the port there from 3000 if you wish.
 
 #### Home page on laptop:
-![img_2.png](img_2.png)
+![img_2.png](screenshots/img_2.png)
 
 #### Footer:
-![img_1.png](img_1.png)
+![img_1.png](screenshots/img_1.png)
 
 #### Admin Dashboard:
-![img_3.png](img_3.png)
+![img_3.png](screenshots/img_3.png)
 
 #### Admin Add Course, NB NOT MOBILE COMPLIANT!
-![img_4.png](img_4.png)
+![img_4.png](screenshots/img_4.png)
 
 
 #### Home Page on mobile:
-![img.png](img.png)
+![img.png](screenshots/img.png)
 
 #### About us on mobile, scrollable, vertical:
-![img_5.png](img_5.png)
+![img_5.png](screenshots/img_5.png)
 
 #### Admin Account Details:
-![img_6.png](img_6.png)
+![img_6.png](screenshots/img_6.png)
 
 #### Non-Admin Account Details:
-![img_7.png](img_7.png)
+![img_7.png](screenshots/img_7.png)
 
 #### Search bar on mobile:
-![img_8.png](img_8.png)
+![img_8.png](screenshots/img_8.png)
 
 
