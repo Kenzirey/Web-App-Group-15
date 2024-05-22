@@ -100,7 +100,7 @@ export default {
 	},
 	data() {
 		return {
-			autoSlideInterval: 5000,
+			autoSlideInterval: 20000,
 			interval: null,
 			imageUrls: []
 		}
