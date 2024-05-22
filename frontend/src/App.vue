@@ -3,7 +3,7 @@
     <!--The header is the v-app-bar from the toolbar-->
     <TopToolbar class="toolbar" :lastGlobalClick="lastClick" />
 
-
+    
       <main class="course-content">
         <!-- The main content of the page, replaced based on the current route -->
         <router-view></router-view>
@@ -131,7 +131,7 @@ button {
 
 
 h1 {
-  font-size: 2.2em;
+  font-size: 3.2em;
   line-height: 1.1;
 }
 </style>

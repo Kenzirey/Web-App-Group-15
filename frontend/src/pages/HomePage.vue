@@ -2,8 +2,9 @@
 <template>
   <div class="home-page-container">
     <section id="introduction">
-      <h1>Welcome to Learniverse Connect</h1>
-		</section>
+      <h2>Welcome to Learniverse Connect</h2>
+      <p>Placeholder text for introduction. This section will give an overview of what Learniverse Connect offers.</p>
+    </section>
 
     <!-- Any other sections we want on the homepage -->
     <section class="Carousel test">
@@ -78,17 +79,12 @@ export default {
     flex-direction: column;
   }
 
-/* These media sizes and comments were taken from:
- https://mediag.com/blog/popular-screen-resolutions-designing-for-all/
- */
+
 /* start of medium tablet styles, if we want it */
 @media screen and (max-width: 767px) {
   #introduction {
    margin: auto 4px auto 4px;
   }
-	h1 {
-		font-size:1.6em;
-	}
 
 }
 
