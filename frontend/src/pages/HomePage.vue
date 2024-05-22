@@ -12,7 +12,7 @@
 		<section class="Carousel test">
 			<CourseCarousel :courses="courses" difficulty="Sale"/>
 			<CourseCarousel :courses="courses" difficulty="Beginner"/>
-			<CourseCarousel :courses="courses" difficulty="Advanced"/>
+			<CourseCarousel :courses="courses" difficulty="Intermediate"/>
 			<CourseCarousel :courses="courses" difficulty="Expert"/>
 		</section>
 	</div>

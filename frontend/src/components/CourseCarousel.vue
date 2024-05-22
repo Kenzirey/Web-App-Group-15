@@ -45,7 +45,7 @@ export default {
 			if (this.difficulty && this.difficulty.toLowerCase() === "sale") {
 				filtered = this.courses.filter(course => course.sale);
 				filtered.sort((a, b) => b.sale - a.sale);
-			} else if (["beginner", "advanced", "expert"].includes(this.difficulty.toLowerCase())) {
+			} else if (this.$difficulties.includes(this.difficulty.toLowerCase())) {
 				filtered = this.courses.filter(course => {
 					return course.difficultyLevel
 						&& course.difficultyLevel.toLowerCase() === this.difficulty.toLowerCase();
