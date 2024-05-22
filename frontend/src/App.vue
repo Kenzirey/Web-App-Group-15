@@ -98,7 +98,7 @@ export default {
 
 <style lang="scss">
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Arial, system-ui, Avenir, Helvetica, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   --swiper-navigation-color: rgb(var(--v-theme-gradiantOne));
