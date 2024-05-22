@@ -50,6 +50,7 @@ public final class Course {
 	private String relatedCertification;
 	@Schema(description = "Description of the course", example =
 			"This course teaches the basics of SQL.")
+	@Column(columnDefinition = "TEXT")
 	private String courseDescription;
 
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
