@@ -98,7 +98,7 @@ export default {
 
 <style lang="scss">
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Arial, system-ui, Avenir, Helvetica, sans-serif;
   line-height: 1.5;
   font-weight: 400;
   --swiper-navigation-color: rgb(var(--v-theme-gradiantOne));
@@ -130,7 +130,7 @@ export default {
   That is where app + courseApp comes from. */
   .course-content {
     /* top right bottom left */
-    margin: 80px auto 0 auto;
+    margin: 88px auto 0 auto;
     text-align: center;
   }
 }
@@ -183,7 +183,7 @@ button {
 
 
 h1 {
-  font-size: 2.2em;
+  font-size: 2.4em;
   line-height: 1.1;
 }
 </style>
