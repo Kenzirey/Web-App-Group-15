@@ -1,5 +1,6 @@
 <!-- src/pages/HomePage.vue -->
 <template>
+
 	<div class="home-page-container">
 		<section id="introduction">
 			<h2>Welcome to Learniverse Connect</h2>
@@ -64,11 +65,16 @@ export default {
 	flex-direction: column;
 }
 
-
+/* These media sizes and comments were taken from:
+ https://mediag.com/blog/popular-screen-resolutions-designing-for-all/
+ */
 /* start of medium tablet styles, if we want it */
 @media screen and (max-width: 767px) {
-	#introduction {
-		margin: auto 4px auto 4px;
+  #introduction {
+   margin: auto 4px auto 4px;
+  }
+	h1 {
+		font-size:1.6em;
 	}
 
 }

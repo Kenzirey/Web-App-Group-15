@@ -2,10 +2,10 @@
 
   <footer class="footer-container">
     <div class="footer-links">
-      <v-btn id="about-us-button" @click="navigateToAboutUs" variant="text" size="large">About Us</v-btn>
-      <v-btn id="contact-us-button" @click="navigateToContactUs" variant="text" size="large">Contact Us</v-btn>
-      <v-btn id="disclaimer-button" @click="navigateDisclaimer" variant="text" size="large">Disclaimer</v-btn>
-      <v-select :items="currencies" variant="outlined" :model-value="$currency"></v-select>
+      <v-btn id="about-us-button" @click="navigateTo('/about')" variant="text" size="large">About Us</v-btn>
+      <v-btn id="contact-us-button" @click="navigateTo('/contact')" variant="text" size="large">Contact Us</v-btn>
+      <v-btn id="disclaimer-button" @click="navigateTo('/disclaimer')" variant="text" size="large">Disclaimer</v-btn>
+      <v-select :items="$currencies.value" variant="outlined" :model-value="$currency"></v-select>
     </div>
     <p>This website is a result of a university group project performed in the course IDATA2301 Web technologies at
       NTNU. All the information provided here is a result of imagination. Any resemblance with real companies or
@@ -15,79 +15,14 @@
 </template>
 
 <script>
-import { getCookie, setCookie } from '@/utility/cookieHelper';
-import { watch } from 'vue';
-
 export default {
 	name: 'Footer',
-	data() {
-		return {
-			currencies: ["NOK", "SEK", "DKK", "EUR", "USD", "GBP"]
-		}
-	},
 	methods: {
-		navigateToAboutUs() {
-      this.$router.push('/about')
-      window.scrollTo({top:0});
-    },
-    navigateToContactUs() {
-      this.$router.push('/contact')
-      window.scrollTo({top:0});
-    },
-    navigateDisclaimer() {
-      this.$router.push('/disclaimer')
-      window.scrollTo({top:0});
-    },
-		checkLang(langSubstring) {
-			return navigator.language.replace(/-/g, "_").toUpperCase().includes(`_${langSubstring.toUpperCase()}`);
-		},
-		checkLangAny(...langSubstrings) {
-			return langSubstrings.some(langSubstring => this.checkLang(langSubstring));
-		},
-		getFirstCurrency(...currencies) {
-			let i = 0;
-			let next = null;
-			while (i < currencies.length && !this.currencies.includes(next)) {
-				next = currencies[i].toUpperCase();
-				i++;
-			}
-			return next || "USD";
-		},
-		getDefaultCurrency() {
-			let currency;
-			if (this.checkLangAny("US", "VG", "EC", "SV", "GU", "TL", "MH", "FM", "PW", "MP", "PR", "TC", "VI", "IO", "BQ", "UM")) {
-				currency = this.getFirstCurrency("USD");
-			} else if (this.checkLang("CA")) {
-				currency = this.getFirstCurrency("CAD", "USD");
-			} else if (this.checkLangAny("AU", "CX", "CC", "NR", "NF")) {
-				currency = this.getFirstCurrency("AUS", "USD");
-			} else if (this.checkLangAny(
-				"NL", "AD", "BE", "ES", "GP", "IE", "AT", "GR", "HR", "CY", "LV", "LT", "LU", "MT", "MQ", "YT", "MC",
-				"PT", "FR", "GF", "RE", "PM", "DE", "SM", "SK", "SI", "FI", "VA", "EE", "ME", "BL", "XK", "AX", "MF"
-			)) {
-				currency = this.getFirstCurrency("EUR");
-			} else if (this.checkLangAny("NO", "SJ")) {
-				currency = this.getFirstCurrency("NOK", "EUR");
-			} else if (this.checkLang("SE")) {
-				currency = this.getFirstCurrency("SEK", "EUR");
-			} else if (this.checkLangAny("DK", "GL", "FO")) {
-				currency = this.getFirstCurrency("DKK", "EUR");
-			} else if (this.checkLang("GB")) {
-				currency = this.getFirstCurrency("GBP", "EUR");
-			} else {
-				currency = this.getFirstCurrency();
-			}
-			return currency;
+		navigateTo(route) {
+			this.$router.push(route);
+			window.scrollTo({top:0});
 		}
-	},
-	created() {
-		watch(this.$currency, newVal => setCookie("currency", newVal));
-		fetch(this.$backendUrl + "exchange").then(response => response.json()).then(currencies => {
-			this.currencies = currencies.map(currency => currency.toUpperCase());
-			this.currencies.sort();
-			this.$currency.value = getCookie("currency") || this.getDefaultCurrency();
-		});
-	},
+	}
 }
 </script>
 

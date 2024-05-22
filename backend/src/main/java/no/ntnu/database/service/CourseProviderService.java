@@ -76,6 +76,9 @@ public class CourseProviderService {
 			LOGGER.warn("Provider is invalid");
 		}
 		provider.setCourseProviderId(id);
+		existingProvider.ifPresent(p ->
+				provider.setCourseProviderLinks(p.getCourseProviderLinks())
+		);
 		repository.save(provider);
 	}
 

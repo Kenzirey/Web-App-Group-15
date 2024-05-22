@@ -15,6 +15,7 @@
           <v-row class="navigation-container">
             <v-btn text @click="goToDashboard">Dashboard</v-btn>
             <v-btn text @click="goToCourses">Courses</v-btn>
+            <v-btn text @click="() => this.$router.push('/admin/providers')" >Providers</v-btn>
             <v-btn text @click="goToUsers">Users</v-btn>
             <v-btn text @click="goToSettings">Settings</v-btn>
           </v-row>

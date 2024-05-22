@@ -162,13 +162,12 @@ public final class CourseProviderLink {
 	/**
 	 * A DTO for {@link CourseProvider}.
 	 *
-	 * @param courseId the {@link Course}'s id to connect the {@link CourseProvider} to.
-	 * @param price    the price related to the specific
-	 *                 {@link CourseProvider} on the specific {@link Course}.
+	 * @param price    The price
+	 * @param currency The currency the price is in
 	 */
 	public record CourseProviderLinkDto(
-			int courseId,
-			double price
+			double price,
+			String currency
 	) {
 	}
 }
