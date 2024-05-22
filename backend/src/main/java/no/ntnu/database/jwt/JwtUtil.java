@@ -17,7 +17,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-//TODO: Personalize it.
 /**
  * Utility class for handling JWT tokens.
  * Taken from 05-jwt-authentication from app-dev repository by Gist.

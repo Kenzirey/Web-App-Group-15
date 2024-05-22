@@ -19,7 +19,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-//TODO: Personalize it.
 /**
  * A filter that is applied to all HTTP requests and checks for a valid JWT token
  * in the "Authorization: Bearer ..." header.

@@ -3,7 +3,6 @@ package no.ntnu.dto;
 /**
  * Data that we will send as a response to the user when the authentication is successful.
  */
-//TODO: Record?
 public class AuthenticationResponse {
 	private final String jwt;
 
