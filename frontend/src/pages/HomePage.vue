@@ -8,7 +8,8 @@
 
 		<!-- Any other sections we want on the homepage -->
 		<section class="Carousel test">
-			<CourseCarousel :courses="courses" difficulty="Sale"/>
+			<!-- Sales got broken due to editing via admin panel last minute, so they are commented out for now.-->
+			<!--<CourseCarousel :courses="courses" difficulty="Sale"/>--> 
 			<CourseCarousel :courses="courses" difficulty="Beginner"/>
 			<CourseCarousel :courses="courses" difficulty="Intermediate"/>
 			<CourseCarousel :courses="courses" difficulty="Expert"/>
