@@ -238,7 +238,7 @@ export default {
 		flex-wrap: wrap;
 	}
 	.course-description {
-		max-width: 60vw;
+		max-width: 65vw;
 		text-align: left;
 		display: inline-block;
 	}
@@ -262,7 +262,7 @@ export default {
 
 .course-description {
 	margin: 20px;
-	max-width: 60vw;
+	max-width: 700px;
 	text-align: left;
 }
 
